@@ -1,0 +1,38 @@
+{
+	"author": "Paul Williams",
+	"name": "np90",
+	"description": "P90 for node.",
+	"keywords": [
+		"css",
+		"minimalist",
+		"processor",
+		"preprocessor",
+		"node",
+		"svelte"
+	],
+	"version": "0.22.0",
+	"exports": {
+		".": "./src/processor.js",
+		"./svelte": "./src/svelte.js",
+		"./util": "./src/util.js"
+	},
+	"type": "module",
+	"license": "MIT",
+	"engines": {
+		"node": ">=18.0.0 <19"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/PaulioRandall/np90.git"
+	},
+	"scripts": {
+		"fmt": "npx prettier --loglevel warn --write --plugin-search-dir=. .",
+		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --silent",
+		"debug": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+		"commit": "npm run fmt && npm run test && cat ./scripts/youre-ready-to-integrate.txt"
+	},
+	"devDependencies": {
+		"p90": "0.22.0",
+		"jest": "29.6.2"
+	}
+}
