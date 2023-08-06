@@ -10,7 +10,7 @@
 		"node",
 		"svelte"
 	],
-	"version": "0.23.0",
+	"version": "0.23.1",
 	"exports": {
 		".": "./src/index.js",
 		"./svelte": "./src/svelte.js",
