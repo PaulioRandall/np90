@@ -1,27 +1,22 @@
-# P90
+# NP90
 
-A minimalist CSS processor with out of the box support for Svelte. Let plain JavaScript handle preprocessing logic, not a CSS mutant.
+**NP90** builds upon [P90](https://github.com/PaulioRandall/p90) for Node projects. It adds support for
+
+- \[**TODO**\] Processing `.p90` files into `.css` files.
+- Svelte preprocessing.
+
+**P90** is a minimalist CSS processor. Let plain JavaScript handle preprocessing logic, not a CSS mutant.
 
 I just needed a bit of sugar upon my CSS. It's straight up optimised for my tastes. The design trade-offs lean towards simplicity, readability, and flexibility more than writability. Complexity of configuration is almost entirely in the user's court.
 
-**P90** scans CSS for **P90** variables just like any ordinary compiler. But tokens are simply substituted with user defined values. It's really just an enhanced `string.replace`.
+**P90** scans CSS for **P90** tokens which are substituted with user defined values. It's just an enhanced `string.replace`.
 
-## 1. Plunder
-
-Loot [`/src`](https://github.com/PaulioRandall/svelte-css-preprocessor/tree/trunk/src) for code to embed in your own projects.
-
-## 2. Fork
-
-And use as a starting point for your own CSS processor. See [Github](https://github.com/PaulioRandall/p90).
-
-## 3. Import
-
-Like any other package.
+## Import for Svelte
 
 ```json
 {
 	"devDependencies": {
-		"p90": "v0.22.0"
+		"np90": "v0.22.0"
 	}
 }
 ```
@@ -47,7 +42,7 @@ Organise as you please. Both nested and flat structures have their vices aand vi
 
 ```js
 // ./src/p90-styles.js
-import { rgbsToColors, generateThemeVars, renderColorSchemes } from 'p90/util'
+import { rgbsToColors, generateThemeVars, renderColorSchemes } from 'np90/util'
 
 const rgbs = {
 	burly_wood: [222, 184, 135],
@@ -121,23 +116,23 @@ export default {
 
 ### svelte.config.js
 
-Add **p90** to the _preprocess_ array in your _svelte.config.js_. Import and pass your styles to it.
+Add **np90** to the _preprocess_ array in your _svelte.config.js_. Import and pass your styles to it.
 
 ```js
 // svelte.config.js
-import p90 from 'p90/svelte'
+import np90 from 'np90/svelte'
 import styles from './src/p90-styles.js'
 
 export default {
   ...,
-  preprocess: [p90(styles)],
+  preprocess: [np90(styles)],
   ...,
 }
 ```
 
 ```js
 // svelte.config.js
-import p90 from 'p90/svelte'
+import np90 from 'np90/svelte'
 import styles from './src/p90-styles.js'
 
 // Config and options with their defaults.
@@ -164,7 +159,7 @@ const config = {
 
 export default {
   ...,
-  preprocess: [p90(styles, config)],
+  preprocess: [np90(styles, config)],
   ...,
 }
 ```
@@ -233,295 +228,4 @@ export default {
 		}
 	}
 </style>
-```
-
-## Non-Svelte users
-
-If you're not working in Svelte you can use the underlying processor. This project doesn't depend on anything other than _Jest_; even that's a _devDependency_.
-
-Currently there is no support for reading CSS from files or repositories. But I'll consider adding it if a use case pops up or, in the unlikely event, through popular demand.
-
-```js
-import p90 from 'p90'
-```
-
-**Parameters**:
-
-- **css**: CSS string.
-- **styles**: Mapping of P90 variable names to values ([example](#p90-stylesjs)).
-- **config**: Configuration and options ([docs](#config)).
-
-```js
-import p90 from 'p90'
-
-function processCss() {
-	const cssBefore = '{ color: $color.blue; }'
-
-	const styles = {
-		color: {
-			blue: '#2222FF',
-		}
-	}
-
-	const config = {
-		filename: 'main.css',
-		throwOnError: true,
-	}
-
-	const cssAfter = await p90(cssBefore, styles, config)
-
-	console.log(cssAfter)
-	// '{ color: #2222FF; }'
-}
-```
-
-### Config
-
-```js
-// Config and options with their defaults.
-const config = {
-	stdout: console.log,
-	stderr: console.error,
-
-	// Name of file being processed so it can be printed upon error.
-	filename: '',
-
-	// If true, errors will be thrown immediately ending the processing.
-	// Default is off because Svelte and various CSS checkers will usually tell
-	// you where the errors are. They're better at it too.
-	throwOnError: false,
-
-	// Prints filename and token info when an error is encountered.
-	printErrors: true,
-}
-```
-
-## Util
-
-There exists some utility functions for common activities. You don't have to use them to use **P90**. If you don't like my approach to CSS code generation then write your own functions. It's plain JavaScript after all.
-
-```js
-import p90Util from 'p90/util'
-```
-
-| Name                                              | Does what?                                                                                                                                                            |
-| :------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [rgbsToColors](#rgbstocolors)                     | Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.                                                                                                     |
-| [renderColorSchemes](#rendercolorschemes)         | Generates CSS color scheme media queries from a set of themes with CSS variables as values; goes hand-in-hand with [generateThemeVariables](#generatethemevariables). |
-| [generateThemeVariables](#generatethemevariables) | Generates a **set** of CSS variables from a set of themes; goes hand-in-hand with [renderColorSchemes](#rendercolorschemes).                                          |
-
-### rgbsToColors
-
-Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.
-
-**Parameters**:
-
-- **rgbs**: map of RGB and RGBA arrays.
-
-```js
-import { rgbsToColors } from 'p90/util'
-
-const colors = rgbsToColors({
-	burly_wood: [222, 184, 135],
-	burly_wood_lucid: [222, 184, 135, 0.5],
-	ice_cream: [250, 250, 250],
-	jet_blue: [30, 85, 175],
-	dark_navy_grey: [5, 10, 60],
-	dark_navy_grey_lucid: [5, 10, 60, 0.5],
-})
-
-console.log(colors) // Use console.table for easy reading
-/*
-{
-	burly_wood: "rgb(222, 184, 135)",
-	burly_wood_lucid: "rgba(222, 184, 135, 0.5)",
-	ice_cream: "rgb(250, 250, 250)",
-	jet_blue: "rgb(30, 85, 175)",
-	dark_navy_grey: "rgb(5, 10, 60)",
-	dark_navy_grey_lucid: "rgba(5, 10, 60, 0.5)",
-}
-*/
-```
-
-### renderColorSchemes
-
-Generates CSS color scheme media queries from a set of themes; goes hand-in-hand with [generateThemeVariables](#generatethemevariables)
-
-**Parameters**:
-
-- **themes**: map of CSS colour schemes (themes).
-
-```js
-import { renderColorSchemes } from 'p90/util'
-
-const themes = {
-	// P90 doesn't care what the theme names are but browsers do!
-	light: {
-		base: [250, 250, 250],
-		text: [5, 10, 60],
-	},
-	dark: {
-		base: [5, 10, 35],
-		text: [231, 245, 255],
-	},
-}
-
-const colorSchemes = renderColorSchemes(themes)
-console.log(colorSchemes)
-/*
-`@media (prefers-color-scheme: light) {
-	:global(:root) {
-		--theme-base: rgb(250, 250, 250);
-		--theme-text: rgb(5, 10, 60);
-	}
-}
-
-@media (prefers-color-scheme: dark) {
-	:global(:root) {
-		--theme-base: rgb(5, 10, 35);
-		--theme-text: rgb(231, 245, 255);
-	}
-}`
-*/
-```
-
-### generateThemeVariables
-
-Generates a **set** of CSS variables from a set of themes; goes hand-in-hand with [renderColorSchemes](#rendercolorschemes).
-
-**Parameters**:
-
-- **themes**: map of CSS colour schemes (themes).
-
-```js
-import { generateThemeVariables } from 'p90/util'
-
-const themes = {
-	// P90 doesn't care what the theme names are but browsers do!
-	light: {
-		base: [250, 250, 250],
-		text: [5, 10, 60],
-	},
-	dark: {
-		base: [5, 10, 35],
-		text: [231, 245, 255],
-	},
-}
-
-const themeVariables = generateThemeVariables(themes)
-console.log(themeVariables)
-/*
-{
-	base: "var(--theme-base)",
-	text: "var(--theme-text)",
-}
-*/
-```
-
-## Algorithm
-
-**This section is for those few who care about how P90 works underneath or wish to plunder its code to build their own parser.**
-
-The [proccessor](./src/processor/processor.js) file is where everthing comes together and is the best place to start exploring.
-
-We use a token data structure to keep all information about each substitution in one place. See [lexical analysis (Wikipedia)](https://en.wikipedia.org/wiki/Lexical_analysis) for a general overview to scanning. Each major step in the process clones the tokens and then adds new information.
-
-### 1. Scan all tokens via [token-scanner.js](./src/processor/token-scanner.js)
-
-[token-scanner.js](./src/processor/token-scanner.js) makes use of [string-reader.js](./src/processor/string-reader.js) which handles the reading and matching of symbols as well as mapping between symbol and codepoint indexes. It isloates the handling of surrogate pair UTF-16 codepoints.
-
-```js
-token_after_scanning = {
-	escape: false, // True only when escaping
-	start: 9, // Code point index
-	end: 31, // Code point index
-	prefix: '$',
-	raw: '$numbers.add(1, 2, 3);',
-	suffix: ';', // One of ['', ';', ':']
-	path: ['numbers', 'add'],
-	args: ['1', '2', '3'],
-}
-```
-
-Escape tokens are flagged as they need no value map lookup:
-
-```js
-escape_token = {
-	escape: true,
-	start: 10,
-	end: 12,
-	prefix: '$',
-	raw: '$$',
-	suffix: '',
-	path: ['$'],
-	args: [],
-}
-```
-
-### 2. Look up the initial value (referred to as `prop`) in the users value map via [lookup.js](./src/processor/lookup.js)
-
-`prop` does not hold the final value used for substitution. They will be resolved in the next step. For most types there is no change but functions need to be invoked, objects transformed, etc.
-
-```js
-token_after_lookup = {
-	escape: false,
-	start: 9,
-	end: 31,
-	prefix: '$',
-	raw: '$numbers.add(1, 2, 3);',
-	suffix: ';',
-	path: ['numbers', 'add'],
-	args: ['1', '2', '3'],
-	type: 'function', // From 'typeof' with additional custom type 'array'
-	prop: (...numbers) => {
-		let result = 0
-		for (const n of numbers) {
-			result += parseFloat(n)
-		}
-		return result
-	},
-}
-```
-
-```js
-import { identifyType } from './src/processor/lookup.js'
-
-identifyType(undefined) // 'undefined'
-identifyType(null) // 'null'
-identifyType(0) // 'number'
-identifyType(12345678987654321) // 'bigint'
-identifyType('') // 'string'
-identifyType(true) // 'boolean'
-identifyType([]) // 'array'
-identifyType({}) // 'object'
-identifyType(() => '') // 'function'
-```
-
-### 3. Resolve the property to a value via [resolve.js](./src/processor/resolver.js)
-
-The resultant `value` should be usable for the CSS string substitution without need for further modification. The `type` field is used to determine how this is done. The suffix will be appended, except where the type is _"null"_.
-
-```js
-token_after_resolve = {
-	escape: false,
-	start: 9,
-	end: 35,
-	prefix: '$',
-	raw: `$numbers.add(1, '2', "3");`,
-	suffix: ';',
-	path: ['numbers', 'add'],
-	args: ['1', `2`, `3`],
-	type: 'function',
-	prop: (...numbers) => {
-		let result = 0
-		for (const n of numbers) {
-			result += parseFloat(n)
-		}
-		return result
-	},
-	value: '6;', // Notice the suffix has been appended
-
-	// True if a function returned a null which invoked a recursive resolution.
-	recursed?: false
-}
 ```
