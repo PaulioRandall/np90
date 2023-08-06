@@ -1,7 +1,7 @@
 {
 	"author": "Paul Williams",
 	"name": "np90",
-	"description": "P90 for Node.",
+	"description": "P90 with Node file processing and out of the box Svelte preprocessing support.",
 	"keywords": [
 		"css",
 		"minimalist",
@@ -10,7 +10,7 @@
 		"node",
 		"svelte"
 	],
-	"version": "0.23.1",
+	"version": "0.24.0",
 	"exports": {
 		".": "./src/index.js",
 		"./svelte": "./src/svelte.js",
@@ -27,14 +27,14 @@
 	},
 	"scripts": {
 		"fmt": "npx prettier --loglevel warn --write --plugin-search-dir=. .",
-		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --silent",
-		"debug": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --silent --runInBand",
+		"debug": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
 		"commit": "npm run fmt && npm run test && cat ./scripts/youre-ready-to-integrate.txt"
 	},
 	"devDependencies": {
 		"jest": "29.6.2"
 	},
 	"dependencies": {
-		"p90": "0.23.0"
+		"p90": "0.24.0"
 	}
 }

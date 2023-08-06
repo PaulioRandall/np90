@@ -1,2 +1,4 @@
 .DS_Store
 node_modules
+**/testdata/**/*.css
+!**/testdata/**/other.css

@@ -1,27 +1,32 @@
 import p90 from 'p90'
-import { fileProcessor } from '../files/files.js'
+import { stdout, stderr } from '../writers/writers.js'
+import { processFileTree } from '../files/files.js'
 
-const TTY_RED = '\x1b[31m'
-const TTY_YELLOW = '\x1b[33m'
-const TTY_RESET = '\x1b[0m'
+let processed = false
 
 export const defaultMimeTypes = ['p90', 'text/p90']
 
 export const sveltePreprocessor = (valueMaps, options = {}) => {
 	options = {
-		stdout: (msg) => process.stdout.write(`\n${TTY_YELLOW}${msg}${TTY_RESET}`),
-		stderr: (msg) => process.stderr.write(`\n${TTY_RED}${msg}${TTY_RESET}`),
+		globalDir: null,
+		stdout,
+		stderr,
 		mimeTypes: defaultMimeTypes,
 		...options,
 	}
 
-	fileProcessor(valueMaps, options)
 	return newSvelteProcessor(valueMaps, options)
 }
 
 const newSvelteProcessor = (valueMaps, options) => {
 	return {
+		name: 'NP90: P90 style preprocessor',
 		style: async ({ content, markup, attributes, filename }) => {
+			if (!processed && options.globalDir !== null) {
+				processed = true
+				await processFileTree(options.globalDir, valueMaps, options)
+			}
+
 			if (!options.mimeTypes.includes(attributes.lang)) {
 				return {
 					code: content,
