@@ -1,48 +1,37 @@
 # NP90
 
-**NP90** builds upon [P90](https://github.com/PaulioRandall/p90) for Node projects. It adds support for
+I just needed a bit of sugar upon my CSS.
+
+**NP90** builds upon [P90](https://github.com/PaulioRandall/p90) for Node projects. It adds support for:
 
 - \[**TODO**\] Processing `.p90` files into `.css` files.
 - Svelte preprocessing.
 
-**P90** is a minimalist CSS processor. Let plain JavaScript handle preprocessing logic, not a CSS mutant.
+A minimalist value replacement processor for CSS. Let plain JavaScript handle preprocessing logic, not a CSS mutant.
 
-I just needed a bit of sugar upon my CSS. It's straight up optimised for my tastes. The design trade-offs lean towards simplicity, readability, and flexibility more than writability. Complexity of configuration is almost entirely in the user's court.
+Honestly, this tool is straight up optimised for my tastes. The design trade-offs lean towards simplicity, readability, and flexibility more than writability. Complexity of mapping values is almost entirely in the user's court.
 
-**P90** scans CSS for **P90** tokens which are substituted with user defined values. It's just an enhanced `string.replace`.
+**P90** scans CSS for **P90** tokens which are substituted with user defined values. It's really just an enhanced `string.replace`.
 
 ## Import for Svelte
 
 ```json
 {
 	"devDependencies": {
-		"np90": "v0.22.0"
+		"np90": "v0.23.0"
 	}
 }
 ```
 
 ### p90-styles.js
 
-Rename, move, and reorganise as you see fit.
-
-There aren't really any conventions because the limitations of the design are good enough. Use kebab-case or camelCase if you don't like snake_case.
-
-Organise as you please. Both nested and flat structures have their vices aand virtues. **P90** variable names and user values can be whatever you like providing they meet the following criteria:
-
-- Variable in CSS are prefixed with `$`.
-- Double `$$` escapes, e.g. `$$$$` resolves to `$$`
-- Objects and undefined values throw an error.
-- Null values resolve to an empty string, trailing colons and semi-colons are removed.
-- Function arguments are always strings. It's your responsibility to parse them.
-- Returning a function from a function will result in an error.
-- Promises are awaited and resolved to values, but not recursively!
-- A single trailing colon, semi-colon, or whitespace character is preserved, except where the replacement value is _null_.
+Rename, move, and reorganise as you see fit. See [P90](https://github.com/PaulioRandall/p90) for the value mapping rules.
 
 > I've made so many changes to this example that it probably contains a few errors. The rewrite is in my TODO list so will probably never get done.
 
 ```js
 // ./src/p90-styles.js
-import { rgbsToColors, generateThemeVars, renderColorSchemes } from 'np90/util'
+import { rgbsToColors, themeVariables, colorSchemes } from 'np90/util'
 
 const rgbs = {
 	burly_wood: [222, 184, 135],
@@ -73,8 +62,8 @@ export default {
 	rgb: rgbs,
 	color: colors,
 
-	color_schemes: renderColorSchemes(themes),
-	theme: generateThemeVariables(themes),
+	color_schemes: colorSchemes(themes),
+	theme: themeVariables(themes),
 
 	// The function is called for each instance.
 	// There is no caching unless you implement it.
