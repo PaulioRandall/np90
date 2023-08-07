@@ -4,7 +4,7 @@ I just needed a bit of sugar upon my CSS.
 
 **NP90** builds upon [P90](https://github.com/PaulioRandall/p90) for Node projects. It adds support for:
 
-- \[**TODO**\] Processing `.p90` files into `.css` files.
+- Processing `.p90` files into `.css` files.
 - Svelte preprocessing.
 
 A minimalist value replacement processor for CSS. Let plain JavaScript handle preprocessing logic, not a CSS mutant.

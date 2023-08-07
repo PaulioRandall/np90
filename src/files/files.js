@@ -4,7 +4,9 @@ import p90 from 'p90'
 
 export const processFileTree = async (file, valueMaps, options) => {
 	const files = await listFiles(file)
+
 	for (const inFile of filterP90(files)) {
+		const outFile = replaceExt(inFile, 'css')
 		processFile(inFile, valueMaps, options)
 	}
 }
@@ -51,9 +53,14 @@ const processFile = async (inFile, valueMaps, options) => {
 	}
 
 	css = await p90(css, valueMaps, { ...options, filename: inFile })
+	css = css.trim()
 
-	const outFile = replaceExt(inFile, 'css')
-	writeFile(outFile, options.stderr, css)
+	if (options.amalgamate) {
+		appendFile(options.amalgamate, options.stderr, css + '\n\n')
+	} else {
+		const outFile = replaceExt(inFile, 'css')
+		writeFile(outFile, options.stderr, css + '\n')
+	}
 }
 
 const readFile = (f, stderr) => {
@@ -74,6 +81,14 @@ const replaceExt = (f, newExt) => {
 const writeFile = (f, stderr, content) => {
 	try {
 		fs.writeFileSync(f, content, 'utf-8')
+	} catch (e) {
+		stderr(e)
+	}
+}
+
+const appendFile = (f, stderr, content) => {
+	try {
+		fs.appendFileSync(f, content, 'utf-8')
 	} catch (e) {
 		stderr(e)
 	}
