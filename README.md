@@ -18,7 +18,7 @@ Honestly, this tool is straight up optimised for my tastes. The design trade-off
 ```json
 {
 	"devDependencies": {
-		"np90": "v0.24.0"
+		"np90": "v0.25.0"
 	}
 }
 ```
