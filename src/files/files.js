@@ -5,9 +5,13 @@ import p90 from 'p90'
 export const processFileTree = async (file, valueMaps, options) => {
 	const files = await listFiles(file)
 
+	if (options.amalgamate) {
+		await fs.rmSync(options.amalgamate, { force: true })
+	}
+
 	for (const inFile of filterP90(files)) {
 		const outFile = replaceExt(inFile, 'css')
-		processFile(inFile, valueMaps, options)
+		await processFile(inFile, valueMaps, options)
 	}
 }
 
