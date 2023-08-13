@@ -1,7 +1,7 @@
 {
 	"author": "Paul Williams",
 	"name": "np90",
-	"description": "P90 with Node file processing and out of the box Svelte preprocessing support.",
+	"description": "A minimalist search and replace tool for preprocessing CSS files.",
 	"keywords": [
 		"css",
 		"minimalist",
@@ -12,9 +12,10 @@
 	],
 	"version": "0.25.2",
 	"exports": {
-		".": "./src/index.js",
-		"./svelte": "./src/svelte.js",
-		"./util": "./src/util.js"
+		"./files": "./src/files/index.js",
+		"./p90": "./src/p90/index.js",
+		"./p90/css": "./src/p90/css/index.js",
+		"./svelte": "./src/svelte/index.js"
 	},
 	"type": "module",
 	"license": "MIT",
