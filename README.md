@@ -1,37 +1,23 @@
-# NP90
+# P69
 
-I just needed a bit of sugar upon my CSS.
+**P69** builds upon [P90](https://github.com/PaulioRandall/p90) to provide CSS preprocessing for Node projects. It adds support for:
 
-**NP90** builds upon [P90](https://github.com/PaulioRandall/p90) for Node projects. It adds support for:
-
-- Processing `.p90` files into `.css` files.
+- Processing `.p69` files into `.css` files.
 - Svelte preprocessing.
 
-A minimalist value replacement processor for CSS. Let plain JavaScript handle preprocessing logic, not a CSS mutant.
+Honestly, this tool is straight up optimised for me and my tastes. The design trade-offs lean towards simplicity, readability, and flexibility more than writability. Complexity of mapping values is almost entirely in the user's court.
 
-Honestly, this tool is straight up optimised for my tastes. The design trade-offs lean towards simplicity, readability, and flexibility more than writability. Complexity of mapping values is almost entirely in the user's court.
+**P90** scans CSS for **P90** tokens which are substituted with user defined values. It's really just an enhanced GREP using `string.replace`.
 
-**P90** scans CSS for **P90** tokens which are substituted with user defined values. It's really just an enhanced `string.replace`.
+### styles.js
 
-## Import for Svelte
-
-```json
-{
-	"devDependencies": {
-		"np90": "v0.25.1"
-	}
-}
-```
-
-### p90-styles.js
-
-Rename, move, and reorganise as you see fit. See [P90](https://github.com/PaulioRandall/p90) for the value mapping rules.
+Rename, move, and reorganise as you see fit. See [P90](https://github.com/PaulioRandall/p90) for value mapping rules.
 
 > I've made so many changes to this example that it probably contains a few errors. The rewrite is in my TODO list so will probably never get done.
 
 ```js
-// ./src/p90-styles.js
-import { rgbsToColors, themeVariables, colorSchemes } from 'np90/util'
+// ./src/styles.js
+import { rgbsToColors, themeVariables, colorSchemes } from 'p69/p90/css'
 
 const rgbs = {
 	burly_wood: [222, 184, 135],
@@ -105,37 +91,39 @@ export default {
 
 ### svelte.config.js
 
-Add **np90** to the _preprocess_ array in your _svelte.config.js_. Import and pass your styles to it.
+Add **p69** to the _preprocess_ array in your _svelte.config.js_. Import and pass your styles to it.
 
 ```js
 // svelte.config.js
-import np90 from 'np90/svelte'
-import styles from './src/p90-styles.js'
+import p69 from 'p69/svelte'
+import styles from './src/styles.js'
 
 export default {
   ...,
-  preprocess: [np90(styles)],
+  preprocess: [p69(styles)],
   ...,
 }
 ```
 
+**Options:**
+
 ```js
 // svelte.config.js
-import np90 from 'np90/svelte'
-import styles from './src/p90-styles.js'
+import p69 from 'p69/svelte'
+import styles from './src/styles.js'
 
-// Config and options with their defaults.
-const config = {
-	stdout: console.log,
-	stderr: console.error,
+// Options with their defaults.
+const options = {
 
-	// If true, errors will be thrown immediately ending the processing.
-	// Default is off beccause Svelte and various CSS checkers will usually tell
-	// you where the errors are. They're better at it too.
-	throwOnError: false,
+	// root directory containing .p69 files that need to be converted to CSS.
+	// If null then .p69 file processing is skipped.
+	root: null, // E.g. ./src
 
-	// Prints file name and token info when an error is encountered.
-	printErrors: true,
+	// amalgamate file path. By default .p69 files are compiled into CSS and
+	// placed in the same directory with a .css extension. If a file path is
+	// provided as the amalgamate option then all .p69 files will be merged and
+	// saved as the provided file.
+	amalgamate: null, // E.g. ./src/styles.css
 
 	// List of accepted lang attibute values.
 	// import { defaultMimeTypes } from 'p90'
@@ -144,11 +132,27 @@ const config = {
 		'text/css',
 		'text/p90',
 	],
+
+	// The following are P90 options.
+
+	// Logger for informational messages.
+	stdout: console.log,
+
+	// Logger for error messages.
+	stderr: console.error,
+
+	// If true, errors will be thrown immediately ending the processing.
+	// Default is false because I use Svelte and it will tell me where the
+	// errors are.
+	throwOnError: false,
+
+	// Prints file name and token info when an error is encountered.
+	printErrors: true,
 }
 
 export default {
   ...,
-  preprocess: [np90(styles, config)],
+  preprocess: [p69(styles, options)],
   ...,
 }
 ```
@@ -178,19 +182,19 @@ export default {
 	<h1>A Bohemian quest for simplicity</h1>
 
 	<p>
-		It took me about an hour to learn and write my first Svelte CSS
-		pre-processor after deciding existing tooling was too obese for my needs.
-		Refactoring reduced my solution to about 20 lines of code. It simply
-		substituted named values like `$green` with whatever I configured `rgb(10,
-		240, 10)`. I moved it to it's own repository, enhanced it a little, and
-		added a handful of utility functions for common use cases.
+		It took me about an hour to learn and write my first Svelte CSS preprocessor
+		after deciding existing tooling was too obese for my needs. Refactoring
+		reduced my solution to about 20 lines of code. It simply substituted named
+		values like `$green` with whatever I configured `rgb(10, 240, 10)`. I moved
+		it to it's own repository, enhanced it a little, and added a handful of
+		utility functions for common use cases.
 	</p>
 
 	<p>
 		It was so simple that I started wondering why we drag around a plethora of
 		CSS like languages with needless diabolical syntax. Because it's easier to
 		use a cumbersome tool you know than invest effort in adapting to the new
-		environment.
+		environment. Also, as Dijkstra repeatedly notes, complexity sells better.
 	</p>
 
 	<p>
@@ -218,3 +222,136 @@ export default {
 	}
 </style>
 ```
+
+## CSS Utility Functions
+
+A utility functions to use in your style files. Entirely optional; write your own if you want.
+
+```js
+import { themeVariables, colorSchemes, rgbsToColors, spacings } from 'p69/css'
+```
+
+| Name                              | Does what?                                                                                                                                            |
+| :-------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [rgbsToColors](#rgbstocolors)     | Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.                                                                                     |
+| [colorSchemes](#colorschemes)     | Generates CSS color scheme media queries from a set of themes with CSS variables as values; goes hand-in-hand with [themeVariables](#themevariables). |
+| [themeVariables](#themevariables) | Generates a **set** of CSS variables from a set of themes; goes hand-in-hand with [colorSchemes](#colorschemes).                                      |
+| [spacings](#spacings)             | Generates a set of spacing functions.                                                                                                                 |
+
+### rgbsToColors
+
+Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.
+
+**Parameters**:
+
+- **rgbs**: map of RGB and RGBA arrays.
+
+```js
+import { rgbsToColors } from 'p90/css'
+
+const colors = rgbsToColors({
+	burly_wood: [222, 184, 135],
+	burly_wood_lucid: [222, 184, 135, 0.5],
+	ice_cream: [250, 250, 250],
+	jet_blue: [30, 85, 175],
+	dark_navy_grey: [5, 10, 60],
+	dark_navy_grey_lucid: [5, 10, 60, 0.5],
+})
+
+console.log(colors) // Use console.table for easy reading
+/*
+{
+	burly_wood: "rgb(222, 184, 135)",
+	burly_wood_lucid: "rgba(222, 184, 135, 0.5)",
+	ice_cream: "rgb(250, 250, 250)",
+	jet_blue: "rgb(30, 85, 175)",
+	dark_navy_grey: "rgb(5, 10, 60)",
+	dark_navy_grey_lucid: "rgba(5, 10, 60, 0.5)",
+}
+*/
+```
+
+### colorSchemes
+
+Generates CSS color scheme media queries from a set of themes; goes hand-in-hand with [themeVariables](#themeVariables)
+
+**Parameters**:
+
+- **themes**: map of CSS colour schemes (themes).
+
+```js
+import { colorSchemes } from 'p90/css'
+
+const themes = {
+	// P90 doesn't care what the theme names are but browsers do!
+	light: {
+		base: [250, 250, 250],
+		text: [5, 10, 60],
+	},
+	dark: {
+		base: [5, 10, 35],
+		text: [231, 245, 255],
+	},
+}
+
+const scheme = colorSchemes(themes)
+console.log(scheme)
+/*
+`@media (prefers-color-scheme: light) {
+	:global(:root) {
+		--theme-base: rgb(250, 250, 250);
+		--theme-text: rgb(5, 10, 60);
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	:global(:root) {
+		--theme-base: rgb(5, 10, 35);
+		--theme-text: rgb(231, 245, 255);
+	}
+}`
+*/
+```
+
+### themeVariables
+
+Generates a **set** of CSS variables from a set of themes; goes hand-in-hand with [colorSchemes](#colorschemes).
+
+**Parameters**:
+
+- **themes**: map of CSS colour schemes (themes).
+
+```js
+import { themeVariables } from 'p90/css'
+
+const themes = {
+	// P90 doesn't care what the theme names are but browsers do!
+	light: {
+		base: [250, 250, 250],
+		text: [5, 10, 60],
+	},
+	dark: {
+		base: [5, 10, 35],
+		text: [231, 245, 255],
+		meh: [0, 0, 0],
+	},
+}
+
+const theme = themeVariables(themes)
+console.log(theme)
+/*
+{
+	base: "var(--theme-base)",
+	text: "var(--theme-text)",
+	meh: "var(--theme-meh)",
+}
+*/
+```
+
+### spacings
+
+> TODO.
+
+## Markdown Processor
+
+> Planned.

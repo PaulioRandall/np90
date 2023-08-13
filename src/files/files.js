@@ -46,7 +46,7 @@ const filterP90 = (files) => {
 
 	for (const f of files) {
 		const ext = path.extname(f)
-		if (ext === '.p90') {
+		if (ext === '.p69') {
 			results.push(f)
 		}
 	}

@@ -10,7 +10,7 @@ describe('svelte', () => {
 
 		const given = {
 			content: '$color',
-			attributes: { lang: 'p90' },
+			attributes: { lang: 'p69' },
 			filename: 'Test.svelte',
 		}
 

@@ -4,7 +4,7 @@ import { processFileTree } from '../files/files.js'
 
 let processed = false
 
-export const defaultMimeTypes = ['p90', 'text/p90']
+export const defaultMimeTypes = ['p69', 'text/p69']
 
 export const sveltePreprocessor = (valueMaps, userOptions = {}) => {
 	const options = getOptions(userOptions)
@@ -16,7 +16,7 @@ const getOptions = (userOptions) => {
 		stdout,
 		stderr,
 		root: null,
-		amalgamate: false,
+		amalgamate: null,
 		mimeTypes: defaultMimeTypes,
 		...userOptions,
 	}
@@ -24,7 +24,7 @@ const getOptions = (userOptions) => {
 
 const newSvelteProcessor = (valueMaps, options) => {
 	return {
-		name: 'NP90: P90 CSS preprocessor',
+		name: 'P69: CSS preprocessor using P90',
 		style: async ({ content, markup, attributes, filename }) => {
 			if (!processed && options.root !== null) {
 				processed = true
