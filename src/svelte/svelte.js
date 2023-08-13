@@ -6,25 +6,29 @@ let processed = false
 
 export const defaultMimeTypes = ['p90', 'text/p90']
 
-export const sveltePreprocessor = (valueMaps, options = {}) => {
-	options = {
-		globalDir: null,
+export const sveltePreprocessor = (valueMaps, userOptions = {}) => {
+	const options = getOptions(userOptions)
+	return newSvelteProcessor(valueMaps, options)
+}
+
+const getOptions = (userOptions) => {
+	return {
 		stdout,
 		stderr,
+		root: null,
+		amalgamate: false,
 		mimeTypes: defaultMimeTypes,
-		...options,
+		...userOptions,
 	}
-
-	return newSvelteProcessor(valueMaps, options)
 }
 
 const newSvelteProcessor = (valueMaps, options) => {
 	return {
-		name: 'NP90: P90 style preprocessor',
+		name: 'NP90: P90 CSS preprocessor',
 		style: async ({ content, markup, attributes, filename }) => {
-			if (!processed && options.globalDir !== null) {
+			if (!processed && options.root !== null) {
 				processed = true
-				await processFileTree(options.globalDir, valueMaps, options)
+				await processFileTree(options.root, valueMaps, options)
 			}
 
 			if (!options.mimeTypes.includes(attributes.lang)) {
@@ -33,13 +37,13 @@ const newSvelteProcessor = (valueMaps, options) => {
 				}
 			}
 
-			const config = {
+			const fileOptions = {
 				...options,
-				filename,
+				errorNote: filename,
 			}
 
 			return {
-				code: await p90(content, valueMaps, config),
+				code: await p90(valueMaps, content, fileOptions),
 			}
 		},
 	}

@@ -5,7 +5,7 @@ import p90 from 'p90'
 export const processFileTree = async (file, valueMaps, options) => {
 	const files = await listFiles(file)
 
-	if (options.amalgamate) {
+	if (requiresAmalgamation(options)) {
 		await fs.rmSync(options.amalgamate, { force: true })
 	}
 
@@ -13,6 +13,10 @@ export const processFileTree = async (file, valueMaps, options) => {
 		const outFile = replaceExt(inFile, 'css')
 		await processFile(inFile, valueMaps, options)
 	}
+}
+
+const requiresAmalgamation = (options) => {
+	return options.root !== null && options.amalgamate
 }
 
 const listFiles = async (f) => {
@@ -56,10 +60,10 @@ const processFile = async (inFile, valueMaps, options) => {
 		return
 	}
 
-	css = await p90(css, valueMaps, { ...options, filename: inFile })
+	css = p90(valueMaps, css, { ...options, filename: inFile })
 	css = css.trim()
 
-	if (options.amalgamate) {
+	if (requiresAmalgamation(options)) {
 		appendFile(options.amalgamate, options.stderr, css + '\n\n')
 	} else {
 		const outFile = replaceExt(inFile, 'css')
