@@ -125,6 +125,10 @@ const options = {
 	// saved as the provided file.
 	amalgamate: null, // E.g. ./src/styles.css
 
+	// watch determines if P69 should reprocess everytime a P69 file changes
+	// during development. Must be set to true and not just truthy!
+	watch: process?.env?.NODE_ENV === 'development',
+
 	// List of accepted lang attibute values.
 	// import { defaultMimeTypes } from 'p90'
 	mimeTypes: [
