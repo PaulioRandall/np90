@@ -117,13 +117,14 @@ const options = {
 
 	// root directory containing .p69 files that need to be converted to CSS.
 	// If null then .p69 file processing is skipped.
-	root: null, // E.g. ./src
+	root: './src',
 
-	// amalgamate file path. By default .p69 files are compiled into CSS and
-	// placed in the same directory with a .css extension. If a file path is
-	// provided as the amalgamate option then all .p69 files will be merged and
-	// saved as the provided file.
-	amalgamate: null, // E.g. ./src/styles.css
+	// amalgamate file path. The file path to merge all processed .p69 files
+	// into. If null, a .css file will be created for each .p69 file in
+	// the same directory. There are virtues and vices to each approach but
+	// amalgamation works better for smaller projects while big projects
+	// benefit from more rigorous separation of concerns.
+	amalgamate: './src/routes/styles.css',
 
 	// watch determines if P69 should reprocess everytime a P69 file changes
 	// during development. Must be set to true and not just truthy!

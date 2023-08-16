@@ -6,7 +6,10 @@ describe('svelte', () => {
 			color: 'blue',
 		}
 
-		const processor = sveltePreprocessor(valueMap)
+		const processor = sveltePreprocessor(valueMap, {
+			root: null,
+			amalgamate: null,
+		})
 
 		const given = {
 			content: '$color',

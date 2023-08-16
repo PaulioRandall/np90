@@ -16,7 +16,7 @@ export const processFileTree = async (file, valueMaps, options) => {
 }
 
 const requiresAmalgamation = (options) => {
-	return options.root !== null && options.amalgamate
+	return options.root && options.amalgamate
 }
 
 const listFiles = async (f) => {

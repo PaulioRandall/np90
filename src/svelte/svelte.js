@@ -15,8 +15,8 @@ const getOptions = (userOptions) => {
 	return {
 		stdout,
 		stderr,
-		root: null,
-		amalgamate: null,
+		root: './src',
+		amalgamate: './src/routes/styles.css',
 		watch: process?.env?.NODE_ENV === 'development',
 		mimeTypes: defaultMimeTypes,
 		...userOptions,
@@ -29,7 +29,7 @@ const newSvelteProcessor = (valueMaps, options) => {
 	return {
 		name: 'P69: CSS preprocessor using P90',
 		style: async ({ content, markup, attributes, filename }) => {
-			if (!once && options.root !== null) {
+			if (!once && options.root) {
 				once = true
 				await p69(valueMaps, options)
 			}

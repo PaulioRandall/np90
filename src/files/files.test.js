@@ -2,7 +2,9 @@ import fs from 'fs'
 import { stdout, stderr } from '../writers/writers.js'
 import { processFileTree } from '../files/files.js'
 
+const testdataDir = './src/files/testdata'
 const amalgamate = './src/files/testdata/global.css'
+
 const testdata = [
 	{
 		file: './src/files/testdata/alpha/alpha.css',
@@ -68,7 +70,10 @@ describe('files', () => {
 			pad: '2rem',
 		}
 
-		await processFileTree('./src/files/testdata', valueMap, options)
+		await processFileTree(testdataDir, valueMap, {
+			root: null,
+			amalgamate: null,
+		})
 		await sleep(1000)
 
 		for (const f of testdata) {
@@ -87,9 +92,10 @@ describe('files', () => {
 			pad: '2rem',
 		}
 
-		await processFileTree('./src/files/testdata', valueMap, {
+		await processFileTree(testdataDir, valueMap, {
 			...options,
-			amalgamate,
+			root: testdataDir,
+			amalgamate: amalgamate,
 		})
 		await sleep(1000)
 
