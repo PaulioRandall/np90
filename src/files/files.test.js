@@ -20,11 +20,6 @@ const testdata = [
 	},
 ]
 
-const options = {
-	stdout,
-	stderr,
-}
-
 const resetTestdata = async () => {
 	await fs.rmSync(amalgamate, { force: true })
 	for (const f of testdata) {
@@ -71,6 +66,8 @@ describe('files', () => {
 		}
 
 		await processFileTree(testdataDir, valueMap, {
+			stdout,
+			stderr,
 			root: null,
 			amalgamate: null,
 		})
@@ -93,7 +90,8 @@ describe('files', () => {
 		}
 
 		await processFileTree(testdataDir, valueMap, {
-			...options,
+			stdout,
+			stderr,
 			root: testdataDir,
 			amalgamate: amalgamate,
 		})
