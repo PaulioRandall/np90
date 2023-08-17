@@ -1,90 +1,65 @@
 # P69
 
-**P69** builds upon [P90](https://github.com/PaulioRandall/p90) to provide CSS preprocessing for Node projects. It adds support for:
+**P69** builds upon [P90](https://github.com/PaulioRandall/p90) to provide CSS preprocessing for Node projects.
 
-- Processing `.p69` files into `.css` files.
+**P90** scans CSS for **P90** tokens which are substituted with user defined values. It's really just an enhanced GREP using `string.replace`. **P69** adds value by introducing:
+
 - Svelte preprocessing.
+- Support for `.p69` to `.css` file processing.
 
-Honestly, this tool is straight up optimised for me and my tastes. The design trade-offs lean towards simplicity, readability, and flexibility more than writability. Complexity of mapping values is almost entirely in the user's court.
-
-**P90** scans CSS for **P90** tokens which are substituted with user defined values. It's really just an enhanced GREP using `string.replace`.
+This tool is straight up optimised for me and my tastes. The design trade-offs lean towards simplicity and flexibility more than writability.
 
 ### styles.js
 
 Rename, move, and reorganise as you see fit. See [P90](https://github.com/PaulioRandall/p90) for value mapping rules.
 
-> I've made so many changes to this example that it probably contains a few errors. The rewrite is in my TODO list so will probably never get done.
-
 ```js
-// ./src/styles.js
-import { rgbsToColors, themeVariables, colorSchemes } from 'p69/p90/css'
+// src/styles.js
 
-const rgbs = {
-	burly_wood: [222, 184, 135],
-	ice_cream: [250, 250, 250],
-	very_light_sky_blue: [231, 245, 255],
-	jet_blue: [30, 85, 175],
-	dark_navy_grey: [5, 10, 60],
-	very_dark_navy: [5, 10, 35],
-}
-
-const colors = rgbsToColors(rgbs)
-
-const themes = {
-	// P90 doesn't care what the theme names are but browsers do!
-	light: {
-		base: colors.ice_cream,
-		text: colors.dark_navy_grey,
-		strong: colors.jet_blue,
-	},
-	dark: {
-		base: colors.very_dark_navy,
-		text: colors.very_light_sky_blue,
-		strong: colors.burly_wood,
-	},
-}
-
-export default {
-	rgb: rgbs,
-	color: colors,
-
-	color_schemes: colorSchemes(themes),
-	theme: themeVariables(themes),
-
-	// The function is called for each instance.
-	// There is no caching unless you implement it.
-	colorWithAlpha: (color, alpha) => {
-		const rgb = rgbs[color]
-
-		// Function arguments are always strings.
-		// Parse them as you see fit.
-		const a = parseFloat(alpha)
-
-		const result = [...rgb]
-
-		if (rgb.length === 3) {
-			result.push(a)
-		} else {
-			result[3] = a
+// You can create any sort of utility functions you like.
+const newSpacingFunc = (sizePx, base = 16) => {
+	return (fmt = 'px') => {
+		switch (fmt) {
+			case 'px':
+				return sizePx + 'px'
+			case 'em':
+				return sizePx / base + 'em'
+			case 'rem':
+				return sizePx / base + 'rem'
+			default:
+				throw new Error(`Unknown spacing fmt '${fmt}'`)
 		}
+	}
+}
 
-		return result
-	},
-
-	font: {
+// You can configure this how you like.
+// There's no convention, just do what works for you.
+export default {
+	$: (n = 1) => '$'.repeat(n), // Used for escaping the prefix
+	text: {
 		family: {
-			sans_serif: ['sans-serif', 'Helvetica', 'Arial', 'Verdana'],
+			helvetica: ['Helvetica', 'Arial', 'Verdana'],
 		},
 		size: {
-			// Constructed using utopia.fyi... Could these be constructed in code?
+			// https://utopia.fyi/
 			md: 'clamp(1.06rem, calc(0.98rem + 0.39vw), 1.38rem)',
-			lg: 'clamp(1.25rem, calc(1.19rem + 0.31vw), 1.5rem)',
-			xl: 'clamp(1.5rem, calc(1.41rem + 0.47vw), 1.88rem)',
+			lg: 'clamp(1.95rem, calc(1.73rem + 0.95vw), 2.91rem)',
+			xl: 'clamp(2.59rem, calc(2.32rem + 1.34vw), 3.66rem)',
 		},
 	},
-
+	color: {
+		base: 'rgb(255, 255, 255)',
+		text: 'rgb(11, 19, 43)',
+		link: 'rgb(20, 20, 255)',
+		strong: 'Navy',
+	},
+	space: {
+		sm: newSpacingFunc(8),
+		md: newSpacingFunc(16),
+		lg: newSpacingFunc(32),
+	},
 	screen: {
-		larger_devices: `(min-width: 900px)`,
+		larger_devices: '(min-width: 1200px)',
 	},
 }
 ```
@@ -92,6 +67,8 @@ export default {
 ### svelte.config.js
 
 Add **p69** to the _preprocess_ array in your _svelte.config.js_. Import and pass your styles to it.
+
+**Quick start:**
 
 ```js
 // svelte.config.js
@@ -105,40 +82,46 @@ export default {
 }
 ```
 
-**Options:**
+**With options:**
 
 ```js
 // svelte.config.js
 import p69 from 'p69/svelte'
 import styles from './src/styles.js'
 
-// Options with their defaults.
+// Options showing defaults.
 const options = {
 
-	// root directory containing .p69 files that need to be converted to CSS.
-	// If null then .p69 file processing is skipped.
+	// root directory containing .p69 files that need
+	// to be converted to CSS. If null then .p69 file
+	// processing is skipped.
 	root: './src',
 
-	// amalgamate file path. The file path to merge all processed .p69 files
-	// into. If null, a .css file will be created for each .p69 file in
-	// the same directory. There are virtues and vices to each approach but
-	// amalgamation works better for smaller projects while big projects
-	// benefit from more rigorous separation of concerns.
+	// amalgamate file path. The file path to merge all
+	// processed .p69 files into. If null, a .css file will
+	// be created for each .p69 file in the same directory.
+	// There are virtues and vices to each approach but
+	// amalgamation works better for smaller projects while
+	// big projects benefit from more rigorous separation of
+	// concerns.
 	amalgamate: './src/routes/styles.css',
 
-	// watch determines if P69 should reprocess everytime a P69 file changes
-	// during development. Must be set to true and not just truthy!
+	// watch determines if P69 should reprocess everytime a
+	// P69 file changes during development. Must be set to
+	// true and not just truthy!
 	watch: process?.env?.NODE_ENV === 'development',
 
 	// List of accepted lang attibute values.
 	// import { defaultMimeTypes } from 'p90'
+	// Use [undefined, ...defaultMimeTypes] to
+	// allow style tags without a lang attribute.
 	mimeTypes: [
-		'', // Undefined, null, or empty lang attribute.
-		'text/css',
+		'p90',
 		'text/p90',
 	],
 
-	// The following are P90 options.
+	// Prefix character
+	prefix: '$',
 
 	// Logger for informational messages.
 	stdout: console.log,
@@ -146,13 +129,19 @@ const options = {
 	// Logger for error messages.
 	stderr: console.error,
 
-	// If true, errors will be thrown immediately ending the processing.
-	// Default is false because I use Svelte and it will tell me where the
-	// errors are.
+	// If true, errors will be thrown rather than ignored.
+	// This will immediately end processing. Default is
+	// false because I use Svelte and it's good at tell
+	// me where the errors are.
 	throwOnError: false,
 
-	// Prints file name and token info when an error is encountered.
+	// Print file name and token information when an error
+	// is encountered.
 	printErrors: true,
+
+	// A note when printing errors, usually a filename or
+	// some identifier that may aid you in debugging.
+	errorNote: '¯\\_(ツ)_/¯',
 }
 
 export default {
@@ -168,14 +157,30 @@ export default {
 <slot />
 
 <style>
-	/* prettier-ignore */
-	$color_schemes
-
 	:global(body) {
-		background: $theme.base;
-		color: $theme.text;
-		font-family: $font.family.sans_serif;
-		font-size: $font.size.md;
+		background: $color.base;
+	}
+
+	:global(p) {
+		font-family: $text.family.helvetica;
+		font-size: $text.size.md;
+		color: $color.text;
+		margin-top: $space.md(em);
+	}
+
+	:global(h1) {
+		font-size: $text.size.lg;
+		color: $color.strong;
+	}
+
+	@media $screen.larger_devices {
+		:global(h1) {
+			font-size: $font.size.xl;
+		}
+	}
+
+	:global(strong) {
+		color: $color.strong;
 	}
 </style>
 ```
@@ -183,23 +188,30 @@ export default {
 ### +page.svelte
 
 ```html
-<page>
+<main>
 	<h1>A Bohemian quest for simplicity</h1>
 
 	<p>
 		It took me about an hour to learn and write my first Svelte CSS preprocessor
-		after deciding existing tooling was too obese for my needs. Refactoring
+		after deciding existing tooling was just unnecessary verbose. Refactoring
 		reduced my solution to about 20 lines of code. It simply substituted named
-		values like `$green` with whatever I configured `rgb(10, 240, 10)`. I moved
-		it to it's own repository, enhanced it a little, and added a handful of
-		utility functions for common use cases.
+		values like `$green` with whatever I configured, e.g. `rgb(10, 240, 10)`.
+	</p>
+
+	<p>
+		I moved it to it's own repository (<b>P90</b>), enhanced it a little, and
+		added a handful of utility functions for common use cases. Then I moved the
+		CSS and Svelte specific stuff to <b>P69</b> so <b>P90</b> could be come a
+		generic search and replace package.
 	</p>
 
 	<p>
 		It was so simple that I started wondering why we drag around a plethora of
-		CSS like languages with needless diabolical syntax. Because it's easier to
-		use a cumbersome tool you know than invest effort in adapting to the new
-		environment. Also, as Dijkstra repeatedly notes, complexity sells better.
+		CSS like languages and frameworks with needless diabolical syntax nd
+		configuration. Because it's easier to use a cumbersome tool you know than
+		invest effort in adapting to the new environment. Simplicity is hard, and as
+		Dijkstra repeatedly notes
+		<q>complexity sells better</q>.
 	</p>
 
 	<p>
@@ -208,29 +220,12 @@ export default {
 		JavaScript is designed to do. You know, making use of languages we already
 		know and hate.
 	</p>
-</page>
-
-<style>
-	h1 {
-		color: $theme.strong;
-		font-size: $font.size.lg;
-
-		/* You don't have to put single or double quotes around arguments. */
-		/* But it helps */
-		background-color: $colorWithAlpha('burly_wood', 0.2);
-	}
-
-	@media $screen.larger_devices {
-		h1 {
-			font-size: $font.size.xl;
-		}
-	}
-</style>
+</main>
 ```
 
 ## CSS Utility Functions
 
-A utility functions to use in your style files. Entirely optional; write your own if you want.
+Optional utility functions to use in your style files. Perfectly acceptable to write your own if you don't like mine.
 
 ```js
 import { themeVariables, colorSchemes, rgbsToColors, spacings } from 'p69/css'
@@ -303,14 +298,14 @@ const scheme = colorSchemes(themes)
 console.log(scheme)
 /*
 `@media (prefers-color-scheme: light) {
-	:global(:root) {
+	:root {
 		--theme-base: rgb(250, 250, 250);
 		--theme-text: rgb(5, 10, 60);
 	}
 }
 
 @media (prefers-color-scheme: dark) {
-	:global(:root) {
+	:root {
 		--theme-base: rgb(5, 10, 35);
 		--theme-text: rgb(231, 245, 255);
 	}
@@ -355,8 +350,58 @@ console.log(theme)
 
 ### spacings
 
-> TODO.
+Generates a **set** of spacings functions with support for most size units.
 
-## Markdown Processor
+**Parameters**:
 
-> Planned.
+- **values**: map of names to pixel amounts.
+- **options**:
+  - **base**: Pixels per REM. This is **not** the users font size, just a way to adjust EM and REM if needed (default=16)
+  - **defaultUnit**: Default size unit when not passing any parameters when referenced within CSS (default='px')
+  - **custom**: Any custom key-value pairs to append to the resultant object (default={})
+
+Everything is in reference to 96 DPI. Supported size units:
+
+- px
+- em
+- rem
+- pt
+- pc
+- in
+- cm
+- mm
+
+```js
+import { spacings } from 'p90/css'
+
+const styles = {
+	width: spacings(
+		{
+			min: 320,
+			sm: 720,
+			md: 920,
+			lg: 1200,
+			xl: 1600,
+		},
+		{
+			defaultUnit: 'rem',
+			custom: {
+				max: '100%',
+			},
+		}
+	),
+}
+
+const css = `
+main {
+	max-width: $width.max; /* 100%  */
+	width: $width.sm;      /* 45rem */
+}
+
+@media (min-width: $width.md(px)) { /* 920px  */
+	main {
+		max-width: $width.xl(px); /* 1600px */
+	}
+}
+`
+```

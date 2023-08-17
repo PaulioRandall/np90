@@ -21,20 +21,20 @@ const pxToMm = (px) => round((px * 1) / PX_IN_MM, 1)
 const pxToPc = (px) => round((px * 1) / PX_IN_PC)
 
 export const spacings = (values, options = {}) => {
-	const { base = 16, defaultFmt = 'px', custom = {} } = options
+	const { base = 16, defaultUnit = 'px', custom = {} } = options
 	const spaces = {}
 
 	for (const name in values) {
 		const px = values[name]
 
-		spaces[name] = (fmt) => {
-			if (!fmt) {
-				fmt = defaultFmt
+		spaces[name] = (unit) => {
+			if (!unit) {
+				unit = defaultUnit
 			}
 
-			switch (fmt) {
+			switch (unit) {
 				case 'px':
-					return px + fmt
+					return px + unit
 				case 'em':
 					return pxToEm(px, base) + 'em'
 				case 'rem':
@@ -50,7 +50,7 @@ export const spacings = (values, options = {}) => {
 				case 'mm':
 					return pxToMm(px) + 'mm'
 				default:
-					throw new Error(`Spacing format not supported '${name}(${fmt})'`)
+					throw new Error(`Spacing format not supported '${name}(${unit})'`)
 			}
 		}
 	}
