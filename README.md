@@ -9,6 +9,8 @@
 
 This tool is straight up optimised for me and my tastes. The design trade-offs lean towards simplicity and flexibility more than writability.
 
+See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-minimalist-template) for an example in a runnable project.
+
 ### styles.js
 
 Rename, move, and reorganise as you see fit. See [P90](https://github.com/PaulioRandall/p90) for value mapping rules.
@@ -16,21 +18,7 @@ Rename, move, and reorganise as you see fit. See [P90](https://github.com/Paulio
 ```js
 // src/styles.js
 
-// You can create any sort of utility functions you like.
-const newSpacingFunc = (sizePx, base = 16) => {
-	return (fmt = 'px') => {
-		switch (fmt) {
-			case 'px':
-				return sizePx + 'px'
-			case 'em':
-				return sizePx / base + 'em'
-			case 'rem':
-				return sizePx / base + 'rem'
-			default:
-				throw new Error(`Unknown spacing fmt '${fmt}'`)
-		}
-	}
-}
+import { spacings } from 'p69/util'
 
 // You can configure this how you like.
 // There's no convention, just do what works for you.
@@ -53,11 +41,16 @@ export default {
 		link: 'rgb(20, 20, 255)',
 		strong: 'Navy',
 	},
-	space: {
-		sm: newSpacingFunc(8),
-		md: newSpacingFunc(16),
-		lg: newSpacingFunc(32),
-	},
+	space: spacings(
+		{
+			sm: 8,
+			md: 16,
+			lg: 32,
+		},
+		{
+			defaultUnit: 'rem',
+		}
+	),
 	screen: {
 		larger_devices: '(min-width: 1200px)',
 	},
@@ -228,7 +221,7 @@ export default {
 Optional utility functions to use in your style files. Perfectly acceptable to write your own if you don't like mine.
 
 ```js
-import { themeVariables, colorSchemes, rgbsToColors, spacings } from 'p69/css'
+import { themeVariables, colorSchemes, rgbsToColors, spacings } from 'p69/util'
 ```
 
 | Name                              | Does what?                                                                                                                                            |
@@ -247,7 +240,7 @@ Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.
 - **rgbs**: map of RGB and RGBA arrays.
 
 ```js
-import { rgbsToColors } from 'p90/css'
+import { rgbsToColors } from 'p90/util'
 
 const colors = rgbsToColors({
 	burly_wood: [222, 184, 135],
@@ -280,7 +273,7 @@ Generates CSS color scheme media queries from a set of themes; goes hand-in-hand
 - **themes**: map of CSS colour schemes (themes).
 
 ```js
-import { colorSchemes } from 'p90/css'
+import { colorSchemes } from 'p90/util'
 
 const themes = {
 	// P90 doesn't care what the theme names are but browsers do!
@@ -322,7 +315,7 @@ Generates a **set** of CSS variables from a set of themes; goes hand-in-hand wit
 - **themes**: map of CSS colour schemes (themes).
 
 ```js
-import { themeVariables } from 'p90/css'
+import { themeVariables } from 'p90/util'
 
 const themes = {
 	// P90 doesn't care what the theme names are but browsers do!
@@ -350,7 +343,7 @@ console.log(theme)
 
 ### spacings
 
-Generates a **set** of spacings functions with support for most size units.
+Generates a set of spacings functions with support for most size units.
 
 **Parameters**:
 
@@ -372,7 +365,7 @@ Everything is in reference to 96 DPI. Supported size units:
 - mm
 
 ```js
-import { spacings } from 'p90/css'
+import { spacings } from 'p69/util'
 
 const styles = {
 	width: spacings(
