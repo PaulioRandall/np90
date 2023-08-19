@@ -10,9 +10,7 @@ export const themeVariables = (themes) => {
 	return result
 }
 
-export const colorSchemes = (themes) => colorSchemeMediaQueries(themes)
-
-const colorSchemeMediaQueries = (themes) => {
+export const colorSchemes = (themes) => {
 	const result = []
 
 	for (const name in themes) {

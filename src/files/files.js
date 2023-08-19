@@ -62,7 +62,10 @@ const processFile = async (inFile, valueMaps, options) => {
 
 	css = p90(valueMaps, css, { ...options, filename: inFile })
 	css = css.trim()
+	writeCssToFile(inFile, css, options)
+}
 
+const writeCssToFile = (inFile, css, options) => {
 	if (requiresAmalgamation(options)) {
 		appendFile(options.amalgamate, options.stderr, css + '\n\n')
 	} else {

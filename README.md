@@ -2,10 +2,10 @@
 
 **P69** builds upon [P90](https://github.com/PaulioRandall/p90) to provide CSS preprocessing for Node projects.
 
-**P90** scans CSS for **P90** tokens which are substituted with user defined values. It's really just an enhanced GREP using `string.replace`. **P69** adds value by introducing:
+**P90** scans CSS for **P90** tokens which are substituted with user defined values. It's really just an enhanced `string.replace`. **P69** adds value by introducing:
 
 - Svelte preprocessing.
-- Support for `.p69` to `.css` file processing.
+- File processing: `.p69` to `.css`.
 
 This tool is straight up optimised for me and my tastes. The design trade-offs lean towards simplicity and flexibility more than writability.
 
