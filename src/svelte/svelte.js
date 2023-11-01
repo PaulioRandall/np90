@@ -1,7 +1,7 @@
 import p90 from '../p90'
 import chokidar from 'chokidar'
 import path from 'path'
-import { stdout, stderr } from '../writers/writers.js'
+import { stdout, stderr } from './writers.js'
 import { processFileTree } from '../files/files.js'
 
 export const defaultMimeTypes = [undefined, 'p69', 'text/p69']

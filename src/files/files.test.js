@@ -1,9 +1,9 @@
 import fs from 'fs'
-import { stdout, stderr } from '../writers/writers.js'
+import { stdout, stderr } from '../svelte/writers.js'
 import { processFileTree } from '../files/files.js'
 
 const testdataDir = './src/files/testdata'
-const amalgamate = './src/files/testdata/global.css'
+const output = './src/files/testdata/global.css'
 
 const testdata = [
 	{
@@ -21,7 +21,7 @@ const testdata = [
 ]
 
 const resetTestdata = async () => {
-	await fs.rmSync(amalgamate, { force: true })
+	await fs.rmSync(output, { force: true })
 	for (const f of testdata) {
 		await fs.rmSync(f.file, { force: true })
 	}
@@ -69,7 +69,7 @@ describe('files', () => {
 			stdout,
 			stderr,
 			root: null,
-			amalgamate: null,
+			output: null,
 		})
 		await sleep(1000)
 
@@ -93,11 +93,11 @@ describe('files', () => {
 			stdout,
 			stderr,
 			root: testdataDir,
-			amalgamate: amalgamate,
+			output: output,
 		})
 		await sleep(1000)
 
 		const data = amalgamateTestdata()
-		checkFileContents(amalgamate, data)
+		checkFileContents(output, data)
 	}, 5000)
 })

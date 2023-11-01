@@ -6,7 +6,7 @@ export const processFileTree = async (file, valueMaps, options) => {
 	const files = await listFiles(file)
 
 	if (requiresAmalgamation(options)) {
-		await fs.rmSync(options.amalgamate, { force: true })
+		await fs.rmSync(options.output, { force: true })
 	}
 
 	for (const inFile of filterP90(files)) {
@@ -16,7 +16,7 @@ export const processFileTree = async (file, valueMaps, options) => {
 }
 
 const requiresAmalgamation = (options) => {
-	return options.root && options.amalgamate
+	return options.root && options.output
 }
 
 const listFiles = async (f) => {
@@ -67,7 +67,7 @@ const processFile = async (inFile, valueMaps, options) => {
 
 const writeCssToFile = (inFile, css, options) => {
 	if (requiresAmalgamation(options)) {
-		appendFile(options.amalgamate, options.stderr, css + '\n\n')
+		appendFile(options.output, options.stderr, css + '\n\n')
 	} else {
 		const outFile = replaceExt(inFile, 'css')
 		writeFile(outFile, options.stderr, css + '\n')
