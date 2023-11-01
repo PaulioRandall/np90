@@ -90,27 +90,29 @@ const options = {
 	// processing is skipped.
 	root: './src',
 
-	// amalgamate file path. The file path to merge all
-	// processed .p69 files into. If null, a .css file will
-	// be created for each .p69 file in the same directory.
+	// output is the file path to merge all processed .p69
+	// files into. This does not include style content from
+	// Svelte files. If null, a .css file will be created
+	// for each .p69 file in the same directory as it.
+	//
 	// There are virtues and vices to each approach but
 	// amalgamation works better for smaller projects while
-	// big projects benefit from more rigorous separation of
-	// concerns.
-	amalgamate: './src/routes/styles.css',
+	// big ones often benefit from more rigorous separation.
+	output: './src/routes/global.css',
 
 	// watch determines if P69 should reprocess everytime a
 	// P69 file changes during development. Must be set to
 	// true and not just truthy!
 	watch: process?.env?.NODE_ENV === 'development',
 
-	// List of accepted lang attibute values.
-	// import { defaultMimeTypes } from 'p90'
-	// Use [undefined, ...defaultMimeTypes] to
-	// allow style tags without a lang attribute.
+	// List of accepted lang attibute values. Import
+	// defaultMimeTypes from 'p69' if you need. Undefined
+	// means that a style tag with no lang set will be
+	// included in P69 processing.
 	mimeTypes: [
-		'p90',
-		'text/p90',
+		undefined,
+		'p69',
+		'text/p69',
 	],
 
 	// Prefix character
@@ -124,7 +126,7 @@ const options = {
 
 	// If true, errors will be thrown rather than ignored.
 	// This will immediately end processing. Default is
-	// false because I use Svelte and it's good at tell
+	// false because I use Svelte and it's good at telling
 	// me where the errors are.
 	throwOnError: false,
 

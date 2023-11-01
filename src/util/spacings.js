@@ -21,42 +21,36 @@ const pxToMm = (px) => round((px * 1) / PX_IN_MM, 1)
 const pxToPc = (px) => round((px * 1) / PX_IN_PC)
 
 export const spacings = (values, options = {}) => {
-	const { base = 16, defaultUnit = 'px', custom = {} } = options
-	const spaces = {}
+	const { base = 16, defaultUnit = 'rem' } = options
+	const funcs = {}
 
 	for (const name in values) {
-		const px = values[name]
-
-		spaces[name] = (unit) => {
-			if (!unit) {
-				unit = defaultUnit
-			}
-
-			switch (unit) {
-				case 'px':
-					return px + unit
-				case 'em':
-					return pxToEm(px, base) + 'em'
-				case 'rem':
-					return pxToEm(px, base) + 'rem'
-				case 'pt':
-					return pxToPt(px) + 'pt'
-				case 'pc':
-					return pxToPc(px) + 'pc'
-				case 'in':
-					return pxToIn(px) + 'in'
-				case 'cm':
-					return pxToCm(px) + 'cm'
-				case 'mm':
-					return pxToMm(px) + 'mm'
-				default:
-					throw new Error(`Spacing format not supported '${name}(${unit})'`)
-			}
-		}
+		funcs[name] = (unit) =>
+			calcSpace(name, base, values[name], unit ? unit : defaultUnit)
 	}
 
-	return {
-		...spaces,
-		...custom,
+	return funcs
+}
+
+const calcSpace = (name, base, px, unit) => {
+	switch (unit) {
+		case 'rem':
+			return pxToEm(px, base) + 'rem'
+		case 'em':
+			return pxToEm(px, base) + 'em'
+		case 'px':
+			return px + unit
+		case 'pt':
+			return pxToPt(px) + 'pt'
+		case 'pc':
+			return pxToPc(px) + 'pc'
+		case 'in':
+			return pxToIn(px) + 'in'
+		case 'cm':
+			return pxToCm(px) + 'cm'
+		case 'mm':
+			return pxToMm(px) + 'mm'
+		default:
+			throw new Error(`Spacing format not supported '${name}(${unit})'`)
 	}
 }

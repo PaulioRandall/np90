@@ -4,7 +4,7 @@ import path from 'path'
 import { stdout, stderr } from '../writers/writers.js'
 import { processFileTree } from '../files/files.js'
 
-export const defaultMimeTypes = ['p69', 'text/p69']
+export const defaultMimeTypes = [undefined, 'p69', 'text/p69']
 
 export const sveltePreprocessor = (valueMaps, userOptions = {}) => {
 	const options = getOptions(userOptions)
@@ -16,7 +16,7 @@ const getOptions = (userOptions) => {
 		stdout,
 		stderr,
 		root: './src',
-		amalgamate: './src/routes/styles.css',
+		output: './src/routes/global.css',
 		watch: process?.env?.NODE_ENV === 'development',
 		mimeTypes: defaultMimeTypes,
 		...userOptions,
@@ -27,7 +27,7 @@ const newSvelteProcessor = (valueMaps, options) => {
 	let once = false
 
 	return {
-		name: 'P69: CSS preprocessor using P90',
+		name: 'P69: CSS preprocessor',
 		style: async ({ content, markup, attributes, filename }) => {
 			if (!once && options.root) {
 				once = true

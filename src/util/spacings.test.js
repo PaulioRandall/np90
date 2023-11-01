@@ -20,9 +20,9 @@ describe('spacings', () => {
 
 		const act = spacings(given)
 
-		expect(act.sm()).toEqual('24px')
+		expect(act.sm()).toEqual('1.5rem')
 		expect(act.sm('em')).toEqual('1.5em')
-		expect(act.sm('rem')).toEqual('1.5rem')
+		expect(act.sm('px')).toEqual('24px')
 		expect(act.sm('pt')).toEqual('18pt')
 		expect(act.sm('pc')).toEqual('1.5pc')
 		expect(act.sm('in')).toEqual('0.25in')

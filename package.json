@@ -1,21 +1,20 @@
 {
 	"author": "Paul Williams",
 	"name": "p69",
-	"description": "A minimalist search and replace tool for preprocessing CSS files.",
+	"description": "A minimalist CSS preprocessing tool using simple search and replace.",
 	"keywords": [
 		"css",
-		"minimalist",
-		"processor",
 		"preprocessor",
+		"minimalist",
 		"node",
-		"svelte"
+		"svelte",
+		"plunder"
 	],
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"exports": {
 		"./files": "./src/files/index.js",
-		"./p90": "./src/p90/index.js",
-		"./svelte": "./src/svelte/index.js",
-		"./util": "./src/util/index.js"
+		"./util": "./src/util/index.js",
+		"./svelte": "./src/svelte/index.js"
 	},
 	"type": "module",
 	"license": "MIT",
@@ -27,13 +26,14 @@
 		"url": "https://github.com/PaulioRandall/p69.git"
 	},
 	"scripts": {
-		"fmt": "npx prettier --loglevel warn --write --plugin-search-dir=. .",
+		"fmt": "prettier --log-level warn --write .",
 		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --silent --runInBand",
 		"debug": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
 		"commit": "npm run fmt && npm run test && cat ./scripts/youre-ready-to-integrate.txt"
 	},
 	"devDependencies": {
-		"jest": "29.6.2"
+		"jest": "29.6.2",
+		"prettier": "3.0.3"
 	},
 	"dependencies": {
 		"p90": "1.0.0",
