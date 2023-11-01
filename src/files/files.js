@@ -9,7 +9,7 @@ export const processFileTree = async (file, valueMaps, options) => {
 		await fs.rmSync(options.output, { force: true })
 	}
 
-	for (const inFile of filterP90(files)) {
+	for (const inFile of filterP69(files)) {
 		const outFile = replaceExt(inFile, 'css')
 		await processFile(inFile, valueMaps, options)
 	}
@@ -41,7 +41,7 @@ const listChildren = async (dir) => {
 	return files
 }
 
-const filterP90 = (files) => {
+const filterP69 = (files) => {
 	const results = []
 
 	for (const f of files) {
