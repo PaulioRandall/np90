@@ -1,4 +1,4 @@
-import p90 from 'p90'
+import p90 from '../p90'
 import chokidar from 'chokidar'
 import path from 'path'
 import { stdout, stderr } from '../writers/writers.js'

@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import p90 from 'p90'
+import p90 from '../p90'
 
 export const processFileTree = async (file, valueMaps, options) => {
 	const files = await listFiles(file)
