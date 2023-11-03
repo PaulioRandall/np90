@@ -8,7 +8,7 @@ describe('svelte', () => {
 
 		const processor = sveltePreprocessor(valueMap, {
 			root: null,
-			amalgamate: null,
+			output: null,
 		})
 
 		const given = {

@@ -25,8 +25,9 @@ export const spacings = (values, options = {}) => {
 	const funcs = {}
 
 	for (const name in values) {
-		funcs[name] = (unit) =>
-			calcSpace(name, base, values[name], unit ? unit : defaultUnit)
+		funcs[name] = (unit) => {
+			return calcSpace(name, base, values[name], unit ? unit : defaultUnit)
+		}
 	}
 
 	return funcs

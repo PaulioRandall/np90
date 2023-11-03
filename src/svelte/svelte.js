@@ -4,7 +4,7 @@ import path from 'path'
 import { stdout, stderr } from './writers.js'
 import { processFileTree } from '../files/files.js'
 
-export const defaultMimeTypes = [undefined, 'p69', 'text/p69']
+const defaultMimeTypes = [undefined, 'p69', 'text/p69']
 
 export const sveltePreprocessor = (valueMaps, userOptions = {}) => {
 	const options = getOptions(userOptions)
@@ -13,12 +13,11 @@ export const sveltePreprocessor = (valueMaps, userOptions = {}) => {
 
 const getOptions = (userOptions) => {
 	return {
-		stdout,
-		stderr,
 		root: './src',
 		output: './src/routes/global.css',
 		watch: process?.env?.NODE_ENV === 'development',
 		mimeTypes: defaultMimeTypes,
+		throwOnError: false,
 		...userOptions,
 	}
 }
@@ -42,6 +41,8 @@ const newSvelteProcessor = (valueMaps, options) => {
 
 			const fileOptions = {
 				...options,
+				stdout,
+				stderr,
 				errorNote: filename,
 			}
 
@@ -69,7 +70,7 @@ const startWatching = (valueMaps, options) => {
 			return
 		}
 
-		if (options.amalgamate) {
+		if (options.output) {
 			file = options.root
 		}
 
