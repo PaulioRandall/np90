@@ -137,17 +137,24 @@ const tokens = {
 	},
 }
 
-// Optional of course
+const before = 'main { font-family: $font.family.verdana; }'
+const after = p69(
+	tokenMap,
+	before,
+	(options = {
+		/* See below for options */
+	})
+)
+
+// After: "main { font-family: Verdana, Arial, Helvetica; }"
+```
+
+```js
 const options = {
 	// If true, errors will be thrown after being printed.
 	// This will immediately end processing. Default is false.
 	throwOnError: false,
 }
-
-const before = 'main { font-family: $font.family.verdana; }'
-const after = p69(tokenMap, before, options)
-
-// After: "main { font-family: Verdana, Arial, Helvetica; }"
 ```
 
 **P69 enhanced CSS files:**
@@ -163,11 +170,65 @@ const tokens = {
 	},
 }
 
-p69Files(tokenMap /* See below for options */)
+p69Files(
+	tokenMap,
+	(options = {
+		/* See below for options */
+	})
+)
 ```
 
 ```js
 const options = {
+	// If true, errors will be thrown after being printed.
+	// This will immediately end processing. Default is
+	// false as I use Svelte which is better at telling me
+	// where the errors are.
+	throwOnError: false,
+
+	// root directory containing .p69 files that need
+	// to be converted to CSS. If null then .p69 file
+	// processing is skipped.
+	root: './src',
+
+	// output is the file path to merge all processed .p69
+	// files into. This does not include style content from
+	// Svelte files or anyother framework. If null, a .css
+	// file will be created for each .p69 file in the same
+	// directory as it.
+	//
+	// There are virtues and vices to each approach but
+	// amalgamation works better for smaller projects while
+	// big projects often benefit from more rigorous
+	// modularisation.
+	output: './src/global.css',
+}
+```
+
+## Svelte Usage
+
+### `svelte.config.js`
+
+```js
+// svelte.config.js
+import p69Svelte from 'p69/svelte'
+import tokens from './src/tokens.js'
+
+export default {
+  ...,
+  preprocess: [p69Svelte(tokens, options = {/* See below for options */})],
+  ...,
+}
+```
+
+```js
+const options = {
+	// If true, errors will be thrown after being printed.
+	// This will immediately end processing. Default is
+	// false as I use Svelte which is better at telling me
+	// where the errors are.
+	throwOnError: false,
+
 	// root directory containing .p69 files that need
 	// to be converted to CSS. If null then .p69 file
 	// processing is skipped.
@@ -185,43 +246,35 @@ const options = {
 	// modularisation.
 	output: './src/global.css',
 
-	// watch determines if P69 should reprocess everytime a
-	// P69 file changes during development. This only makes
-	// sense when using a frameworks developer mode. Must be
-	// set to true and not just truthy!
-	watch: process?.env?.NODE_ENV === 'development',
-
 	// List of accepted lang attibute values. Import
 	// defaultMimeTypes from 'p69' if you need to know them
 	// in code. Undefined means that a style tag with no
 	// lang set will be included in P69 processing.
 	mimeTypes: [undefined, 'p69', 'text/p69'],
 
-	// If true, errors will be thrown after being printed.
-	// This will immediately end processing. Default is
-	// false as I use Svelte which is better at telling me
-	// where the errors are.
-	throwOnError: false,
+	// watch determines if P69 should reprocess everytime a
+	// P69 file or any of the watchToken files change during
+	// development. This only makes sense when using the
+	// framework's developer mode. Must be set to true and
+	// not just truthy!
+	watch: process?.env?.NODE_ENV === 'development',
+
+	// watchTokens contains a set of globs for specifying
+	// files and folders which, on change, should trigger
+	// a reloading of token mappings. The watch option must
+	// be true to enable this option.
+	//
+	// By default this is every JavaScript file in the src
+	// folder. For small projects this is fine but when a
+	// project contains a lot of JavaScript files most of
+	// the reprocessing is redundant. Setting the specific
+	// token file or files greatly reduces pointless
+	// activity.
+	watchTokens: ['./src/**/*.js'],
 }
 ```
 
-## Svelte Usage
-
-### `svelte.config.js`
-
-```js
-// svelte.config.js
-import p69Svelte from 'p69/svelte'
-import tokens from './src/tokens.js'
-
-export default {
-  ...,
-  preprocess: [p69Svelte(tokens, /* See above for options */)],
-  ...,
-}
-```
-
-### `+layout.svelte`
+### Example `+layout.svelte`
 
 ```html
 <!-- +layout.svelte -->
@@ -256,41 +309,17 @@ export default {
 </style>
 ```
 
-### `+page.svelte`
+### Example `atomic-text-classes.p69`
 
-```html
-<!-- +page.svelte -->
-<main>
-	<h1>A Bohemian quest for simplicity</h1>
+```css
+/* atomic-text-classes.p69 */
+.g-text-strong {
+	color: $theme.strong;
+}
 
-	<p>
-		It took me about an hour to learn and write my first Svelte CSS preprocessor
-		after deciding existing tooling was just unnecessary verbose. Refactoring
-		reduced my solution to about 20 lines of code. It simply substituted named
-		values like `$green` with whatever I configured, e.g. `rgb(10, 240, 10)`.
-	</p>
-
-	<p>
-		I moved it to it's own repository (<b>P90</b>), enhanced it a little, and
-		added a handful of utility functions for common use cases. Then I moved the
-		CSS and Svelte specific stuff to <b>P69</b>.
-	</p>
-
-	<p>
-		It was so simple that I started wondering why we drag around a plethora of
-		CSS like languages and frameworks with needless diabolical syntax and
-		configuration. Because it's easier to use a cumbersome tool you know than
-		invest effort in adapting to the new environment. Simplicity is hard, and as
-		Dijkstra repeatedly notes <q>complexity sells better</q>.
-	</p>
-
-	<p>
-		Why do slow complex transpiling when fast and simple value substitution can
-		do the job. Let JavaScript handle logic, not a CSS mutant. That's what
-		JavaScript is designed to do. You know, making use of languages we already
-		know and hate.
-	</p>
-</main>
+.g-text-spectral {
+	font-family: $text.family.spectral;
+}
 ```
 
 ## CSS Utility Functions

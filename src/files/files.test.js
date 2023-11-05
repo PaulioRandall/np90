@@ -58,31 +58,31 @@ const checkFileContents = (f, contents) => {
 describe('files', () => {
 	test('#1', async () => {
 		await resetTestdata()
-		await sleep(1000)
+		await sleep(500)
 
-		const valueMap = {
+		const tokenMap = {
 			color: 'blue',
 			pad: '2rem',
 		}
 
-		await processFileTree(testdataDir, valueMap, {
+		await processFileTree(testdataDir, tokenMap, {
 			stdout,
 			stderr,
 			root: null,
 			output: null,
 		})
-		await sleep(1000)
+		await sleep(500)
 
 		for (const f of testdata) {
 			checkFileContents(f.file, f.data)
 		}
-	}, 5000)
+	}, 3000)
 })
 
 describe('files', () => {
 	test('#2', async () => {
 		await resetTestdata()
-		await sleep(1000)
+		await sleep(500)
 
 		const valueMap = {
 			color: 'blue',
@@ -95,9 +95,9 @@ describe('files', () => {
 			root: testdataDir,
 			output: output,
 		})
-		await sleep(1000)
+		await sleep(500)
 
 		const data = amalgamateTestdata()
 		checkFileContents(output, data)
-	}, 5000)
+	}, 3000)
 })
