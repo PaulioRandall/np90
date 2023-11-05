@@ -1,30 +1,32 @@
-import { stdout, stderr } from './writers.js'
-
 import { TokenMapLoader } from './TokenMapLoader.js'
 import { P69StringCompiler } from './P69StringCompiler.js'
 import { P69FileCompiler } from './P69FileCompiler.js'
+import { P69DirWatcher } from './P69DirWatcher.js'
 
 const defaultMimeTypes = [undefined, 'p69', 'text/p69']
+
 const tokenMapLoader = new TokenMapLoader()
 const p69StringCompiler = new P69StringCompiler()
 const p69FileCompiler = new P69FileCompiler()
+const p69DirWatcher = new P69DirWatcher()
 
 export const sveltePreprocessor = (tokenFile, userOptions = {}) => {
 	const options = getOptions(userOptions)
 
 	tokenMapLoader.setFile(tokenFile)
 
-	// TODO: stdout & stderr should be internalised
-	p69StringCompiler.updateOptions({
-		...options,
-		stdout,
-		stderr,
-	})
+	p69StringCompiler.updateOptions(options)
 
 	p69FileCompiler.setOptions(options)
 	p69FileCompiler.setRoot(options.root)
 
-	return newSvelteProcessor(options.mimeTypes)
+	if (options.watch) {
+		p69DirWatcher.setDir(options.root)
+		p69DirWatcher.setHandler(p69FileCompiler.compile)
+		p69DirWatcher.start()
+	}
+
+	return newSvelteProcessor(options)
 }
 
 const getOptions = (userOptions) => {
@@ -38,7 +40,7 @@ const getOptions = (userOptions) => {
 	}
 }
 
-const newSvelteProcessor = (mimeTypes) => {
+const newSvelteProcessor = (options) => {
 	return {
 		name: 'P69: CSS preprocessor',
 		style: async ({ content, markup, attributes, filename }) => {
@@ -48,7 +50,7 @@ const newSvelteProcessor = (mimeTypes) => {
 				p69FileCompiler.setTokenMaps(tokenMaps)
 			}
 
-			if (!mimeTypes.includes(attributes.lang)) {
+			if (!options.mimeTypes.includes(attributes.lang)) {
 				return {
 					code: content,
 				}
@@ -62,53 +64,3 @@ const newSvelteProcessor = (mimeTypes) => {
 		},
 	}
 }
-
-/*
-const reloadMapTokens = async (tokenFile, options) => {
-	const tokenMaps = await loadTokenMaps(tokenFile)
-	await processFileTree(options.root, tokenMaps, options)
-
-	if (!alreadyWatching && options.watch === true) {
-		startWatching(tokenMaps, options)
-	}
-
-	alreadyWatching = true
-	return tokenMaps
-}
-
-const loadTokenMaps = async (tokenFile) => {
-	const tokenMaps = await import(tokenFile)
-		.then((m) => m.default)
-		.catch((e) => {
-			console.error(e)
-			return null
-		})
-
-	if (!tokenMaps) {
-		throw new Error("Missing token map")
-	}
-
-	return tokenMaps
-}
-
-
-const startWatching = (tokenMaps, options) => {
-	const watcher = chokidar.watch(options.root, {
-		persistent: true,
-	})
-
-	const isP90File = (file) => path.extname(file) !== '.p69'
-
-	watcher.on('change', async (file) => {
-		if (!isP90File(file)) {
-			return
-		}
-
-		if (options.output) {
-			file = options.root
-		}
-
-		await processFileTree(file, tokenMaps, options)
-	})
-}
-*/

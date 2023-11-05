@@ -1,6 +1,8 @@
 import chokidar from 'chokidar'
 import path from 'path'
-import { stdout } from './writer.js'
+import { stdout } from './writers.js'
+
+// TODO: Doesn't need to be a class
 
 // P69DirWatcher does what it says. It watchers a directory for changes to .p69
 // files and invokes a handler when any of them change.
@@ -20,26 +22,27 @@ export class P69DirWatcher {
 		return this
 	}
 
-	startWatching() {
+	start() {
 		if (this._watcher) {
 			return
 		}
 
 		this._initWatcher()
 		this._listenForChanges()
-
-		stdout('Started watching for .p69 file changes')
 	}
 
-	stopWatching() {
+	stop() {
 		if (!this._watcher) {
 			return
 		}
 
-		this._watcher.close().then(() => {
-			this._watcher = null
-			stdout('Stopped watching for .p69 file changes')
-		})
+		this._watcher.close()
+		this._watcher = null
+	}
+
+	restart() {
+		this.stop()
+		this.start()
 	}
 
 	_initWatcher() {

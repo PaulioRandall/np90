@@ -11,22 +11,22 @@ export const processFileTree = async (file, tokenMaps, options) => {
 		await deleteFile(options.output)
 	}
 
-	for (const inFile of p69Files) {
-		await processFile(inFile, tokenMaps, options)
+	for (const f of p69Files) {
+		await processFile(f, tokenMaps, options)
 	}
 }
 
-const processFile = async (inFile, tokenMaps, options) => {
-	let [css, ok] = await readWholeFile(inFile)
+export const processFile = async (p69File, tokenMaps, options) => {
+	let [css, ok] = await readWholeFile(p69File)
 
 	if (!ok) {
 		return
 	}
 
-	css = p90(tokenMaps, css, prepOptions(options, inFile))
+	css = p90(tokenMaps, css, prepOptions(options, p69File))
 	css = css.trim()
 
-	await writeCssToFile(inFile, css, options)
+	await writeCssToFile(p69File, css, options)
 }
 
 const prepOptions = (userOptions, filename) => {
@@ -38,14 +38,14 @@ const prepOptions = (userOptions, filename) => {
 	}
 }
 
-const writeCssToFile = async (inFile, css, options) => {
+const writeCssToFile = async (p69File, css, options) => {
 	if (options.output) {
 		await appendToFile(options.output, css + '\n\n')
 		return
 	}
 
-	const outFile = replaceFileExt(inFile, 'css')
-	await createOrReplaceFile(outFile, css + '\n')
+	const cssFile = replaceFileExt(p69File, 'css')
+	await createOrReplaceFile(cssFile, css + '\n')
 }
 
 const replaceFileExt = (f, newExt) => {

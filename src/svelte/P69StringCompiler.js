@@ -1,5 +1,7 @@
 import { replaceAll as p90 } from '../p90/p90.js'
 
+// TODO: Doesn;t need to be a class
+
 // P69StringCompiler does what it says. It compiles P69 strings into CSS files.
 export class P69StringCompiler {
 	constructor() {
