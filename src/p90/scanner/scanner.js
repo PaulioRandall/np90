@@ -4,8 +4,8 @@ const escapeForRegex = (s) => {
 	return s.replace(/[/\-\.\(\)\[\]\$\^\&\\]/g, '\\$&')
 }
 
-export const scanAll = (content, prefix) => {
-	const f = scanFunc(content, prefix)
+export const scanAll = (content) => {
+	const f = scanFunc(content)
 	const result = []
 	let tk = null
 
@@ -16,8 +16,10 @@ export const scanAll = (content, prefix) => {
 	return result
 }
 
-export const scanFunc = (content, prefix) => {
+export const scanFunc = (content) => {
 	const sr = newStringReader(content)
+
+	const prefix = '$'
 	const escapedPrefix = escapeForRegex(prefix)
 	const prefixRegex = new RegExp(escapedPrefix)
 

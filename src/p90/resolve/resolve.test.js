@@ -1,6 +1,6 @@
 import { resolve } from './resolve.js'
 
-describe('resolve', () => {
+describe('resolve.js', () => {
 	test('simple value returns the value as a string', () => {
 		const act = resolve(123)
 		expect(act).toEqual('123')

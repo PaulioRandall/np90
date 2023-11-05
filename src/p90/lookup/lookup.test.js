@@ -1,6 +1,6 @@
 import { lookup } from './lookup.js'
 
-describe('lookup', () => {
+describe('lookup.js', () => {
 	test('finds simple value & identifies its type', () => {
 		const valueMaps = [
 			{

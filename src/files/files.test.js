@@ -17,8 +17,6 @@ const expectedCSS = [
 	},
 ]
 
-const output = './src/files/testdata/global.css'
-
 describe('files.js', () => {
 	test('processes testdata from .p69 to .css', async () => {
 		await testdata.reset()
@@ -41,6 +39,7 @@ describe('files.js', () => {
 	test('processes AND amalgamtes testdata from .p69 to .css', async () => {
 		await testdata.reset()
 
+		const output = './src/files/testdata/global.css'
 		const tokenMap = {
 			color: 'blue',
 			pad: '2rem',

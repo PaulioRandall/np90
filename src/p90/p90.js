@@ -1,6 +1,7 @@
 import { scanAll } from './scanner/scanner.js'
 import { lookup } from './lookup/lookup.js'
 import { resolve, identifyType } from './resolve/resolve.js'
+import { stdout, stderr } from '../shared/writers.js'
 
 export const replaceAll = (valueMaps, content, userOptions = {}) => {
 	const options = getOptions(userOptions)
@@ -15,18 +16,14 @@ export const replaceAll = (valueMaps, content, userOptions = {}) => {
 
 const getOptions = (userOptions) => {
 	return {
-		prefix: '$',
-		stdout: console.log,
-		stderr: console.error,
 		throwOnError: false,
-		printErrors: true,
 		errorNote: '¯\\_(ツ)_/¯', // Filename usually
 		...userOptions,
 	}
 }
 
 const replaceAllTokens = (valueMaps, content, options) => {
-	const tokens = scanAll(content, options.prefix)
+	const tokens = scanAll(content)
 
 	// Work from back to front of the content string otherwise replacements at
 	// the start will cause later tokens to hold the wrong start & end indexes.
@@ -68,13 +65,11 @@ const appendSuffix = (value, suffix) => {
 }
 
 const handleError = (e, tk, options) => {
-	if (options.printErrors) {
-		const tkStr = JSON.stringify(tk, null, 2)
+	const tkStr = JSON.stringify(tk, null, 2)
 
-		options.stderr(`P90 error: ${options.errorNote}`)
-		options.stdout(`P90 token: ${tkStr}`)
-		options.stderr(e)
-	}
+	stderr(`P90 error: ${options.errorNote}`)
+	stdout(`P90 token: ${tkStr}`)
+	stderr(e)
 
 	if (options.throwOnError) {
 		throw e

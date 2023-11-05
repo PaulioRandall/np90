@@ -1,6 +1,5 @@
 import path from 'path'
 
-import { stdout, stderr } from '../shared/writers.js'
 import { replaceAll as p90 } from '../p90/p90.js'
 
 import os from './os'
@@ -34,8 +33,6 @@ const processFile = async (p69File, tokenMaps, options) => {
 const prepOptions = (userOptions, filename) => {
 	return {
 		...userOptions,
-		stdout,
-		stderr,
 		filename,
 	}
 }

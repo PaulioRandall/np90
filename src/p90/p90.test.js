@@ -10,7 +10,7 @@ const doProcessString = (valueMaps, content, config = {}) => {
 	})
 }
 
-describe('replaceAll', () => {
+describe('p90.js', () => {
 	test('performs simple replacement', () => {
 		const valueMap = {
 			green: 'forestgreen',
@@ -59,18 +59,5 @@ describe('replaceAll', () => {
 		const act = doProcessString(valueMap, `$func(alpha, beta, charlie)`)
 		expect(act).toEqual('alpha-beta-charlie')
 		expect(unspecifiedArg).toBeUndefined()
-	})
-
-	test('handles custom prefixes', () => {
-		const valueMap = {
-			green: 'forestgreen',
-		}
-
-		const options = {
-			prefix: '£',
-		}
-
-		const act = doProcessString(valueMap, `£green`, options)
-		expect(act).toEqual('forestgreen')
 	})
 })

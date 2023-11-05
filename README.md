@@ -268,8 +268,7 @@ const options = {
 	// folder. For small projects this is fine but when a
 	// project contains a lot of JavaScript files most of
 	// the reprocessing is redundant. Setting the specific
-	// token file or files greatly reduces pointless
-	// activity.
+	// token file or files reduces pointless reloading.
 	watchTokens: ['./src/**/*.js'],
 }
 ```
