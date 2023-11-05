@@ -19,7 +19,7 @@ const expectedCSS = [
 
 const output = './src/files/testdata/global.css'
 
-describe('files', () => {
+describe('files.js', () => {
 	test('processes testdata from .p69 to .css', async () => {
 		await testdata.reset()
 

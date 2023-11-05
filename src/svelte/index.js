@@ -1,1 +1,1 @@
-export default from './svelte.js'
+export default from './preprocessor.js'

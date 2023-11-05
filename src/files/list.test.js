@@ -1,7 +1,7 @@
 import testdata from './testdata.js'
-import { listP69Files } from './list-files.js'
+import listP69Files from './list.js'
 
-describe('list-files', () => {
+describe('list.js', () => {
 	test('correctly lists all .p69 testdata files', async () => {
 		await testdata.reset()
 

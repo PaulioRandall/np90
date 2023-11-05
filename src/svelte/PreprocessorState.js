@@ -1,6 +1,5 @@
-// SvelteProcessorState does what it says. It loads and holds state for the
-// Svelte preprocessor.
-export class SvelteProcessorState {
+// PreprocessorState loads and holds state for preprocessor.
+export class PreprocessorState {
 	constructor() {
 		this._requireTokenMapReload = true
 		this._options = {}
@@ -33,7 +32,7 @@ export class SvelteProcessorState {
 		return this._options.root
 	}
 
-	acceptMimeType(lang) {
+	acceptsMimeType(lang) {
 		return this._options.mimeTypes.includes(lang)
 	}
 

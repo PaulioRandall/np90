@@ -6,7 +6,7 @@ import path from 'path'
 //
 // If the passed file is a .p69 file then it will be the only item in the
 // resultant array. The array may be empty if no .p69 files are found.
-export const listP69Files = async (file) => {
+const listP69Files = async (file) => {
 	const stat = await fs.promises.stat(file)
 
 	if (stat.isDirectory()) {
@@ -36,3 +36,5 @@ const absPath = (dir, f) => {
 const isP69 = (f) => {
 	return path.extname(f) === '.p69'
 }
+
+export default listP69Files

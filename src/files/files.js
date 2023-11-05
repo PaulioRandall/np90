@@ -1,10 +1,10 @@
 import path from 'path'
 
-import { stdout, stderr } from '../svelte/writers.js'
+import { stdout, stderr } from '../shared/writers.js'
 import { replaceAll as p90 } from '../p90/p90.js'
 
 import os from './os'
-import { listP69Files } from './list-files.js'
+import listP69Files from './list.js'
 
 const processTree = async (file, tokenMaps, options) => {
 	const p69Files = await listP69Files(file)
