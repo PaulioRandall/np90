@@ -41,8 +41,12 @@ export class SvelteProcessorState {
 		return !!this._options.output
 	}
 
-	isWatchEnabled() {
-		return !!this._options.watch
+	isFileProcessingEnabled() {
+		return !!this._options.root
+	}
+
+	isFileWatchEnabled() {
+		return !!this._options.root && !!this._options.watch
 	}
 
 	setTokenFile(tokenFile) {

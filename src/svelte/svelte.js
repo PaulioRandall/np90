@@ -18,8 +18,12 @@ export const sveltePreprocessor = (tokenFile, userOptions = {}) => {
 		...userOptions,
 	})
 
-	if (state.isWatchEnabled()) {
-		p69FileProcessor.start()
+	if (state.isFileProcessingEnabled()) {
+		fileProcessor.process()
+	}
+
+	if (state.isFileWatchEnabled()) {
+		fileProcessor.start()
 	}
 
 	return newSvelteProcessor()

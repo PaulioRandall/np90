@@ -4,8 +4,8 @@ import path from 'path'
 import { processFileTree } from '../files/files.js'
 import { stdout } from './writers.js'
 
-// P69FileProcessor does what it says. It watchers a directory for changes to
-// .p69 files and invokes a handler when any of them change.
+// P69FileProcessor performs .p69 file processing on request and provides a
+// watcher that reprocesses .p69 files when any of them change.
 export class P69FileProcessor {
 	constructor(state) {
 		if (!state) {
@@ -14,6 +14,14 @@ export class P69FileProcessor {
 
 		this._state = state
 		this._watcher = null
+	}
+
+	process() {
+		return processFileTree(
+			this._state.getRoot(),
+			this._state.getTokenMaps(),
+			this._state.getOptions()
+		)
 	}
 
 	start() {
@@ -48,20 +56,12 @@ export class P69FileProcessor {
 	_listenForChanges() {
 		this._watcher.on('change', async (file) => {
 			if (this._isP69File(file)) {
-				await this._reprocess()
+				await this.process()
 			}
 		})
 	}
 
 	_isP69File(file) {
 		return path.extname(file) === '.p69'
-	}
-
-	_reprocess = () => {
-		return processFileTree(
-			this._state.getRoot(),
-			this._state.getTokenMaps(),
-			this._state.getOptions()
-		)
 	}
 }

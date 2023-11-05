@@ -2,9 +2,7 @@ import { sveltePreprocessor } from './svelte.js'
 
 describe('svelte', () => {
 	test('Integration', () => {
-		const tokenFile = './svelte.test.token-map.js'
-
-		const processor = sveltePreprocessor(tokenFile, {
+		const processor = sveltePreprocessor('./svelte.test.token-map.js', {
 			root: null,
 			output: null,
 		})
