@@ -5,7 +5,7 @@ import { replaceAll as p90 } from '../p90/p90.js'
 import os from './os'
 import listP69Files from './list.js'
 
-const processTree = async (file, tokenMaps, options) => {
+export const processTree = async (file, tokenMaps, options) => {
 	const p69Files = await listP69Files(file)
 
 	if (options.output) {
@@ -17,7 +17,7 @@ const processTree = async (file, tokenMaps, options) => {
 	}
 }
 
-const processFile = async (p69File, tokenMaps, options) => {
+export const processFile = async (p69File, tokenMaps, options) => {
 	let [css, ok] = await os.readWholeFile(p69File)
 
 	if (!ok) {
@@ -45,9 +45,4 @@ const writeCssToFile = async (p69File, css, options) => {
 
 	const cssFile = os.replaceFileExt(p69File, 'css')
 	await os.createOrReplaceFile(cssFile, css + '\n')
-}
-
-export default {
-	processTree,
-	processFile,
 }

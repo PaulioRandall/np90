@@ -1,6 +1,6 @@
 import fs from 'fs'
 import testdata from './testdata.js'
-import files from './files.js'
+import { processTree } from './process.js'
 
 const expectedCSS = [
 	{
@@ -26,7 +26,7 @@ describe('files.js', () => {
 			pad: '2rem',
 		}
 
-		await files.processTree(testdata.root, tokenMap, {
+		await processTree(testdata.root, tokenMap, {
 			root: null,
 			output: null,
 		})
@@ -45,7 +45,7 @@ describe('files.js', () => {
 			pad: '2rem',
 		}
 
-		await files.processTree(testdata.root, tokenMap, {
+		await processTree(testdata.root, tokenMap, {
 			root: testdata.root,
 			output: output,
 		})

@@ -1,7 +1,7 @@
 import chokidar from 'chokidar'
 import path from 'path'
 
-import files from '../files/files.js'
+import { processTree } from '../files/process.js'
 import { stdout } from '../shared/writers.js'
 
 // P69FileProcessor performs .p69 file processing on request and provides a
@@ -17,7 +17,7 @@ export class P69FileProcessor {
 	}
 
 	process() {
-		return files.processTree(
+		return processTree(
 			this._state.getRoot(),
 			this._state.getTokenMaps(),
 			this._state.getOptions()
