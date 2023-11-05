@@ -1,72 +1,89 @@
 import fs from 'fs'
 import path from 'path'
+import { stdout, stderr } from '../svelte/writers.js'
 import { listP69Files } from './list-files.js'
 import { replaceAll as p90 } from '../p90/p90.js'
 
 export const processFileTree = async (file, tokenMaps, options) => {
 	const p69Files = await listP69Files(file)
 
-	if (requiresAmalgamation(options)) {
-		await fs.rmSync(options.output, { force: true })
+	if (options.output) {
+		await deleteFile(options.output)
 	}
 
 	for (const inFile of p69Files) {
-		const outFile = replaceExt(inFile, 'css')
 		await processFile(inFile, tokenMaps, options)
 	}
 }
 
-const requiresAmalgamation = (options) => {
-	return options.root && options.output
-}
+const processFile = async (inFile, tokenMaps, options) => {
+	let [css, ok] = await readWholeFile(inFile)
 
-const processFile = async (inFile, valueMaps, options) => {
-	let css = readFile(inFile, options.stderr)
-	if (css === null) {
+	if (!ok) {
 		return
 	}
 
-	css = p90(valueMaps, css, { ...options, filename: inFile })
+	css = p90(tokenMaps, css, prepOptions(options, inFile))
 	css = css.trim()
-	writeCssToFile(inFile, css, options)
+
+	await writeCssToFile(inFile, css, options)
 }
 
-const writeCssToFile = (inFile, css, options) => {
-	if (requiresAmalgamation(options)) {
-		appendFile(options.output, options.stderr, css + '\n\n')
-	} else {
-		const outFile = replaceExt(inFile, 'css')
-		writeFile(outFile, options.stderr, css + '\n')
+const prepOptions = (userOptions, filename) => {
+	return {
+		...userOptions,
+		stdout,
+		stderr,
+		filename,
 	}
 }
 
-const readFile = (f, stderr) => {
-	try {
-		return fs.readFileSync(f, { encoding: 'utf-8' })
-	} catch (e) {
-		stderr(e)
-		return null
+const writeCssToFile = async (inFile, css, options) => {
+	if (options.output) {
+		await appendToFile(options.output, css + '\n\n')
+		return
 	}
+
+	const outFile = replaceFileExt(inFile, 'css')
+	await createOrReplaceFile(outFile, css + '\n')
 }
 
-const replaceExt = (f, newExt) => {
+const replaceFileExt = (f, newExt) => {
 	const currExt = path.extname(f)
 	f = f.slice(0, -currExt.length)
 	return `${f}.${newExt}`
 }
 
-const writeFile = (f, stderr, content) => {
-	try {
-		fs.writeFileSync(f, content, 'utf-8')
-	} catch (e) {
-		stderr(e)
-	}
+const readWholeFile = (f) => {
+	return fs.promises
+		.readFile(f, { encoding: 'utf-8' })
+		.then(handleOK)
+		.catch(handleErr)
 }
 
-const appendFile = (f, stderr, content) => {
-	try {
-		fs.appendFileSync(f, content, 'utf-8')
-	} catch (e) {
-		stderr(e)
-	}
+const createOrReplaceFile = (f, content) => {
+	return fs.promises
+		.writeFile(f, content, { encoding: 'utf-8' })
+		.then(handleOK)
+		.catch(handleErr)
+}
+
+const appendToFile = (f, content) => {
+	return fs.promises
+		.appendFile(f, content, { encoding: 'utf-8' })
+		.then(handleOK)
+		.catch(handleErr)
+}
+
+const deleteFile = (f) => {
+	return fs.promises.rm(f, { force: true }).then(handleOK).catch(handleErr)
+}
+
+const handleOK = (result) => {
+	return [result, true]
+}
+
+const handleErr = (err) => {
+	stderr(e)
+	return [null, false]
 }

@@ -1,6 +1,5 @@
 import fs from 'fs'
 import testdata from './testdata.js'
-import { stdout, stderr } from '../svelte/writers.js'
 import { processFileTree } from '../files/files.js'
 
 const expectedCSS = [
@@ -30,14 +29,9 @@ describe('files', () => {
 		}
 
 		await processFileTree(testdata.root, tokenMap, {
-			stdout,
-			stderr,
 			root: null,
 			output: null,
 		})
-
-		// TODO: Get rid of the need for this
-		await testdata.sleep(500)
 
 		for (const f of expectedCSS) {
 			await testdata.expectFileContains(f.path, f.content)
@@ -55,14 +49,9 @@ describe('files', () => {
 		}
 
 		await processFileTree(testdata.root, tokenMap, {
-			stdout,
-			stderr,
 			root: testdata.root,
 			output: output,
 		})
-
-		// TODO: Get rid of the need for this
-		await testdata.sleep(500)
 
 		const exp = expectedCSS.reduce((acc, f) => {
 			return `${acc}${f.content}\n`
