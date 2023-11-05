@@ -1,66 +1,57 @@
-import { TokenMapLoader } from './TokenMapLoader.js'
-import { P69StringCompiler } from './P69StringCompiler.js'
-import { P69FileCompiler } from './P69FileCompiler.js'
-import { P69DirWatcher } from './P69DirWatcher.js'
+import { replaceAll as p90 } from '../p90/p90.js'
 
-const defaultMimeTypes = [undefined, 'p69', 'text/p69']
+import { SvelteProcessorState } from './SvelteProcessorState.js'
+import { P69FileProcessor } from './P69FileProcessor.js'
 
-const tokenMapLoader = new TokenMapLoader()
-const p69StringCompiler = new P69StringCompiler()
-const p69FileCompiler = new P69FileCompiler()
-const p69DirWatcher = new P69DirWatcher()
+const state = new SvelteProcessorState()
+const fileProcessor = new P69FileProcessor(state)
 
 export const sveltePreprocessor = (tokenFile, userOptions = {}) => {
-	const options = getOptions(userOptions)
+	state.setTokenFile(tokenFile)
 
-	tokenMapLoader.setFile(tokenFile)
-
-	p69StringCompiler.updateOptions(options)
-
-	p69FileCompiler.setOptions(options)
-	p69FileCompiler.setRoot(options.root)
-
-	if (options.watch) {
-		p69DirWatcher.setDir(options.root)
-		p69DirWatcher.setHandler(p69FileCompiler.compile)
-		p69DirWatcher.start()
-	}
-
-	return newSvelteProcessor(options)
-}
-
-const getOptions = (userOptions) => {
-	return {
+	state.setOptions({
 		throwOnError: false,
 		root: './src',
 		output: './src/routes/global.css',
 		watch: process?.env?.NODE_ENV === 'development',
-		mimeTypes: defaultMimeTypes,
+		mimeTypes: [undefined, 'p69', 'text/p69'],
 		...userOptions,
+	})
+
+	if (state.isWatchEnabled()) {
+		p69FileProcessor.start()
 	}
+
+	return newSvelteProcessor()
 }
 
-const newSvelteProcessor = (options) => {
+const newSvelteProcessor = () => {
 	return {
 		name: 'P69: CSS preprocessor',
 		style: async ({ content, markup, attributes, filename }) => {
-			if (tokenMapLoader.isDirty()) {
-				const tokenMaps = await tokenMapLoader.reload()
-				p69StringCompiler.setTokenMaps(tokenMaps)
-				p69FileCompiler.setTokenMaps(tokenMaps)
+			if (state.isReloadRequired()) {
+				await state.reloadTokenMaps()
 			}
 
-			if (!options.mimeTypes.includes(attributes.lang)) {
+			if (!state.acceptMimeType(attributes.lang)) {
 				return {
 					code: content,
 				}
 			}
 
-			p69StringCompiler.updateOptions({ errorNote: filename })
-
 			return {
-				code: await p69StringCompiler.compile(content),
+				code: await compileCSS(filename, content),
 			}
 		},
 	}
+}
+
+const compileCSS = (filename, s) => {
+	return p90(
+		state.getTokenMaps(),
+		s,
+		state.getOptions({
+			errorNote: filename,
+		})
+	)
 }
