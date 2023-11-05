@@ -69,6 +69,11 @@ const createFile = async (filepath, content) => {
 	await fs.promises.writeFile(filepath, content, { encoding: 'utf-8' })
 }
 
+const expectFileContains = async (f, exp) => {
+	const act = await fs.promises.readFile(f, { encoding: 'utf-8' })
+	expect(act).toEqual(exp)
+}
+
 const sleep = (timeout) => {
 	return new Promise((resolve) => {
 		setTimeout(resolve, timeout)
@@ -81,5 +86,6 @@ export default {
 	reset,
 	purge,
 	create,
+	expectFileContains,
 	sleep,
 }

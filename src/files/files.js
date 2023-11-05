@@ -1,57 +1,23 @@
 import fs from 'fs'
 import path from 'path'
+import { listP69Files } from './list-files.js'
 import { replaceAll as p90 } from '../p90/p90.js'
 
-export const processFileTree = async (file, valueMaps, options) => {
-	const files = await listFiles(file)
+export const processFileTree = async (file, tokenMaps, options) => {
+	const p69Files = await listP69Files(file)
 
 	if (requiresAmalgamation(options)) {
 		await fs.rmSync(options.output, { force: true })
 	}
 
-	for (const inFile of filterP69(files)) {
+	for (const inFile of p69Files) {
 		const outFile = replaceExt(inFile, 'css')
-		await processFile(inFile, valueMaps, options)
+		await processFile(inFile, tokenMaps, options)
 	}
 }
 
 const requiresAmalgamation = (options) => {
 	return options.root && options.output
-}
-
-const listFiles = async (f) => {
-	const stat = await fs.promises.stat(f)
-	if (stat.isDirectory()) {
-		return listChildren(f)
-	}
-	return [f]
-}
-
-const listChildren = async (dir) => {
-	const children = await fs.promises.readdir(dir)
-	const files = []
-
-	for (const filename of children) {
-		const rel = path.join(dir, filename)
-		const abs = path.resolve(rel)
-		const filesFound = await listFiles(abs)
-		files.push(...filesFound)
-	}
-
-	return files
-}
-
-const filterP69 = (files) => {
-	const results = []
-
-	for (const f of files) {
-		const ext = path.extname(f)
-		if (ext === '.p69') {
-			results.push(f)
-		}
-	}
-
-	return results
 }
 
 const processFile = async (inFile, valueMaps, options) => {
