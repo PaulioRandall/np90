@@ -1,6 +1,6 @@
 import fs from 'fs'
 import testdata from './testdata.js'
-import { processFileTree } from '../files/files.js'
+import files from './files.js'
 
 const expectedCSS = [
 	{
@@ -20,7 +20,7 @@ const expectedCSS = [
 const output = './src/files/testdata/global.css'
 
 describe('files', () => {
-	test('#1', async () => {
+	test('processes testdata from .p69 to .css', async () => {
 		await testdata.reset()
 
 		const tokenMap = {
@@ -28,7 +28,7 @@ describe('files', () => {
 			pad: '2rem',
 		}
 
-		await processFileTree(testdata.root, tokenMap, {
+		await files.processTree(testdata.root, tokenMap, {
 			root: null,
 			output: null,
 		})
@@ -37,10 +37,8 @@ describe('files', () => {
 			await testdata.expectFileContains(f.path, f.content)
 		}
 	}, 2000)
-})
 
-describe('files', () => {
-	test('#2', async () => {
+	test('processes AND amalgamtes testdata from .p69 to .css', async () => {
 		await testdata.reset()
 
 		const tokenMap = {
@@ -48,7 +46,7 @@ describe('files', () => {
 			pad: '2rem',
 		}
 
-		await processFileTree(testdata.root, tokenMap, {
+		await files.processTree(testdata.root, tokenMap, {
 			root: testdata.root,
 			output: output,
 		})

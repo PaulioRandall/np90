@@ -1,2 +1,1 @@
-export { sveltePreprocessor as default } from './svelte.js'
-export * from './svelte.js'
+export default from './svelte.js'

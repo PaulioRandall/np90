@@ -6,7 +6,7 @@ import { P69FileProcessor } from './P69FileProcessor.js'
 const state = new SvelteProcessorState()
 const fileProcessor = new P69FileProcessor(state)
 
-export const sveltePreprocessor = (tokenFile, userOptions = {}) => {
+const sveltePreprocessor = (tokenFile, userOptions = {}) => {
 	state.setTokenFile(tokenFile)
 
 	state.setOptions({
@@ -59,3 +59,5 @@ const compileCSS = (filename, s) => {
 		})
 	)
 }
+
+export default sveltePreprocessor

@@ -1,4 +1,4 @@
-import { sveltePreprocessor } from './svelte.js'
+import sveltePreprocessor from './svelte.js'
 
 describe('svelte', () => {
 	test('Integration', () => {
