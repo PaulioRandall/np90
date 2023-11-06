@@ -48,6 +48,7 @@ const files = [
 const reset = async () => {
 	await purge()
 	await create()
+	await sleep(250)
 }
 
 const purge = async () => {

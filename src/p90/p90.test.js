@@ -1,9 +1,9 @@
-import { replaceAll } from './p90.js'
+import p90 from './p90.js'
 
 const joinLines = (...lines) => lines.join('\n')
 
 const doProcessString = (valueMaps, content, config = {}) => {
-	return replaceAll(valueMaps, content, {
+	return p90(valueMaps, content, {
 		filename: 'Test.svelte',
 		throwOnError: true,
 		...config,

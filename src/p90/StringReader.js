@@ -1,5 +1,5 @@
-// newStringReader creates an object with functions for reading a string,
-// rune by rune, using regular expressions.
+// StringReader is a class for reading a string, rune by rune, using regular
+// expressions.
 //
 // A rune (AKA symbol), terminology borrowed from the Go programming language,
 // is a alias for a unicode symbol. JavaScript engines all use UTF-16 (AFAIK)
@@ -7,61 +7,74 @@
 // in this file assume the input string is well formed UTF-16.
 //
 // This implementation works on runes but keeps a track of code points
-// because that's what the reader's users will need for manipulating
-// JavaScript strings.
+// because that's what the users will need for manipulating JavaScript strings.
 //
-// The reader acts as an iterator with various query and read operations.
-export const newStringReader = (s) => {
-	const runes = Array.from(s)
-	const len = runes.length
+// StringReader acts as an iterator with various query and read operations.
+export default class StringReader {
+	constructor(s) {
+		this._runes = Array.from(s)
+		this._len = this._runes.length
 
-	// These indexes need to be incremented together so always use the
-	// increment function; never increment manually!
+		// These indexes need to be incremented together so always use the
+		// increment function; never increment manually!
 
-	// Tracks index in the rune array (AKA symbol index).
-	//
-	// Use this index when with StringReader functions.
-	let runeIdx = 0
+		// Tracks index in the rune array (AKA symbol index).
+		//
+		// Use this index when with StringReader functions.
+		this._runeIdx = 0
 
-	// Tracks code point index in the CSS string.
-	//
-	// Use this index when with standard JavaScript string functions.
-	let cpIdx = 0
+		// Tracks code point index in the CSS string.
+		//
+		// Use this index when with standard JavaScript string functions.
+		this._cpIdx = 0
+
+		return this
+	}
 
 	// runeIndex returns the rune (symbol) index.
-	const runeIndex = () => runeIdx
+	runeIndex() {
+		return this._runeIdx
+	}
 
 	// codePointIndex returns the code point index.
-	const codePointIndex = () => cpIdx
+	codePointIndex() {
+		return this._cpIdx
+	}
 
 	// reset doesn't need explanation.
-	const reset = () => {
-		runeIdx = 0
-		cpIdx = 0
+	reset() {
+		this._runeIdx = 0
+		this._cpIdx = 0
 	}
 
 	// isEmpty doesn't need explanation.
-	const isEmpty = () => runeIdx >= len
+	isEmpty() {
+		return this._runeIdx >= this._len
+	}
 
 	// increment the indexes ensuring cpIdx is incremented twice for surrogate
 	// pairs.
-	const increment = () => {
-		const cp = runes[runeIdx].codePointAt(0)
+	increment() {
+		const cp = this._runes[this._runeIdx].codePointAt(0)
 
-		runeIdx++
-		cpIdx++
+		this._runeIdx++
+		this._cpIdx++
 
 		const hasTwoCodePoints = cp >= 0x10000
 		if (hasTwoCodePoints) {
-			cpIdx++
+			this._cpIdx++
 		}
 	}
 
 	// haveEnough returns true if there is at least n unread runes.
-	const haveEnough = (n) => runeIdx + n <= len
+	haveEnough(n) {
+		return this._runeIdx + n <= this._len
+	}
 
 	// match returns true if there is a regex match on the next rune.
-	const match = (regex) => !isEmpty() && runes[runeIdx].match(regex)
+	match(regex) {
+		return !this.isEmpty() && this._runes[this._runeIdx].match(regex)
+	}
 
 	// slice returns a sub string using absolute indexes. It's interface is
 	// identical to Array.slice.
@@ -70,61 +83,61 @@ export const newStringReader = (s) => {
 	// iterator aspect of the scanner.
 	//
 	// It's intended for slicing parts of the string that have been iterated.
-	const slice = (start, end) => {
-		return runes.slice(start, end).join('')
+	slice(start, end) {
+		return this._runes.slice(start, end).join('')
 	}
 
 	// makeBookmark returns the indexes as an array. Pass them to gotoBookmark
 	// to jump back to a bookmarked location.
 	//
 	// Do not manually modify the bookmark!!
-	const makeBookmark = () => {
-		return [runeIdx, cpIdx]
+	makeBookmark() {
+		return [this._runeIdx, this._cpIdx]
 	}
 
 	// gotoBookmark jumps to a bookmarked location. Only use bookmarks created
 	// by makeBookmark.
 	//
 	// Never use a manually modified bookmarks!!
-	const gotoBookmark = (bookmark) => {
-		runeIdx = bookmark[0]
-		cpIdx = bookmark[1]
+	gotoBookmark(bookmark) {
+		this._runeIdx = bookmark[0]
+		this._cpIdx = bookmark[1]
 	}
 
 	// seek advances the iterator until a rune matches the regex.
-	const seek = (regex) => {
-		while (runeIdx < len) {
-			if (runes[runeIdx].match(regex)) {
+	seek(regex) {
+		while (this._runeIdx < this._len) {
+			if (this._runes[this._runeIdx].match(regex)) {
 				return true
 			}
-			increment()
+			this.increment()
 		}
 		return false
 	}
 
 	// read returns the next rune; incrementing the index.
-	const read = () => {
-		if (isEmpty()) {
+	read() {
+		if (this.isEmpty()) {
 			throw new Error(`Can't read because EOF`)
 		}
 
-		const ru = runes[runeIdx]
-		increment()
+		const ru = this._runes[this._runeIdx]
+		this.increment()
 		return ru
 	}
 
 	// accept reads and returns the next rune if there is a regex match. Null is
 	// returned otherwise.
-	const accept = (regex) => {
-		return match(regex) ? read() : null
+	accept(regex) {
+		return this.match(regex) ? this.read() : null
 	}
 
 	// expect reads and returns the next rune if there is a regex match. An error
 	// is thrown otherwise.
-	const expect = (regex) => {
-		const ru = accept(regex)
+	expect(regex) {
+		const ru = this.accept(regex)
 		if (ru === null) {
-			const got = isEmpty() ? 'EOF' : runes[runeIdx]
+			const got = this.isEmpty() ? 'EOF' : this._runes[this._runeIdx]
 			throw new Error(`Expected ${regex} but got ${got}`)
 		}
 		return ru
@@ -132,33 +145,17 @@ export const newStringReader = (s) => {
 
 	// readWhile reads runes until the regex fails to match; returns the matched
 	// runes as a sub string.
-	const readWhile = (regex) => {
+	readWhile(regex) {
 		const result = []
-		while (match(regex)) {
-			result.push(runes[runeIdx])
-			increment()
+		while (this.match(regex)) {
+			result.push(this._runes[this._runeIdx])
+			this.increment()
 		}
 		return result.join('')
 	}
 
 	// skipSpaces reads until a non-whitespace rune or EOF is encountered.
-	const skipSpaces = () => readWhile(/\s/)
-
-	return {
-		runeIndex,
-		codePointIndex,
-		reset,
-		isEmpty,
-		haveEnough,
-		match,
-		slice,
-		makeBookmark,
-		gotoBookmark,
-		seek,
-		read,
-		accept,
-		expect,
-		readWhile,
-		skipSpaces,
+	skipSpaces() {
+		return this.readWhile(/\s/)
 	}
 }

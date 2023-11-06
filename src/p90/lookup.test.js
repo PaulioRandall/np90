@@ -2,18 +2,18 @@ import { lookup } from './lookup.js'
 
 describe('lookup.js', () => {
 	test('finds simple value & identifies its type', () => {
-		const valueMaps = [
+		const tokenMaps = [
 			{
 				x: 'prop',
 			},
 		]
 
-		const act = lookup(valueMaps, ['x'])
+		const act = lookup(tokenMaps, ['x'])
 		expect(act).toEqual('prop')
 	})
 
 	test('finds nested value & identifies its type', () => {
-		const valueMaps = [
+		const tokenMaps = [
 			{
 				my: {
 					func: () => 'meh',
@@ -21,25 +21,25 @@ describe('lookup.js', () => {
 			},
 		]
 
-		const act = lookup(valueMaps, ['my', 'func'])
-		expect(act).toEqual(valueMaps[0].my.func)
+		const act = lookup(tokenMaps, ['my', 'func'])
+		expect(act).toEqual(tokenMaps[0].my.func)
 	})
 
 	test('finds array value & identifies it as an array', () => {
-		const valueMaps = [
+		const tokenMaps = [
 			{
 				list: [1, 2, 3],
 			},
 		]
 
-		const act = lookup(valueMaps, ['list'])
-		expect(act).toEqual(valueMaps[0].list)
+		const act = lookup(tokenMaps, ['list'])
+		expect(act).toEqual(tokenMaps[0].list)
 	})
 
 	test("finds value that's not in the first value map of the set", () => {
-		const valueMaps = [{ a: 'alpha' }, { b: 'beta' }, { c: 'charlie' }]
+		const tokenMaps = [{ a: 'alpha' }, { b: 'beta' }, { c: 'charlie' }]
 
-		const act = lookup(valueMaps, ['c'])
+		const act = lookup(tokenMaps, ['c'])
 		expect(act).toEqual('charlie')
 	})
 })

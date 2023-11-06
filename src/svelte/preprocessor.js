@@ -1,4 +1,4 @@
-import { replaceAll as p90 } from '../p90/p90.js'
+import p90 from '../p90/p90.js'
 
 import { PreprocessorState } from './PreprocessorState.js'
 import { P69FileProcessor } from './P69FileProcessor.js'

@@ -1,7 +1,12 @@
 const implicitTypes = ['string', 'number', 'bigint', 'boolean', 'array']
 
+// resolve accepts a value sourced from a token map and returns a value ready
+// for output.
+//
+// For most types the value is simply stringified. But functions must be
+// invoked to acquire the real value which is then stringified.
 export const resolve = (value, args = []) => {
-	let type = identifyType(value)
+	const type = identifyType(value)
 
 	switch (type) {
 		case 'null':
@@ -27,11 +32,12 @@ export const resolve = (value, args = []) => {
 	return value
 }
 
+// identifyType returns the name of the type of the value.
+//
+// For the most part the name matches the JavaScript type but nulls and arrays
+// return 'null' and 'array' respectively to differentiate themselves from
+// objects and each other.
 export const identifyType = (value) => {
-	if (value === undefined) {
-		return 'undefined'
-	}
-
 	if (value === null) {
 		return 'null'
 	}
@@ -53,7 +59,7 @@ const invokeFunction = (func, args) => {
 
 	if (type === 'function') {
 		throw new Error(
-			"To avoid inifinite recursion, you can't return a function from a function."
+			'Naughty, returning a function from a function is not allowed.'
 		)
 	}
 

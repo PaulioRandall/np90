@@ -1,9 +1,9 @@
-import { scanAll } from './scanner/scanner.js'
-import { lookup } from './lookup/lookup.js'
-import { resolve, identifyType } from './resolve/resolve.js'
+import { scanAll } from './Scanner.js'
+import { lookup } from './lookup.js'
+import { resolve, identifyType } from './resolve.js'
 import { stdout, stderr } from '../shared/writers.js'
 
-export const replaceAll = (valueMaps, content, userOptions = {}) => {
+const replaceAll = (valueMaps, content, userOptions = {}) => {
 	const options = getOptions(userOptions)
 
 	if (!Array.isArray(valueMaps)) {
@@ -75,3 +75,5 @@ const handleError = (e, tk, options) => {
 		throw e
 	}
 }
+
+export default replaceAll

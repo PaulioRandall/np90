@@ -1,6 +1,6 @@
 import path from 'path'
 
-import { replaceAll as p90 } from '../p90/p90.js'
+import p90 from '../p90/p90.js'
 
 import os from './os'
 import listP69Files from './list.js'
