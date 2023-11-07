@@ -14,9 +14,13 @@ export class P69FileProcessor {
 
 		this._state = state
 		this._watcher = null
+		this._timeout = null
+		this._delay = 100
 	}
 
 	process() {
+		this._cancelSchedule()
+
 		return processTree(
 			this._state.getRoot(),
 			this._state.getTokenMaps(),
@@ -34,12 +38,8 @@ export class P69FileProcessor {
 	}
 
 	stop() {
-		if (!this._watcher) {
-			return
-		}
-
-		this._watcher.close()
-		this._watcher = null
+		this._cancelSchedule()
+		this._destroyWatcher()
 	}
 
 	restart() {
@@ -53,17 +53,32 @@ export class P69FileProcessor {
 		})
 	}
 
-	// TODO: Set reprocess flag and use interval polling to avoid processing
-	//       multiple times when multiple files change at once.
+	_destroyWatcher() {
+		if (this._watcher) {
+			this._watcher.close()
+		}
+		this._watcher = null
+	}
+
 	_listenForChanges() {
 		this._watcher.on('change', async (file) => {
 			if (this._isP69File(file)) {
-				await this.process()
+				this._reschedule()
 			}
 		})
 	}
 
 	_isP69File(file) {
 		return path.extname(file) === '.p69'
+	}
+
+	_reschedule() {
+		this._cancelSchedule()
+		this._timeout = setTimeout(this.process, this._delay)
+	}
+
+	_cancelSchedule() {
+		clearTimeout(this._timeout)
+		this._timeout = null
 	}
 }
