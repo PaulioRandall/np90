@@ -1,6 +1,6 @@
 import p90 from '../p90/p90.js'
 
-import { PreprocessorState } from './PreprocessorState.js'
+import PreprocessorState from './PreprocessorState.js'
 import { P69FileProcessor } from './P69FileProcessor.js'
 
 const state = new PreprocessorState()
@@ -9,30 +9,23 @@ const fileProcessor = new P69FileProcessor(state)
 const svelteProcessor = {
 	name: '.p69 to .css processor',
 	style: async ({ content, markup, attributes, filename }) => {
-		if (state.isReloadRequired()) {
-			await state.reloadTokenMaps()
-		}
-
-		if (!state.acceptsMimeType(attributes.lang)) {
-			return {
-				code: content,
-			}
+		if (state.acceptsMimeType(attributes.lang)) {
+			content = await compileCSS(filename, content)
 		}
 
 		return {
-			code: await compileCSS(filename, content),
+			code: content,
 		}
 	},
 }
 
-const compileCSS = (filename, s) => {
-	return p90(
-		state.getTokenMaps(),
-		s,
-		state.getOptions({
+const compileCSS = (filename, code) => {
+	return state.apply((tokenMaps, options) => {
+		return p90(tokenMaps, code, {
+			...options,
 			errorNote: filename,
 		})
-	)
+	})
 }
 
 const init = (tokenFile, userOptions = {}) => {

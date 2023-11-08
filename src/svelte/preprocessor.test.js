@@ -1,8 +1,8 @@
 import preprocessor from './preprocessor.js'
 
 describe('svelte', () => {
-	test('Integration', () => {
-		const processor = preprocessor('./preprocessor.test.token-map.js', {
+	test('Integration', async () => {
+		const processor = await preprocessor('./preprocessor.test.token-map.js', {
 			root: null,
 			output: null,
 		})

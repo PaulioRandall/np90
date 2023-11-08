@@ -21,11 +21,9 @@ export class P69FileProcessor {
 	process() {
 		this._cancelSchedule()
 
-		return processTree(
-			this._state.getRoot(),
-			this._state.getTokenMaps(),
-			this._state.getOptions()
-		)
+		return this._state.apply((tokenMaps, options) => {
+			return processTree(options.root, tokenMaps, options)
+		})
 	}
 
 	start() {
@@ -64,6 +62,12 @@ export class P69FileProcessor {
 		this._watcher.on('change', async (file) => {
 			if (this._isP69File(file)) {
 				this._reschedule()
+				return
+			}
+
+			if (this._isJSFile(file)) {
+				this._state.outOfDate()
+				this._reschedule()
 			}
 		})
 	}
@@ -72,9 +76,20 @@ export class P69FileProcessor {
 		return path.extname(file) === '.p69'
 	}
 
+	_isJSFile(file) {
+		switch (path.extname(file)) {
+			case '.js':
+			case '.jsx':
+			case '.ts':
+				return true
+			default:
+				return false
+		}
+	}
+
 	_reschedule() {
 		this._cancelSchedule()
-		this._timeout = setTimeout(this.process, this._delay)
+		this._timeout = setTimeout(() => this.process(), this._delay)
 	}
 
 	_cancelSchedule() {

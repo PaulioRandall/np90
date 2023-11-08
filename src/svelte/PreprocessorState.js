@@ -1,31 +1,20 @@
 // PreprocessorState loads and holds state for preprocessor.
-export class PreprocessorState {
+export default class PreprocessorState {
 	constructor() {
-		this._requireTokenMapReload = true
-		this._options = {}
+		this._reloadRequired = true
 		this._tokenFile = null
+		this._options = {}
 		this._tokenMaps = []
 	}
 
-	setReloadRequired() {
-		this._requireTokenMapReload = true
+	outOfDate() {
+		this._reloadRequired = true
 		return this
-	}
-
-	isReloadRequired() {
-		return this._requireTokenMapReload
 	}
 
 	setOptions(options) {
 		this._options = options
 		return this
-	}
-
-	getOptions(extra = {}) {
-		return {
-			...this._options,
-			...extra,
-		}
 	}
 
 	getRoot() {
@@ -53,20 +42,37 @@ export class PreprocessorState {
 		return this
 	}
 
-	getTokenMaps() {
-		return this._tokenMaps
+	async apply(f) {
+		if (this._reloadRequired) {
+			await this._reloadTokenMaps()
+		}
+
+		return f(this._tokenMaps, this._options)
 	}
 
-	reloadTokenMaps() {
-		return import(this._tokenFile)
-			.then((m) => {
-				this._tokenMaps = m.default
-				this._requireTokenMapReload = false
-				return this
-			})
-			.catch((e) => {
-				console.error('Failed to reload token map', e)
-				return this
-			})
+	_reloadTokenMaps() {
+		// Note that this causes a tiny memory leak per reload that accumaltes over
+		// time. There's nothing we can do about it at the moment because modules
+		// aren't supposed to change once imported.
+		//
+		// However, the leak should be miniscule per reload unless you've got a
+		// huge dataset inside of your token file. In the extremely unlikely
+		// event that your development machine goes OOM during an extra long
+		// programming session you can just restart dev mode; that or close a
+		// Chrome tab.
+		//
+		// Unfortunately, the files the token file depend on probably won't be
+		// reimported. I've solved half the problem and that's good enough for 80%
+		// of development.
+		//
+		// TODO: Try using a worker:
+		//       https://github.com/nodejs/help/issues/1399#issuecomment-1007130183
+		const modulePath = `${this._tokenFile}?cache_id=${Date.now()}`
+
+		return import(modulePath).then((m) => {
+			this._tokenMaps = m.default
+			this._reloadRequired = false
+			return this._tokenMaps
+		})
 	}
 }

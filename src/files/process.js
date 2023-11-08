@@ -2,7 +2,7 @@ import path from 'path'
 
 import p90 from '../p90/p90.js'
 
-import os from './os'
+import os from './os.js'
 import listP69Files from './list.js'
 
 export const processTree = async (file, tokenMaps, options) => {

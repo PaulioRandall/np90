@@ -3,15 +3,15 @@ import { lookup } from './lookup.js'
 import { resolve, identifyType } from './resolve.js'
 import { stdout, stderr } from '../shared/writers.js'
 
-const replaceAll = (valueMaps, content, userOptions = {}) => {
+const replaceAll = (tokenMaps, content, userOptions = {}) => {
 	const options = getOptions(userOptions)
 
-	if (!Array.isArray(valueMaps)) {
-		valueMaps = [valueMaps]
+	if (!Array.isArray(tokenMaps)) {
+		tokenMaps = [tokenMaps]
 	}
 
 	content = content.normalize('NFC')
-	return replaceAllTokens(valueMaps, content, options)
+	return replaceAllTokens(tokenMaps, content, options)
 }
 
 const getOptions = (userOptions) => {
@@ -22,7 +22,7 @@ const getOptions = (userOptions) => {
 	}
 }
 
-const replaceAllTokens = (valueMaps, content, options) => {
+const replaceAllTokens = (tokenMaps, content, options) => {
 	const tokens = scanAll(content)
 
 	// Work from back to front of the content string otherwise replacements at
@@ -31,7 +31,7 @@ const replaceAllTokens = (valueMaps, content, options) => {
 
 	for (const tk of tokens) {
 		try {
-			content = replaceToken(valueMaps, content, tk)
+			content = replaceToken(tokenMaps, content, tk)
 		} catch (e) {
 			handleError(e, tk, options)
 		}
@@ -40,8 +40,8 @@ const replaceAllTokens = (valueMaps, content, options) => {
 	return content
 }
 
-const replaceToken = (valueMaps, content, tk) => {
-	let value = lookup(valueMaps, tk.path)
+const replaceToken = (tokenMaps, content, tk) => {
+	let value = lookup(tokenMaps, tk.path)
 
 	if (value === undefined) {
 		return content
