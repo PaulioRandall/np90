@@ -2,22 +2,22 @@
 	"author": "Paul Williams",
 	"name": "p69",
 	"description": "A minimalist CSS preprocessing tool using simple search and replace.",
+	"type": "module",
+	"license": "MIT",
+	"version": "2.0.0-dev",
 	"keywords": [
 		"css",
-		"preprocessor",
+		"processor",
 		"minimalist",
 		"node",
 		"svelte",
 		"plunder"
 	],
-	"version": "2.0.0",
 	"exports": {
 		"./files": "./src/files/index.js",
 		"./util": "./src/util/index.js",
 		"./svelte": "./src/svelte/index.js"
 	},
-	"type": "module",
-	"license": "MIT",
 	"engines": {
 		"node": "18.18.2"
 	},

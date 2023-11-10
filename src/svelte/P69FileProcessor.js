@@ -60,12 +60,14 @@ export class P69FileProcessor {
 
 	_listenForChanges() {
 		this._watcher.on('change', async (file) => {
+			file = path.resolve(file)
+
 			if (this._isP69File(file)) {
 				this._reschedule()
 				return
 			}
 
-			if (this._isJSFile(file)) {
+			if (this._state.getTokenFile() === file) {
 				this._state.outOfDate()
 				this._reschedule()
 			}

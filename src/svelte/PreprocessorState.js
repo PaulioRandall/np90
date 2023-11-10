@@ -42,6 +42,10 @@ export default class PreprocessorState {
 		return this
 	}
 
+	getTokenFile() {
+		return this._tokenFile
+	}
+
 	async apply(f) {
 		if (this._reloadRequired) {
 			await this._reloadTokenMaps()
@@ -67,6 +71,8 @@ export default class PreprocessorState {
 		//
 		// TODO: Try using a worker:
 		//       https://github.com/nodejs/help/issues/1399#issuecomment-1007130183
+		//
+		// TODO: Does Node mocking modules exist yet?
 		const modulePath = `${this._tokenFile}?cache_id=${Date.now()}`
 
 		return import(modulePath).then((m) => {
