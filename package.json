@@ -4,7 +4,7 @@
 	"description": "A minimalist CSS preprocessing tool using simple search and replace.",
 	"type": "module",
 	"license": "MIT",
-	"version": "2.0.0-dev",
+	"version": "2.0.0-dev-1",
 	"keywords": [
 		"css",
 		"processor",
