@@ -92,7 +92,10 @@ export default class StringReader {
 	//
 	// Do not manually modify the bookmark!!
 	makeBookmark() {
-		return [this._runeIdx, this._cpIdx]
+		return {
+			runeIdx: this._runeIdx,
+			cpIdx: this._cpIdx,
+		}
 	}
 
 	// gotoBookmark jumps to a bookmarked location. Only use bookmarks created
@@ -100,8 +103,8 @@ export default class StringReader {
 	//
 	// Never use a manually modified bookmarks!!
 	gotoBookmark(bookmark) {
-		this._runeIdx = bookmark[0]
-		this._cpIdx = bookmark[1]
+		this._runeIdx = bookmark.runeIdx
+		this._cpIdx = bookmark.cpIdx
 	}
 
 	// seek advances the iterator until a rune matches the regex.

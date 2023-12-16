@@ -131,33 +131,18 @@ export default class Scanner {
 			return null
 		}
 
-		const [start, startCp] = this._sr.makeBookmark()
-
-		const startRune = this._sr.read()
-		if (this._sr.accept(this._prefixRegex)) {
-			const suffix = this._scanSuffix()
-			const [end, endCp] = this._sr.makeBookmark()
-
-			return {
-				start: startCp,
-				end: endCp,
-				raw: this._sr.slice(start, end),
-				suffix: suffix,
-				path: [this._prefix],
-				args: [],
-			}
-		}
+		const start = this._sr.makeBookmark()
+		this._sr.read() // skip prefix
 
 		const name = this._scanName()
 		const args = this._scanParams(name)
 		const suffix = this._scanSuffix()
-
-		const [end, endCp] = this._sr.makeBookmark()
+		const end = this._sr.makeBookmark()
 
 		return {
-			start: startCp,
-			end: endCp,
-			raw: this._sr.slice(start, end),
+			start: start.cpIdx,
+			end: end.cpIdx,
+			raw: this._sr.slice(start.runeIdx, end.runeIdx),
 			suffix: suffix,
 			path: name.split('.'),
 			args: args,
@@ -170,13 +155,8 @@ export const scanAll = (content) => {
 	const sc = new Scanner(content)
 	const result = []
 
-	while (true) {
-		const tk = sc.nextToken()
-
-		if (tk === null) {
-			break
-		}
-
+	let tk = null
+	while ((tk = sc.nextToken())) {
 		result.push(tk)
 	}
 
