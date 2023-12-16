@@ -4,7 +4,7 @@
 	"description": "A minimalist CSS preprocessing tool using simple search and replace.",
 	"type": "module",
 	"license": "MIT",
-	"version": "2.0.0-dev-1",
+	"version": "2.0.0-dev-2",
 	"keywords": [
 		"css",
 		"processor",
@@ -19,7 +19,8 @@
 		"./svelte": "./src/svelte/index.js"
 	},
 	"engines": {
-		"node": "18.18.2"
+		"node": ">=18.18.2 <19.0.0",
+		"npm": ">=9.8.1 < 10.0.0"
 	},
 	"repository": {
 		"type": "git",
@@ -33,9 +34,9 @@
 	},
 	"devDependencies": {
 		"jest": "29.7.0",
-		"prettier": "3.0.3"
+		"prettier": "3.1.1"
 	},
 	"dependencies": {
-		"chokidar": "3.5.3"
+		"chokidar": "^3.5.3"
 	}
 }
