@@ -1,16 +1,16 @@
-import p90 from './p90.js'
+import engine from './engine.js'
 
 const joinLines = (...lines) => lines.join('\n')
 
 const doProcessString = (valueMaps, content, config = {}) => {
-	return p90(valueMaps, content, {
+	return engine(valueMaps, content, {
 		filename: 'Test.svelte',
 		throwOnError: true,
 		...config,
 	})
 }
 
-describe('p90.js', () => {
+describe('engine.js', () => {
 	test('performs simple replacement', () => {
 		const valueMap = {
 			green: 'forestgreen',

@@ -16,8 +16,11 @@ const replaceAll = (tokenMaps, content, userOptions = {}) => {
 
 const getOptions = (userOptions) => {
 	return {
-		throwOnError: false,
-		errorNote: '¯\\_(ツ)_/¯', // Filename usually
+		onError: (e, tk, options) => {
+			const tkStr = JSON.stringify(tk, null, 2)
+			stderr('P90 error:', e)
+			stdout(`P90 token: ${tkStr}`)
+		},
 		...userOptions,
 	}
 }
@@ -33,7 +36,7 @@ const replaceAllTokens = (tokenMaps, content, options) => {
 		try {
 			content = replaceToken(tokenMaps, content, tk)
 		} catch (e) {
-			handleError(e, tk, options)
+			options.onError(e, tk, options)
 		}
 	}
 
@@ -62,18 +65,6 @@ const replaceValue = (content, value, start, end) => {
 const appendSuffix = (value, suffix) => {
 	const dontSuffix = value === undefined || value === null
 	return dontSuffix ? value : value + suffix
-}
-
-const handleError = (e, tk, options) => {
-	const tkStr = JSON.stringify(tk, null, 2)
-
-	stderr(`P90 error: ${options.errorNote}`)
-	stdout(`P90 token: ${tkStr}`)
-	stderr(e)
-
-	if (options.throwOnError) {
-		throw e
-	}
 }
 
 export default replaceAll

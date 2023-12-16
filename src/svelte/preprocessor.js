@@ -1,4 +1,4 @@
-import p90 from '../p90/p90.js'
+import engine from '../engine/engine.js'
 import { processTree } from '../files/process.js'
 
 export default (tokenMaps, userOptions = {}) => {
@@ -35,7 +35,7 @@ const acceptsMimeType = (options, lang) => {
 }
 
 const compileCSS = (tokenMaps, code, filename, options) => {
-	return p90(tokenMaps, code, {
+	return engine(tokenMaps, code, {
 		...options,
 		errorNote: filename,
 	})

@@ -1,6 +1,6 @@
 import path from 'path'
 
-import p90 from '../p90/p90.js'
+import engine from '../engine/engine.js'
 
 import os from './os.js'
 import listP69Files from './list.js'
@@ -24,7 +24,7 @@ export const processFile = async (p69File, tokenMaps, options) => {
 		return
 	}
 
-	css = p90(tokenMaps, css, prepOptions(options, p69File))
+	css = engine(tokenMaps, css, prepOptions(options, p69File))
 	css = css.trim()
 
 	await writeCssToFile(p69File, css, options)
