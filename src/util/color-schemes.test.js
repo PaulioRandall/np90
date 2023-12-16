@@ -16,9 +16,9 @@ const themes = {
 describe('themeVariables', () => {
 	test('#1', () => {
 		const exp = {
-			base: 'var(--theme-base)',
-			text: 'var(--theme-text)',
-			strong: 'var(--theme-strong)',
+			base: 'var(--base)',
+			text: 'var(--text)',
+			strong: 'var(--strong)',
 		}
 
 		const act = themeVariables(themes)
@@ -44,7 +44,7 @@ describe('colorSchemes', () => {
 	}
 }`
 
-		const act = colorSchemes(themes)
+		const act = colorSchemes(themes, 'theme-')
 		expect(act).toEqual(exp)
 	})
 })

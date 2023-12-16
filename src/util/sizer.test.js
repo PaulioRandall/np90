@@ -1,13 +1,13 @@
-import { spacings } from './spacings.js'
+import { sizer } from './sizer.js'
 
-describe('spacings', () => {
+describe('sizer', () => {
 	test('#1', () => {
 		const given = {
 			sm: 320,
 			md: 720,
 		}
 
-		const act = spacings(given)
+		const act = sizer(given)
 		expect(typeof act).toBe('object')
 		expect(typeof act.sm).toBe('function')
 		expect(typeof act.md).toBe('function')
@@ -18,7 +18,7 @@ describe('spacings', () => {
 			sm: 24,
 		}
 
-		const act = spacings(given)
+		const act = sizer(given)
 
 		expect(act.sm()).toEqual('1.5rem')
 		expect(act.sm('em')).toEqual('1.5em')
@@ -35,7 +35,7 @@ describe('spacings', () => {
 			sm: 320,
 		}
 
-		const act = spacings(given)
+		const act = sizer(given)
 		expect(() => act.sm('au')).toThrow(Error)
 	})
 })

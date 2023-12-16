@@ -1,9 +1,9 @@
 import engine from '../engine/engine.js'
 import { processTree } from '../files/process.js'
+import { stderr } from '../shared/writers.js'
 
 export default (tokenMaps, userOptions = {}) => {
 	return newSvelteProcessor(tokenMaps, {
-		throwOnError: false,
 		root: './src',
 		output: './src/app.css',
 		mimeTypes: [undefined, 'p69', 'text/p69'],
@@ -36,7 +36,7 @@ const acceptsMimeType = (options, lang) => {
 
 const compileCSS = (tokenMaps, code, filename, options) => {
 	return engine(tokenMaps, code, {
+		reference: filename,
 		...options,
-		errorNote: filename,
 	})
 }

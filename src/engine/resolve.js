@@ -59,7 +59,7 @@ const invokeFunction = (func, args) => {
 
 	if (type === 'function') {
 		throw new Error(
-			'Naughty, returning a function from a function is not allowed.'
+			'Naughty! Returning a function from a function is not allowed.'
 		)
 	}
 

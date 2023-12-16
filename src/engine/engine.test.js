@@ -5,7 +5,9 @@ const joinLines = (...lines) => lines.join('\n')
 const doProcessString = (valueMaps, content, config = {}) => {
 	return engine(valueMaps, content, {
 		filename: 'Test.svelte',
-		throwOnError: true,
+		onError: (e) => {
+			throw e
+		},
 		...config,
 	})
 }

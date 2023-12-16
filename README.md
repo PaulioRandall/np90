@@ -13,61 +13,52 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 ```json
 {
 	"devDependencies": {
-		"p69": "2.0.0"
+		"p69": "^2.0.0"
 	}
 }
 ```
 
 ### `tokens.js`
 
-First you'll need to create a map of your tokens in JavaScript. I recommend creating a file and exporting. Nowdays I call the file `tokens.js` but call it whatever you want.
+First create a map of your tokens in JavaScript. I recommend creating a file and exporting; call it whatever you want.
 
-There are no standards or conventions on how one should organise one's token maps. Do what works, not what happens to be trending. Personally, I try to keep it simple, readable, and changable to best support lean means such as CI/CD.
+There are no standards or conventions on how one should organise one's maps of tokens. Do what works, not what happens to be trending!
 
 Here's a rough example:
 
 ```js
 // tokens.js
 
-// This is a custom JavaScript file so no need to design any content.
-// I'm sure you can imagine a map of colours.
+// Don't be scared to split out parts into meaningfully
+// named files if things start to get unruly.
 import colors from './colors.js'
 
 export default {
-	token_name: 'token value',
-
-	// Used for creating string literals containg $
+	// Used for creating string literals such as those
+	// containing '$'.
 	toString: (s = '') => s.toString(),
 
-	// Don't be scared to split out parts into meaningfully named files if things
-	// start to get unruly.
+	// See import.
 	color: colors,
 
-	// Create hierarchies to meaningfully structure your CSS tokens so the
-	// resultant P69 enhanced CSS is easy to comprehend. If you employ a design
-	// system or design tokens then you should probably derive your structure
-	// from there.
+	// Create hierarchies to meaningfully structure your CSS.
+	// Play around with it. Do what works, not what everyone
+	// else is doing.
 	//
-	// I aim for a structure where people reading my tokens within CSS can
-	// understand what my tokens mean. They will then look here if they need
-	// to know the what the actual values are or how they are generated.
-	//
-	// Sounds obvious but it's still very common for people to code using
-	// common sense techniques that lack real world effectiveness or fitness
-	// for purpose.
-	//
-	//   "Common sense is wonderful at making sense of the world, but not
-	//   necessarily for understanding it." - Duncan Watts
+	// However, if you employ a design system or design tokens
+	// then you should probably derive your structure from there.
 	font: {
 		family: {
+			// $font.family.helvetica
 			helvetica: ['Helvetica', 'Arial', 'Verdana'],
+			// $font.family.verdana
 			verdana: ['Verdana', 'Arial', 'Helvetica'],
 		},
 		size: {
-			sm: 12,
-			md: 16,
-			lg: 20,
-			xl: 24,
+			sm: 12, // $font.size.sm
+			md: 16, // $font.size.md
+			lg: 20, // $font.size.lg
+			xl: 24, // $font.size.xl
 		},
 	},
 }
@@ -105,22 +96,24 @@ export const escapeMethods = {
 	$$: '$$',
 	$$$: '$$$',
 
-	// We can create a single function that handles all unbroken series of $.
+	// We can create a single function that handles all unbroken
+	// series of $.
 	//
 	// $$ => $
 	// $$(2) => $$
 	// $$(3) => $$$
 	$: (n = 1) => '$'.repeat(n),
 
-	// literal accepts a value and returns it. This allows values containing $
-	// anywhere within to be escaped easily.
+	// literal accepts a value and returns it. This allows values
+	// containing $ anywhere within to be escaped easily.
 	//
 	// $literal("$$$") => $$$
 	// $literal("$ one $$ two $$$ three") => $ one $$ two $$$ three
 	literal: (v = '') => v.toString(),
 
-	// The world's your Mollusc. You can create any kind of function to escape
-	// however you please. Here's a quotation function.
+	// The world's your Mollusc. You can create any kind of
+	// function to escape however you please. Here's a quotation
+	// function.
 	//
 	// $quote('Lots of $$$') => "Lots of $$$"
 	// $quote('Lots of $$$', '`') => `Lots of $$$`
@@ -144,14 +137,9 @@ const tokens = {
 }
 
 const before = 'main { font-family: $font.family.verdana; }'
+const after = p69(tokens, before)
 
-const after = p69(tokenMap, before, {
-	// If true, errors will be thrown after being printed.
-	// This will immediately end processing. Default is false.
-	throwOnError: false,
-})
-
-// After: "main { font-family: Verdana, Arial, Helvetica; }"
+// after: "main { font-family: Verdana, Arial, Helvetica; }"
 ```
 
 **P69 enhanced CSS files:**
@@ -167,12 +155,23 @@ const tokens = {
 	},
 }
 
-p69Files(tokenMap, {
-	// If true, errors will be thrown after being printed.
-	// This will immediately end processing. Default is
-	// false as I use Svelte which is better at telling me
-	// where the errors are.
-	throwOnError: false,
+p69Files(tokens, {
+	// reference is a useful identifer for when onError
+	// is called. The default onError will print it out.
+	// Typically a filename but any identifer you find
+	// meaningful will do.
+	reference: '¯\\_(ツ)_/¯',
+
+	// errorIfMissing determines if onError should be
+	// called if a style token can't be found in the
+	// provided mappings.
+	errorIfMissing: true,
+
+	// onError is called when an error occurs.
+	// If the error isn't thrown then processing will
+	// continue for the remaining tokens.
+	// By default, logs the error and carries on.
+	onError: (err, token, options) => {},
 
 	// root directory containing .p69 files that need
 	// to be converted to CSS. If null then .p69 file
@@ -181,15 +180,14 @@ p69Files(tokenMap, {
 
 	// output is the file path to merge all processed .p69
 	// files into. This does not include style content from
-	// Svelte files or anyother framework. If null, a .css
-	// file will be created for each .p69 file in the same
-	// directory as it.
+	// framework files. If null, a .css file will be
+	// created for each .p69 file in the same directory as it.
 	//
 	// There are virtues and vices to each approach but
 	// amalgamation works better for smaller projects while
-	// big projects often benefit from more rigorous
+	// big projects usually benefit from more rigorous
 	// modularisation.
-	output: './src/global.css',
+	output: './src/app.css',
 })
 ```
 
@@ -208,11 +206,22 @@ export default {
   	p69Svelte(
 	  	tokens,
 	  	{
-				// If true, errors will be thrown after being printed.
-				// This will immediately end processing. Default is
-				// false as I use Svelte which is better at telling me
-				// where the errors are.
-				throwOnError: false,
+				// reference is a useful identifer for when onError
+				// is called. The default onError will print it out.
+				// Typically a filename but any identifer you find
+				// meaningful will do.
+				reference: '¯\\_(ツ)_/¯',
+
+	  		// errorIfMissing determines if onError should be
+				// called if a style token can't be found in the
+				// provided mappings.
+				errorIfMissing: true,
+
+				// onError is called when an error occurs.
+				// If the error isn't thrown then processing will
+				// continue for the remaining tokens.
+				// By default, logs the error and carries on.
+				onError: (err, token, options) => {},
 
 				// root directory containing .p69 files that need
 				// to be converted to CSS. If null then .p69 file
@@ -221,40 +230,19 @@ export default {
 
 				// output is the file path to merge all processed .p69
 				// files into. This does not include style content from
-				// Svelte files or anyother framework. If null, a .css
-				// file will be created for each .p69 file in the same
-				// directory as it.
+				// framework files. If null, a .css file will be
+				// created for each .p69 file in the same directory as it.
 				//
 				// There are virtues and vices to each approach but
 				// amalgamation works better for smaller projects while
-				// big projects often benefit from more rigorous
+				// big projects usually benefit from more rigorous
 				// modularisation.
-				output: './src/global.css',
+				output: './src/app.css',
 
-				// List of accepted lang attibute values. Import
-				// defaultMimeTypes from 'p69' if you need to know them
-				// in code. Undefined means that a style tag with no
-				// lang set will be included in P69 processing.
+				// List of accepted lang attibute values. Undefined
+				// means a style tag with no lang set will be included
+				// in processing.
 				mimeTypes: [undefined, 'p69', 'text/p69'],
-
-				// watch determines if P69 should reprocess everytime a
-				// P69 file or any of the watchToken files change during
-				// development. This only makes sense when using the
-				// framework's developer mode. Must be set to true and
-				// not just truthy!
-				watch: process?.env?.NODE_ENV === 'development',
-
-				// watchTokens contains a set of globs for specifying
-				// files and folders which, on change, should trigger
-				// a reloading of token mappings. The watch option must
-				// be true to enable this option.
-				//
-				// By default this is every JavaScript file in the src
-				// folder. For small projects this is fine but when a
-				// project contains a lot of JavaScript files most of
-				// the reprocessing is redundant. Setting the specific
-				// token file or files reduces pointless reloading.
-				watchTokens: ['./src/**/*.js'],
 			}
 		)
 	],
@@ -265,7 +253,7 @@ export default {
 ### Example Svelte Component
 
 ```html
-<!-- StylishSection.svelte -->
+<!-- StyledSection.svelte -->
 <section>
 	<slot />
 </section>
@@ -320,10 +308,10 @@ Not much to show off, just a CSS file with **P69** tokens.
 
 ## CSS Utility Functions
 
-Optional utility functions to use in your style files. Perfectly acceptable to write your own if you don't like mine.
+Optional utility functions to use in your style files. Write your own if you don't like mine.
 
 ```js
-import { themeVariables, colorSchemes, rgbsToColors, spacings } from 'p69/util'
+import { rgbsToColors, themeVariables, colorSchemes, sizer } from 'p69/util'
 ```
 
 | Name                              | Does what?                                                                                                                                            |
@@ -331,7 +319,7 @@ import { themeVariables, colorSchemes, rgbsToColors, spacings } from 'p69/util'
 | [rgbsToColors](#rgbstocolors)     | Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.                                                                                     |
 | [colorSchemes](#colorschemes)     | Generates CSS color scheme media queries from a set of themes with CSS variables as values; goes hand-in-hand with [themeVariables](#themevariables). |
 | [themeVariables](#themevariables) | Generates a **set** of CSS variables from a set of themes; goes hand-in-hand with [colorSchemes](#colorschemes).                                      |
-| [spacings](#spacings)             | Generates a set of spacing functions.                                                                                                                 |
+| [sizer](#sizer)                   | Generates a set of size functions.                                                                                                                    |
 
 ### rgbsToColors
 
@@ -373,6 +361,7 @@ Generates CSS color scheme media queries from a set of themes; goes hand-in-hand
 **Parameters**:
 
 - **themes**: map of CSS colour schemes (themes).
+- **prefix**: string to prefix the variable name to avoid name clashes.
 
 ```js
 import { colorSchemes } from 'p90/util'
@@ -389,20 +378,20 @@ const themes = {
 	},
 }
 
-const scheme = colorSchemes(themes)
+const scheme = colorSchemes(themes, 'theme-primary')
 console.log(scheme)
 /*
 `@media (prefers-color-scheme: light) {
 	:root {
-		--theme-base: rgb(250, 250, 250);
-		--theme-text: rgb(5, 10, 60);
+		--theme-primary-base: rgb(250, 250, 250);
+		--theme-primary-text: rgb(5, 10, 60);
 	}
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--theme-base: rgb(5, 10, 35);
-		--theme-text: rgb(231, 245, 255);
+		--theme-primary-base: rgb(5, 10, 35);
+		--theme-primary-text: rgb(231, 245, 255);
 	}
 }`
 */
@@ -415,6 +404,7 @@ Generates a **set** of CSS variables from a set of themes; goes hand-in-hand wit
 **Parameters**:
 
 - **themes**: map of CSS colour schemes (themes).
+- **prefix**: string to prefix the variable name to avoid name clashes.
 
 ```js
 import { themeVariables } from 'p90/util'
@@ -432,20 +422,20 @@ const themes = {
 	},
 }
 
-const theme = themeVariables(themes)
+const theme = themeVariables(themes, 'theme-primary')
 console.log(theme)
 /*
 {
-	base: "var(--theme-base)",
-	text: "var(--theme-text)",
-	meh: "var(--theme-meh)",
+	base: "var(--theme-primary-base)",
+	text: "var(--theme-primary-text)",
+	meh: "var(--theme-primary-meh)",
 }
 */
 ```
 
-### spacings
+### sizer
 
-Generates a set of spacing functions with support for most size units.
+Generates a set of size or spacing functions with support for most size units.
 
 **Parameters**:
 
@@ -466,21 +456,23 @@ Everything is in reference to 96 DPI. Supported size units:
 - mm
 
 ```js
-import { spacings } from 'p69/util'
+import { sizer } from 'p69/util'
 
-const styles = {
-	width: spacings(
+const tokens = {
+	width: sizer(
 		{
 			min: 320,
 			sm: 720,
 			md: 920,
 			lg: 1200,
 			xl: 1600,
-		},
-		{
-			base: 16, // default: 16 (px)
-			defaultUnit: 'rem', // default: 'rem'
 		}
+		/*
+		{
+			base: 16, // default
+			defaultUnit: 'rem', // default
+		}
+		*/
 	),
 }
 

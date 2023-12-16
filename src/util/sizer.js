@@ -13,27 +13,26 @@ const round = (n, dp = 2) => {
 }
 
 const pxToEm = (px, base) => round(px / base)
-const pxToRem = (px, base) => round(px / base)
 const pxToPt = (px) => round((px * PT_IN_INCH) / PX_IN_INCH)
 const pxToIn = (px) => round((px * 1) / PX_IN_INCH)
 const pxToCm = (px) => round((px * 1) / PX_IN_CM)
 const pxToMm = (px) => round((px * 1) / PX_IN_MM, 1)
 const pxToPc = (px) => round((px * 1) / PX_IN_PC)
 
-export const spacings = (values, options = {}) => {
+export const sizer = (values, options = {}) => {
 	const { base = 16, defaultUnit = 'rem' } = options
 	const funcs = {}
 
 	for (const name in values) {
 		funcs[name] = (unit) => {
-			return calcSpace(name, base, values[name], unit ? unit : defaultUnit)
+			return calcSize(name, base, values[name], unit ? unit : defaultUnit)
 		}
 	}
 
 	return funcs
 }
 
-const calcSpace = (name, base, px, unit) => {
+const calcSize = (name, base, px, unit) => {
 	switch (unit) {
 		case 'rem':
 			return pxToEm(px, base) + 'rem'

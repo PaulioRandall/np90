@@ -1,9 +1,9 @@
 import path from 'path'
 
-import engine from '../engine/engine.js'
-
 import os from './os.js'
 import listP69Files from './list.js'
+
+import engine from '../engine/engine.js'
 
 export const processTree = async (file, tokenMaps, options) => {
 	const p69Files = await listP69Files(file)
@@ -13,7 +13,10 @@ export const processTree = async (file, tokenMaps, options) => {
 	}
 
 	for (const f of p69Files) {
-		await processFile(f, tokenMaps, options)
+		await processFile(f, tokenMaps, {
+			reference: f,
+			...options,
+		})
 	}
 }
 
@@ -24,17 +27,10 @@ export const processFile = async (p69File, tokenMaps, options) => {
 		return
 	}
 
-	css = engine(tokenMaps, css, prepOptions(options, p69File))
+	css = engine(tokenMaps, css, options)
 	css = css.trim()
 
 	await writeCssToFile(p69File, css, options)
-}
-
-const prepOptions = (userOptions, filename) => {
-	return {
-		...userOptions,
-		filename,
-	}
 }
 
 const writeCssToFile = async (p69File, css, options) => {

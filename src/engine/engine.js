@@ -16,10 +16,14 @@ const replaceAll = (tokenMaps, content, userOptions = {}) => {
 
 const getOptions = (userOptions) => {
 	return {
+		reference: '¯\\_(ツ)_/¯',
+		errorIfMissing: true,
 		onError: (e, tk, options) => {
-			const tkStr = JSON.stringify(tk, null, 2)
-			stderr('P90 error:', e)
-			stdout(`P90 token: ${tkStr}`)
+			if (options.reference) {
+				stderr('[P69]', options.reference)
+			}
+			stderr('[P69]', e)
+			stdout('[P69]', JSON.stringify(tk, null, 2))
 		},
 		...userOptions,
 	}
@@ -33,9 +37,16 @@ const replaceAllTokens = (tokenMaps, content, options) => {
 	tokens.reverse()
 
 	for (const tk of tokens) {
+		let tokenFound = false
+
 		try {
-			content = replaceToken(tokenMaps, content, tk)
+			;[content, tokenFound] = replaceToken(tokenMaps, content, tk)
 		} catch (e) {
+			options.onError(e, tk, options)
+		}
+
+		if (!tokenFound && options.errorIfMissing) {
+			const e = new Error(`Missing token: ${tk.path.join('.')}`)
 			options.onError(e, tk, options)
 		}
 	}
@@ -43,17 +54,18 @@ const replaceAllTokens = (tokenMaps, content, options) => {
 	return content
 }
 
-const replaceToken = (tokenMaps, content, tk) => {
+const replaceToken = (tokenMaps, content, tk, options) => {
 	let value = lookup(tokenMaps, tk.path)
 
 	if (value === undefined) {
-		return content
+		return [content, false]
 	}
 
 	value = resolve(value, tk.args)
 	value = appendSuffix(value, tk.suffix)
 
-	return replaceValue(content, value, tk.start, tk.end)
+	content = replaceValue(content, value, tk.start, tk.end)
+	return [content, true]
 }
 
 const replaceValue = (content, value, start, end) => {
