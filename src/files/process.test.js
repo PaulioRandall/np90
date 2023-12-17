@@ -27,10 +27,12 @@ describe('files.js', () => {
 			pad: '2rem',
 		}
 
-		await processTree(testdata.root, tokenMap, {
+		const hasErrors = await processTree(testdata.root, tokenMap, {
 			root: null,
 			output: null,
 		})
+
+		expect(hasErrors).toEqual(false)
 
 		for (const f of expectedCSS) {
 			await testdata.expectFileContains(f.path, f.content)
@@ -46,10 +48,12 @@ describe('files.js', () => {
 			pad: '2rem',
 		}
 
-		await processTree(testdata.root, tokenMap, {
+		const hasErrors = await processTree(testdata.root, tokenMap, {
 			root: testdata.root,
 			output: output,
 		})
+
+		expect(hasErrors).toEqual(false)
 
 		const exp = expectedCSS.reduce((acc, f) => {
 			return `${acc}${f.content}\n`

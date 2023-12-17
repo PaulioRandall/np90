@@ -4,6 +4,7 @@ import os from './os.js'
 import listP69Files from './list.js'
 
 import engine from '../engine/engine.js'
+import { stdout, stderr } from '../shared/writers.js'
 
 export const processTree = async (file, tokenMaps, options) => {
 	const p69Files = await listP69Files(file)
@@ -12,18 +13,26 @@ export const processTree = async (file, tokenMaps, options) => {
 		await os.deleteFile(options.output)
 	}
 
+	const hasErrors = false
+
 	for (const f of p69Files) {
 		await processFile(f, tokenMaps, {
 			reference: f,
 			...options,
+		}).catch((e) => {
+			hasErrors = true
+			stderr(e, '\n')
 		})
 	}
+
+	return hasErrors
 }
 
 export const processFile = async (p69File, tokenMaps, options) => {
 	let [css, ok] = await os.readWholeFile(p69File)
 
 	if (!ok) {
+		throw new Error(`Unable to read file: ${p69File}`)
 		return
 	}
 
