@@ -4,7 +4,7 @@
 	"description": "A minimalist CSS preprocessing tool using simple search and replace.",
 	"type": "module",
 	"license": "MIT",
-	"version": "2.0.0-dev-2",
+	"version": "2.0.0-dev-3",
 	"keywords": [
 		"css",
 		"processor",
@@ -36,7 +36,4 @@
 		"jest": "29.7.0",
 		"prettier": "3.1.1"
 	},
-	"dependencies": {
-		"chokidar": "^3.5.3"
-	}
 }
