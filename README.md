@@ -342,10 +342,10 @@ import { rgbsToColors, themeVariables, colorSchemes, sizer } from 'p69/util'
 
 Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.
 
-**`rgbsToColors(rgbColorMap) colorMap`**
+**`rgbsToColors(rgbMap) cssColorMap`**
 
-- **rgbColorMap**: map of RGB and RGBA arrays.
-- **colorMap**: map of token names to RGB and RGBA CSS strings.
+- **rgbMap**: map of token names to RGB and RGBA arrays.
+- **cssColorMap**: map of token names to RGB and RGBA CSS strings.
 
 ```js
 import { rgbsToColors } from 'p90/util'
@@ -380,7 +380,7 @@ Generates CSS color scheme media queries from a set of themes; goes hand-in-hand
 
 **`themeVariables(themes, prefix) mediaQueries`**
 
-- **themes**: map of CSS colour schemes (themes).
+- **themes**: map of colour schemes containing token names to CSS values (themes).
 - **prefix**: string to prefix the variable name to avoid name clashes.
 - **mediaQueries**: media queries as a CSS string.
 
@@ -426,7 +426,7 @@ Generates a **set** of CSS variables from a set of themes; goes hand-in-hand wit
 
 **`colorSchemes(themes, prefix) varMap`**
 
-- **themes**: map of CSS colour schemes (themes).
+- **themes**: map of colour schemes containing token names to CSS values (themes).
 - **prefix**: string to prefix the variable name to avoid name clashes.
 - **varMap**: map of token names to CSS variable strings.
 
@@ -466,8 +466,8 @@ Generates a set of size or spacing functions with support for most size units.
 **`sizer(tokens, { base, defaultUnit }) sizeFuncMap`**
 
 - **tokens**: map of token names to pixel amounts.
-- **base**: Pixels per REM. This is not necessarily the users font size, just a way to adjust EM and REM if needed (default=16)
-- **defaultUnit**: Default size unit when not passing any parameters when referenced within CSS (default='rem')
+- **base**: pixels per REM. This is not necessarily the users font size, just a way to adjust EM and REM if needed (default=16)
+- **defaultUnit**: default size unit when not passing any parameters (default='rem')
 - **sizeFuncMap**: map of token names to size functions.
 
 Everything is in reference to 96 DPI. Supported size units:
