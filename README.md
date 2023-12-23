@@ -7,13 +7,14 @@
 
 **P69** enables compile time tokens for CSS within Node based projects.
 
-It scans CSS for **P69** tokens which are substituted with user defined token values. It's just an enhanced `string.replace` to be honest.
-
-For instance:
+It scans CSS for **P69** tokens which are substituted with user defined token values. It's just an enhanced `string.replace` to be honest. For instance:
 
 ```css
 .strong-paragraph {
+	/* color: goldenrod; */
 	color: $color.strong;
+
+	/* font-size: 20px; */
 	font-size: $font.size.lg;
 }
 ```
@@ -56,7 +57,7 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 
 ### Token Maps
 
-First create a map of your tokens in JavaScript. I recommend creating a file and exporting. Call it what you want.
+First create a map of your tokens in JavaScript. I recommend creating a file and exporting. Call it whatever you like.
 
 There are no standards or conventions on how one should organise their token maps. Do what works, not what happens to be trending!
 
@@ -65,7 +66,7 @@ Here's a rough example:
 ```js
 // tokens.js
 
-import colors from './colors.js'
+import myColors from './my-colors.js'
 
 export default {
 	// Used for creating string literals such as those
@@ -74,7 +75,7 @@ export default {
 
 	// Don't be scared to split out parts into meaningfully
 	// named files if things start to get unruly.
-	color: colors,
+	color: myColors,
 
 	// Create hierarchies to meaningfully structure your CSS.
 	// Structure in accordance with your project.
