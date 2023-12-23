@@ -1,6 +1,6 @@
-[![Latest Stable Version](https://img.shields.io/packagist/v/PaulioRandall/p69?label=version)](https://github.com/PaulioRandall/p69/releases)
+![Made to be Plundered](https://img.shields.io/badge/Made%20to%20be%20Plundered-burlywood)
+[![Latest version](https://img.shields.io/github/v/release/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/releases)
 [![Release date](https://img.shields.io/github/release-date/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/releases)
-[![Node](https://img.shields.io/node/v/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/blob/trunk/package.json)
 
 # P69
 
