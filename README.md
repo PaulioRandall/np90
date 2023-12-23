@@ -1,7 +1,6 @@
-[![Version](https://img.shields.io/packagist/v/PaulioRandall/p69?label=version)](https://github.com/PaulioRandall/p69/releases)
+[![Latest Stable Version](https://img.shields.io/packagist/v/PaulioRandall/p69?label=version)](https://github.com/PaulioRandall/p69/releases)
 [![Release date](https://img.shields.io/github/release-date/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/releases)
 [![Node](https://img.shields.io/node/v/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/blob/trunk/package.json)
-[![License](https://img.shields.io/packagist/l/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/blob/trunk/LICENSE)
 
 # P69
 
@@ -16,6 +15,10 @@ It scans CSS for **P69** tokens which are substituted with user defined token va
 
 	/* font-size: 20px; */
 	font-size: $font.size.lg;
+
+	&::after {
+		content: $removeSpaces('there can be only one');
+	}
 }
 ```
 
