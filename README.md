@@ -1,6 +1,6 @@
 [![Version](https://img.shields.io/packagist/v/PaulioRandall/p69?label=version)](https://github.com/PaulioRandall/p69/releases)
 [![Release date](https://img.shields.io/github/release-date/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/releases)
-[![Node](https://img.shields.io/packagist/node-v/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/blob/trunk/package.json)
+[![Node](https://img.shields.io/node/v/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/blob/trunk/package.json)
 [![License](https://img.shields.io/packagist/l/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/blob/trunk/LICENSE)
 
 # P69
@@ -22,10 +22,10 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 - [Parsing CSS Strings](#parsing-css-strings)
   - [Options](#options)
 - [Parsing P69 Files](#parsing-p69-files)
-  - [Options](#options2)
+  - [Options](#options-1)
   - [Example P69 File](#example-p69-file)
 - [Svelte](#svelte)
-  - [Options](#options3)
+  - [Options](#options-2)
   - [Example Svelte Component](#example-svelte-component)
 - [Utility Functions](#utility-functions)
   - [rgbsToColors](#rgbstocolors): Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.
