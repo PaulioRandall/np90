@@ -8,14 +8,18 @@ This tool is straight up optimised for my tastes which means taking the light to
 
 See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-minimalist-template) for an example in a runnable project.
 
-**Explore:**
+## Explore
 
 - [Import](#import)
-- [tokens.js](#token-js)
+- [tokens.js](#tokenjs)
 - [Parsing CSS Strings](#parsing-css-strings)
 - [Parsing P69 Files](#parsing-p69-files)
-- [svelte](#svelte)
-  - [Utility Functions](#utility-functions)
+- [Svelte](#svelte)
+- [Utility Functions](#utility-functions)
+  - [rgbsToColors](#rgbstocolors): Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.
+  - [colorSchemes](#colorschemes): Generates CSS color scheme media queries from a set of themes with CSS variables as values; goes hand-in-hand with [themeVariables](#themevariables).
+  - [themeVariables](#themevariables): Generates a **set** of CSS variables from a set of themes; goes hand-in-hand with [colorSchemes](#colorschemes)
+  - [sizer](#sizer): Generates a set of size functions.
 
 ## Import
 
@@ -26,6 +30,8 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 	}
 }
 ```
+
+[^Explore](#explore)
 
 ### `tokens.js`
 
@@ -125,6 +131,8 @@ export const escapeMethods = {
 }
 ```
 
+[^Explore](#explore)
+
 ## Parsing CSS Strings
 
 ```js
@@ -170,6 +178,8 @@ p69(tokens, css, {
 })
 ```
 
+[^Explore](#explore)
+
 ## Parsing P69 Files
 
 **P69** files are CSS files containing P69 tokens.
@@ -213,6 +223,8 @@ p69Files(tokens, {
 	output: './src/app.css',
 })
 ```
+
+[^Explore](#explore)
 
 ## Svelte
 
@@ -300,6 +312,8 @@ p69Svelte(tokens, {
 }
 ```
 
+[^Explore](#explore)
+
 ## Utility Functions
 
 Optional utility functions to use in your style files. Don't be limited by what I've done. Write your own if you want.
@@ -308,12 +322,7 @@ Optional utility functions to use in your style files. Don't be limited by what 
 import { rgbsToColors, themeVariables, colorSchemes, sizer } from 'p69/util'
 ```
 
-| Name                              | Does what?                                                                                                                                            |
-| :-------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [rgbsToColors](#rgbstocolors)     | Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.                                                                                     |
-| [colorSchemes](#colorschemes)     | Generates CSS color scheme media queries from a set of themes with CSS variables as values; goes hand-in-hand with [themeVariables](#themevariables). |
-| [themeVariables](#themevariables) | Generates a **set** of CSS variables from a set of themes; goes hand-in-hand with [colorSchemes](#colorschemes).                                      |
-| [sizer](#sizer)                   | Generates a set of size functions.                                                                                                                    |
+[^Explore](#explore)
 
 ### rgbsToColors
 
@@ -347,6 +356,8 @@ console.log(colors) // Use console.table for easy reading
 }
 */
 ```
+
+[^Utility functions](#utility-functions)
 
 ### colorSchemes
 
@@ -391,6 +402,8 @@ console.log(scheme)
 */
 ```
 
+[^Utility functions](#utility-functions)
+
 ### themeVariables
 
 Generates a **set** of CSS variables from a set of themes; goes hand-in-hand with [colorSchemes](#colorschemes).
@@ -426,6 +439,8 @@ console.log(theme)
 }
 */
 ```
+
+[^Utility functions](#utility-functions)
 
 ### sizer
 
@@ -485,3 +500,5 @@ main {
 }
 `
 ```
+
+[^Utility functions](#utility-functions)
