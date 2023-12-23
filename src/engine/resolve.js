@@ -17,8 +17,11 @@ export const resolve = (value, args = []) => {
 		case 'number':
 		case 'bigint':
 		case 'boolean':
-		case 'array':
 			value = value.toString()
+			break
+
+		case 'array':
+			value = value.join(',')
 			break
 
 		case 'function':
@@ -32,7 +35,7 @@ export const resolve = (value, args = []) => {
 	return value
 }
 
-// identifyType returns the name of the type of the value.
+// identifyType returns the name of the value's type.
 //
 // For the most part the name matches the JavaScript type but nulls and arrays
 // return 'null' and 'array' respectively to differentiate themselves from
