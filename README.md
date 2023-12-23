@@ -8,6 +8,15 @@ This tool is straight up optimised for my tastes which means taking the light to
 
 See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-minimalist-template) for an example in a runnable project.
 
+**Explore:**
+
+- [Import](#import)
+- [tokens.js](#token-js)
+- [Parsing CSS Strings](#parsing-css-strings)
+- [Parsing P69 Files](#parsing-p69-files)
+- [svelte](#svelte)
+  - [Utility Functions](#utility-functions)
+
 ## Import
 
 ```json
@@ -161,7 +170,9 @@ p69(tokens, css, {
 })
 ```
 
-## Parsing P69 Files (CSS files containing P69 tokens)
+## Parsing P69 Files
+
+**P69** files are CSS files containing P69 tokens.
 
 ```js
 import p69Files from 'p69/files'
