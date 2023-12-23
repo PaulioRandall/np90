@@ -9,6 +9,15 @@
 
 It scans CSS for **P69** tokens which are substituted with user defined token values. It's just an enhanced `string.replace` to be honest.
 
+For instance:
+
+```css
+.strong-paragraph {
+	color: $color.strong;
+	font-size: $font.size.lg;
+}
+```
+
 This tool is straight up optimised for my tastes which means taking the light touch. In general, the design trade-offs lean towards simplicity, readability, and changability.
 
 See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-minimalist-template) for an example in a runnable project.
@@ -47,7 +56,7 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 
 ### Token Maps
 
-First create a map of your tokens in JavaScript. I recommend creating a file and exportin. Call it what you want.
+First create a map of your tokens in JavaScript. I recommend creating a file and exporting. Call it what you want.
 
 There are no standards or conventions on how one should organise their token maps. Do what works, not what happens to be trending!
 
@@ -68,6 +77,7 @@ export default {
 	color: colors,
 
 	// Create hierarchies to meaningfully structure your CSS.
+	// Structure in accordance with your project.
 	//
 	// However, if you employ a design system or design tokens
 	// then you should probably derive your structure from there.
@@ -291,7 +301,12 @@ p69Svelte(tokens, {
 ```html
 <!-- StyledSection.svelte -->
 
+<script>
+	export let title
+</script>
+
 <section>
+	<h2>{title}</h2>
 	<slot />
 </section>
 
@@ -302,22 +317,22 @@ p69Svelte(tokens, {
 		overflow: hidden;
 	}
 
-	section :global(p) {
-		font-family: $font.family.helvetica;
-		font-size: $font.size.md;
-		color: $color.text;
-		margin-top: $space.md(em);
-	}
-
-	section :global(h1) {
-		font-size: $font.size.lg;
+	section h2 {
+		font-size: $font.size.lg.rem;
 		color: $color.strong;
 	}
 
 	@media $screen.larger_devices {
-		section :global(h1) {
-			font-size: $font.size.xl;
+		section h2 {
+			font-size: $font.size.xl.rem;
 		}
+	}
+
+	section :global(p) {
+		font-family: $font.family.helvetica;
+		font-size: $font.size.md.rem;
+		color: $color.text;
+		margin-top: $space.md.em;
 	}
 
 	section :global(strong) {
