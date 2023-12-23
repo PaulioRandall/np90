@@ -1,3 +1,8 @@
+[![Version](https://img.shields.io/packagist/v/PaulioRandall/p69?label=version)](https://github.com/PaulioRandall/p69/releases)
+[![Release date](https://img.shields.io/github/release-date/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/releases)
+[![Node](https://img.shields.io/packagist/node-v/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/blob/trunk/package.json)
+[![License](https://img.shields.io/packagist/l/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/blob/trunk/LICENSE)
+
 # P69
 
 **P69** enables compile time tokens for CSS within Node based projects.
@@ -11,10 +16,17 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 ## Explore
 
 - [Import](#import)
-- [tokens.js](#tokenjs)
+- [Token Maps](#token-maps)
+  - [Rules for Token Maps](#rules-for-token-maps)
+  - [Escaping the prefix](#escaping-the-prefix)
 - [Parsing CSS Strings](#parsing-css-strings)
+  - [Options](#options)
 - [Parsing P69 Files](#parsing-p69-files)
+  - [Options](#options2)
+  - [Example P69 File](#example-p69-file)
 - [Svelte](#svelte)
+  - [Options](#options3)
+  - [Example Svelte Component](#example-svelte-component)
 - [Utility Functions](#utility-functions)
   - [rgbsToColors](#rgbstocolors): Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.
   - [colorSchemes](#colorschemes): Generates CSS color scheme media queries from a set of themes with CSS variables as values; goes hand-in-hand with [themeVariables](#themevariables).
@@ -31,9 +43,9 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 }
 ```
 
-[^Explore](#explore)
+[^Back to menu](#explore)
 
-### `tokens.js`
+### Token Maps
 
 First create a map of your tokens in JavaScript. I recommend creating a file and exportin. Call it what you want.
 
@@ -74,7 +86,9 @@ export default {
 }
 ```
 
-**Rules for token maps:**
+### Rules for Token Maps
+
+**Definition:**
 
 1. There are no standards or conventions on how one should organise their maps. Do what works, not what happens to be trending.
 2. Any value type is allowed except undefined and object.
@@ -84,7 +98,7 @@ export default {
 6. Nulls are resolved to empty strings, discarding any suffix.
 7. It's possible to pass an array of token maps `p69([...])`. Each map is checked in turn when attempting to resolve a token.
 
-**Rules for token usage:**
+**Usage:**
 
 1. All tokens must be prefixed with `$`.
 2. Functions can have arguments, e.g. `$func(1, 2, 3)`.
@@ -94,7 +108,7 @@ export default {
 
 **Interesting useless side effect:** you can pass arguments to a non-function; it's pointless however since they're not used in processing.
 
-**Build your own escape**
+### Escaping the prefix
 
 There's no escape character for the `$` symbol because it's easy enough to write a token for it. Here are a few possibilities:
 
@@ -131,7 +145,7 @@ export const escapeMethods = {
 }
 ```
 
-[^Explore](#explore)
+[^Back to menu](#explore)
 
 ## Parsing CSS Strings
 
@@ -152,7 +166,7 @@ const after = p69(tokens, before)
 // after: "main { font-family: Verdana, Arial, Helvetica; }"
 ```
 
-**Options**
+### Options
 
 ```js
 p69(tokens, css, {
@@ -178,7 +192,7 @@ p69(tokens, css, {
 })
 ```
 
-[^Explore](#explore)
+[^Back to menu](#explore)
 
 ## Parsing P69 Files
 
@@ -198,7 +212,7 @@ const tokens = {
 p69Files(tokens)
 ```
 
-**Options**
+### Options
 
 ```js
 p69Files(tokens, {
@@ -224,7 +238,23 @@ p69Files(tokens, {
 })
 ```
 
-[^Explore](#explore)
+### Example P69 File
+
+```css
+/* styles.p69 */
+
+.text-strong {
+	color: $theme.strong;
+	font-weight: bold;
+}
+
+.text-fancy {
+	font-family: $font.family.spectral;
+	font-style: italic;
+}
+```
+
+[^Back to menu](#explore)
 
 ## Svelte
 
@@ -243,7 +273,7 @@ export default {
 }
 ```
 
-**Options**
+### Options
 
 ```js
 p69Svelte(tokens, {
@@ -256,7 +286,7 @@ p69Svelte(tokens, {
 })
 ```
 
-**Example Svelte Component**
+### Example Svelte Component
 
 ```html
 <!-- StyledSection.svelte -->
@@ -296,23 +326,7 @@ p69Svelte(tokens, {
 </style>
 ```
 
-**Example P69 File**
-
-```css
-/* styles.p69 */
-
-.text-strong {
-	color: $theme.strong;
-	font-weight: bold;
-}
-
-.text-fancy {
-	font-family: $font.family.spectral;
-	font-style: italic;
-}
-```
-
-[^Explore](#explore)
+[^Back to menu](#explore)
 
 ## Utility Functions
 
@@ -322,7 +336,7 @@ Optional utility functions to use in your style files. Don't be limited by what 
 import { rgbsToColors, themeVariables, colorSchemes, sizer } from 'p69/util'
 ```
 
-[^Explore](#explore)
+[^Back to menu](#explore)
 
 ### rgbsToColors
 
@@ -357,7 +371,7 @@ console.log(colors) // Use console.table for easy reading
 */
 ```
 
-[^Utility functions](#utility-functions)
+[^Back to menu](#explore)
 
 ### colorSchemes
 
@@ -402,7 +416,7 @@ console.log(scheme)
 */
 ```
 
-[^Utility functions](#utility-functions)
+[^Back to menu](#explore)
 
 ### themeVariables
 
@@ -440,7 +454,7 @@ console.log(theme)
 */
 ```
 
-[^Utility functions](#utility-functions)
+[^Back to menu](#explore)
 
 ### sizer
 
@@ -501,4 +515,4 @@ main {
 `
 ```
 
-[^Utility functions](#utility-functions)
+[^Back to menu](#explore)
