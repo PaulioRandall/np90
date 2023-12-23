@@ -17,7 +17,7 @@ const replaceAll = (tokenMaps, content, userOptions = {}) => {
 const getOptions = (userOptions) => {
 	return {
 		reference: '¯\\_(ツ)_/¯',
-		errorIfMissing: true,
+		throwIfMissing: true,
 		onError: (e, tk, options) => {
 			if (options.reference) {
 				stderr('[P69]', options.reference)
@@ -45,9 +45,13 @@ const replaceAllTokens = (tokenMaps, content, options) => {
 			options.onError(e, tk, options)
 		}
 
-		if (!tokenFound && options.errorIfMissing) {
-			const e = new Error(`Missing token: ${tk.path.join('.')}`)
+		if (!tokenFound) {
+			const e = new Error(`Missing or invalid token: ${tk.path.join('.')}`)
 			options.onError(e, tk, options)
+
+			if (options.throwIfMissing) {
+				throw e
+			}
 		}
 	}
 

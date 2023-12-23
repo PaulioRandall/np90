@@ -13,7 +13,7 @@ export const processTree = async (file, tokenMaps, options) => {
 		await os.deleteFile(options.output)
 	}
 
-	const hasErrors = false
+	let hasErrors = false
 
 	for (const f of p69Files) {
 		await processFile(f, tokenMaps, {

@@ -192,11 +192,10 @@ p69(tokens, css, {
 	// meaningful will do.
 	reference: '¯\\_(ツ)_/¯',
 
-	// errorIfMissing determines if onError should be
-	// called if a style token can't be found in the
-	// provided mappings. Note that this will need to
-	// be false when using multiple style maps.
-	errorIfMissing: true,
+	// throwIfMissing will throw an error, after onError
+	// is called, if a style token can't be found in the
+	// provided mappings.
+	throwIfMissing: true,
 
 	// onError is called when an error occurs.
 	// If the error isn't thrown then processing will
