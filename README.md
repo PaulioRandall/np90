@@ -1,4 +1,4 @@
-![Made to be Plundered](https://img.shields.io/badge/Made%20to%20be%20Plundered-burlywood)
+![Made to be Plundered](https://img.shields.io/badge/Made%20to%20be%20Plundered-slateblue)
 [![Latest version](https://img.shields.io/github/v/release/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/releases)
 [![Release date](https://img.shields.io/github/release-date/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/releases)
 
@@ -43,7 +43,7 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 - [Utility Functions](#utility-functions)
   - [rgbsToColors](#rgbstocolors): Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.
   - [colorSchemes](#colorschemes): Generates CSS color scheme media queries from a set of themes with CSS variables as values; goes hand-in-hand with [themeVariables](#themevariables).
-  - [themeVariables](#themevariables): Generates a **set** of CSS variables from a set of themes; goes hand-in-hand with [colorSchemes](#colorschemes)
+  - [themeVariables](#themevariables): Generates a **set** of CSS variables from a set of themes; goes hand-in-hand with [colorSchemes](#colorschemes).
   - [sizer](#sizer): Generates a set of size functions.
 
 ## Import
@@ -482,13 +482,13 @@ console.log(theme)
 
 Generates a set of size maps mapping a pixel value to other units.
 
-**`sizer(tokens, base) sizeFuncMap`**
+**`sizer(tokens, base) sizeMap`**
 
 - **tokens**: map of token names to pixel amounts.
 - **base**: pixels per REM. This is not necessarily the users font size, just a way to adjust EM and REM if needed (default=16)
 - **sizeMap**: map of token names to a map of the token value in different size units.
 
-Everything is in reference to 96 DPI. **sizeMap** schema:
+Everything is in reference to 96 DPI. _sizeMap_ schema:
 
 ```js
 {
@@ -504,6 +504,8 @@ Everything is in reference to 96 DPI. **sizeMap** schema:
 	}
 }
 ```
+
+Example:
 
 ```js
 import { sizer } from 'p69/util'
