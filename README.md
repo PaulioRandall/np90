@@ -461,25 +461,30 @@ console.log(theme)
 
 ### sizer
 
-Generates a set of size or spacing functions with support for most size units.
+Generates a set of size maps mapping a pixel value to other units.
 
-**`sizer(tokens, { base, defaultUnit }) sizeFuncMap`**
+**`sizer(tokens, base) sizeFuncMap`**
 
 - **tokens**: map of token names to pixel amounts.
 - **base**: pixels per REM. This is not necessarily the users font size, just a way to adjust EM and REM if needed (default=16)
-- **defaultUnit**: default size unit when not passing any parameters (default='rem')
-- **sizeFuncMap**: map of token names to size functions.
+- **sizeMap**: map of token names to a map of the token value in different size units.
 
-Everything is in reference to 96 DPI. Supported size units:
+Everything is in reference to 96 DPI. **sizeMap** schema:
 
-- rem
-- em
-- px
-- pt
-- pc
-- in
-- cm
-- mm
+```js
+{
+	token_name: {
+		px,  // 1dp
+		em,  // 2dp
+		rem, // 2dp
+		pt,  // 2dp
+		pc,  // 1dp
+		in,  // 3dp
+		cm,  // 2dp
+		mm,  // 1dp
+	}
+}
+```
 
 ```js
 import { sizer } from 'p69/util'
@@ -493,26 +498,21 @@ const tokens = {
 			lg: 1200,
 			xl: 1600,
 		}
-		/*
-		{
-			base: 16, // default
-			defaultUnit: 'rem', // default
-		}
-		*/
+		// base: 16,
 	),
 }
 
 const css = `
 main {
 	/* width: 45rem (720px at 16px per rem) */
-	width: $width.sm;
+	width: $width.sm.rem;
 }
 
 /* min-width: 920px */
-@media (min-width: $width.md(px)) {
+@media (min-width: $width.md.px) {
 	main {
 		/* max-width: 1600px */
-		max-width: $width.xl(px); 
+		max-width: $width.xl.px; 
 	}
 }
 `
