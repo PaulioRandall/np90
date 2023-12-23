@@ -266,8 +266,8 @@ import tokens from './src/tokens.js'
 
 export default {
   ...,
-  preprocess: [
-  	p69Svelte(tokens)
+	preprocess: [
+		p69Svelte(tokens)
 	],
   ...,
 }
@@ -280,8 +280,8 @@ p69Svelte(tokens, {
 	...P69_File_Options,
 
 	// List of accepted lang attibute values. Undefined
-	// means a style tag with no lang set will be included
-	// in processing.
+	// Undefined means a style tag with no lang set will
+	// be included in processing.
 	mimeTypes: [undefined, 'p69', 'text/p69'],
 })
 ```
@@ -330,7 +330,7 @@ p69Svelte(tokens, {
 
 ## Utility Functions
 
-Optional utility functions to use in your style files. Don't be limited by what I've done. Write your own if you want.
+Optional utility functions to use in your token maps. Don't be limited by what I've done. Write your own if you want.
 
 ```js
 import { rgbsToColors, themeVariables, colorSchemes, sizer } from 'p69/util'
@@ -342,9 +342,10 @@ import { rgbsToColors, themeVariables, colorSchemes, sizer } from 'p69/util'
 
 Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.
 
-**Parameters**:
+**`rgbsToColors(rgbColorMap) colorMap`**
 
-- **rgbs**: map of RGB and RGBA arrays.
+- **rgbColorMap**: map of RGB and RGBA arrays.
+- **colorMap**: map of token names to RGB and RGBA CSS strings.
 
 ```js
 import { rgbsToColors } from 'p90/util'
@@ -375,12 +376,13 @@ console.log(colors) // Use console.table for easy reading
 
 ### colorSchemes
 
-Generates CSS color scheme media queries from a set of themes; goes hand-in-hand with [themeVariables](#themeVariables)
+Generates CSS color scheme media queries from a set of themes; goes hand-in-hand with [themeVariables](#themeVariables).
 
-**Parameters**:
+**`themeVariables(themes, prefix) mediaQueries`**
 
 - **themes**: map of CSS colour schemes (themes).
 - **prefix**: string to prefix the variable name to avoid name clashes.
+- **mediaQueries**: media queries as a CSS string.
 
 ```js
 import { colorSchemes } from 'p90/util'
@@ -422,10 +424,11 @@ console.log(scheme)
 
 Generates a **set** of CSS variables from a set of themes; goes hand-in-hand with [colorSchemes](#colorschemes).
 
-**Parameters**:
+**`colorSchemes(themes, prefix) varMap`**
 
 - **themes**: map of CSS colour schemes (themes).
 - **prefix**: string to prefix the variable name to avoid name clashes.
+- **varMap**: map of token names to CSS variable strings.
 
 ```js
 import { themeVariables } from 'p90/util'
@@ -460,12 +463,12 @@ console.log(theme)
 
 Generates a set of size or spacing functions with support for most size units.
 
-**Parameters**:
+**`sizer(tokens, { base, defaultUnit }) sizeFuncMap`**
 
-- **values**: map of names to pixel amounts.
-- **options**:
-  - **base**: Pixels per REM. This is not necessarily the users font size, just a way to adjust EM and REM if needed (default=16)
-  - **defaultUnit**: Default size unit when not passing any parameters when referenced within CSS (default='rem')
+- **tokens**: map of token names to pixel amounts.
+- **base**: Pixels per REM. This is not necessarily the users font size, just a way to adjust EM and REM if needed (default=16)
+- **defaultUnit**: Default size unit when not passing any parameters when referenced within CSS (default='rem')
+- **sizeFuncMap**: map of token names to size functions.
 
 Everything is in reference to 96 DPI. Supported size units:
 
