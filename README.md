@@ -1,30 +1,53 @@
-![Made to be Plundered](https://img.shields.io/badge/Made%20to%20be%20Plundered-slateblue)
+![Made to be Plundered](https://img.shields.io/badge/Made%20to%20be%20Plundered-indianred)
 [![Latest version](https://img.shields.io/github/v/release/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/releases)
 [![Release date](https://img.shields.io/github/release-date/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/releases)
 
 # P69
 
-**P69** enables compile time tokens for CSS within Node based projects.
+**P69** adds compile time tokens for CSS within Node based projects.
 
-It scans CSS for **P69** tokens which are substituted with user defined token values. It's just an enhanced `string.replace` to be honest. For instance:
+It scans CSS for placeholder tokens which are substituted for user defined values. It's just a glorified `string.replace`.
+
+This tool is straight up optimised for my tastes which means taking the light touch. In general, the design trade-offs lean towards simplicity, readability, and changability.
+
+## For Example
+
+```js
+export default {
+	color: {
+		normal: 'burlywood',
+		highlight: 'crimson ',
+	},
+	font: {
+		size: {
+			sm: '0.8rem',
+			md: '1rem',
+			lg: '1.2rem',
+		},
+	},
+	hello: (name = 'Joe') => {
+		return '"Hello ' + name + '"'
+	},
+}
+```
 
 ```css
-.strong-paragraph {
-	/* color: goldenrod; */
-	color: $color.strong;
+.random-class {
+	color: $color.normal;
+	font-size: $font.size.md;
 
-	/* font-size: 20px; */
-	font-size: $font.size.lg;
+	&:hover {
+		color: &color.highlight;
+	}
 
-	&::after {
-		content: $removeSpaces('there can be only one');
+	&:after {
+		content: $hello(); // "Hello Joe"
+		content: $hello("Jenny"); // "Hello Jenny"
 	}
 }
 ```
 
-This tool is straight up optimised for my tastes which means taking the light touch. In general, the design trade-offs lean towards simplicity, readability, and changability.
-
-See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-minimalist-template) for an example in a runnable project.
+See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-minimalist-template) for example project usage.
 
 ## Explore
 
@@ -49,6 +72,7 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 ## Import
 
 ```json
+// package.json
 {
 	"devDependencies": {
 		"p69": "2.x.x"
@@ -62,7 +86,7 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 
 First create a map of your tokens in JavaScript. I recommend creating a file and exporting. Call it whatever you like.
 
-There are no standards or conventions on how one should organise their token maps. Do what works, not what happens to be trending!
+There are no standards or conventions on how one should organise their tokens. Do what works, not what happens to be trending!
 
 Here's a rough example:
 
@@ -76,12 +100,10 @@ export default {
 	// containing '$'.
 	toString: (s = '') => s.toString(),
 
-	// Don't be scared to split out parts into meaningfully
-	// named files if things start to get unruly.
+	// Split out parts into meaningfully named files.
 	color: myColors,
 
-	// Create hierarchies to meaningfully structure your CSS.
-	// Structure in accordance with your project.
+	// Create hierarchies to meaningfully structure tokens.
 	//
 	// However, if you employ a design system or design tokens
 	// then you should probably derive your structure from there.
@@ -124,7 +146,7 @@ export default {
 
 ### Escaping the prefix
 
-There's no escape character for the `$` symbol because it's easy enough to write a token for it. Here are a few possibilities:
+There's no escape character for the `$` symbol. It's easy enough to write a token for it. A few possibilities:
 
 ```js
 export const escapeMethods = {
@@ -399,7 +421,7 @@ Generates CSS color scheme media queries from a set of themes; goes hand-in-hand
 **`themeVariables(themes, prefix) mediaQueries`**
 
 - **themes**: map of colour schemes containing token names to CSS values (themes).
-- **prefix**: string to prefix the variable name to avoid name clashes.
+- **prefix**: prefix string to avoid name clashes.
 - **mediaQueries**: media queries as a CSS string.
 
 ```js
@@ -445,7 +467,7 @@ Generates a **set** of CSS variables from a set of themes; goes hand-in-hand wit
 **`colorSchemes(themes, prefix) varMap`**
 
 - **themes**: map of colour schemes containing token names to CSS values (themes).
-- **prefix**: string to prefix the variable name to avoid name clashes.
+- **prefix**: prefix string to avoid name clashes.
 - **varMap**: map of token names to CSS variable strings.
 
 ```js
@@ -484,7 +506,7 @@ Generates a set of size maps mapping a pixel value to other units.
 **`sizer(tokens, base) sizeMap`**
 
 - **tokens**: map of token names to pixel amounts.
-- **base**: pixels per REM. This is not necessarily the users font size, just a way to adjust EM and REM if needed (default=16)
+- **base**: pixels per EM. This is not necessarily the users font size, just a way to adjust EM and REM if needed (default=16)
 - **sizeMap**: map of token names to a map of the token value in different size units.
 
 Everything is in reference to 96 DPI. _sizeMap_ schema:
