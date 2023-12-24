@@ -4,7 +4,7 @@
 	"description": "A minimalist CSS preprocessing tool using simple search and replace.",
 	"type": "module",
 	"license": "MIT",
-	"version": "2.0.0-dev-6",
+	"version": "2.0.0",
 	"keywords": [
 		"css",
 		"processor",
@@ -33,7 +33,7 @@
 		"commit": "npm run fmt && npm run test && cat ./scripts/youre-ready-to-integrate.txt"
 	},
 	"devDependencies": {
-		"jest": "29.7.0",
-		"prettier": "3.1.1"
+		"jest": "^29.7.0",
+		"prettier": "^3.1.1"
 	}
 }
