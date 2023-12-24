@@ -71,7 +71,7 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 
 ## Import
 
-**`package.json`**
+`package.json`
 
 ```json
 {
@@ -238,6 +238,9 @@ p69(tokens, css, {
 import p69Files from 'p69/files'
 
 const tokens = {
+	theme: {
+		strong: 'burlywood',
+	},
 	font: {
 		family: {
 			verdana: ['Verdana', 'Arial', 'Helvetica'],
@@ -301,11 +304,11 @@ import p69Svelte from 'p69/svelte'
 import tokens from './src/tokens.js'
 
 export default {
-  ...,
+	...,
 	preprocess: [
 		p69Svelte(tokens)
 	],
-  ...,
+	...,
 }
 ```
 
