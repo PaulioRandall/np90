@@ -1,4 +1,4 @@
-![Made to be Plundered](https://img.shields.io/badge/Made%20to%20be%20Plundered-cornflowerBlue)
+![Made to be Plundered](https://img.shields.io/badge/Made%20to%20be%20Plundered-firebrick)
 [![Latest version](https://img.shields.io/github/v/release/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/releases)
 [![Release date](https://img.shields.io/github/release-date/PaulioRandall/p69)](https://github.com/PaulioRandall/p69/releases)
 
