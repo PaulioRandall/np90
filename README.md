@@ -71,8 +71,9 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 
 ## Import
 
+**`package.json`**
+
 ```json
-// package.json
 {
 	"devDependencies": {
 		"p69": "2.x.x"
