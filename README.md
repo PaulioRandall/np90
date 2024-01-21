@@ -246,7 +246,7 @@ stringP69(tokens, css, {
 **P69** files are CSS files containing P69 tokens.
 
 ```js
-import { filesP69, fileP69 } from 'p69'
+import { filesP69 } from 'p69'
 
 const tokens = {
 	theme: {
@@ -259,13 +259,13 @@ const tokens = {
 	},
 }
 
-filesP69(tokens)
+await filesP69(tokens)
 ```
 
 ### Options
 
 ```js
-filesP69(tokens, {
+await filesP69(tokens, {
 	// See stringP69 options.
 	...stringP69.options,
 
@@ -350,13 +350,15 @@ watchP69(tokens, {
 ```js
 // svelte.config.js
 
-import { svelteP69, watchP69 } from 'p69'
+import { svelteP69, watchP69, filesP69 } from 'p69'
 import tokens from './src/tokens.js'
 
+// Only needed if you're using .p69 files.
+// Compiles all into ./src/app.css by default.
 if (process.env.NODE_ENV === 'development') {
-	// Only needed if you're using .p69 files.
-	// Compiles them all into ./src/app.css by default.
 	watchP69(tokens)
+} else {
+	await filesP69(tokens)
 }
 
 export default {
