@@ -81,7 +81,7 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 		<picture>
 		  <source media="(prefers-color-scheme: dark)" srcset="/scripts/github-dark.png" />
 		  <source media="(prefers-color-scheme: light)" srcset="/scripts/github-light.png" />
-		  <img alt="Github Logo" src="/scripts/github-dark.png" />
+		  <img alt="Github Logo" src="/scripts/github-dark.png" width="50" height="50" />
 		</picture>
 	</a>
 </div>
