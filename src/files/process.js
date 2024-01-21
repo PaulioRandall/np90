@@ -6,7 +6,7 @@ import listP69Files from './list.js'
 import { stringP69 } from '../engine/engine.js'
 import { stdout, stderr } from '../shared/writers.js'
 
-export const filesP69 = async (tokenMaps, options) => {
+export const filesP69 = async (tokenMaps, options = {}) => {
 	const {
 		src = './src', //
 		out = './src/app.css', //
