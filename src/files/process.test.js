@@ -1,7 +1,7 @@
 import fs from 'fs'
 
 import testdata from './testdata.js'
-import { processTree } from './process.js'
+import { filesP69 } from './process.js'
 
 const expectedCSS = [
 	{
@@ -27,9 +27,9 @@ describe('files.js', () => {
 			pad: '2rem',
 		}
 
-		const hasErrors = await processTree(testdata.root, tokenMap, {
-			root: null,
-			output: null,
+		const hasErrors = await filesP69(tokenMap, {
+			src: testdata.src,
+			out: null,
 		})
 
 		expect(hasErrors).toEqual(false)
@@ -42,15 +42,15 @@ describe('files.js', () => {
 	test('processes AND amalgamtes testdata from .p69 to .css', async () => {
 		await testdata.reset()
 
-		const output = './src/files/testdata/global.css'
+		const out = './src/files/testdata/global.css'
 		const tokenMap = {
 			color: 'blue',
 			pad: '2rem',
 		}
 
-		const hasErrors = await processTree(testdata.root, tokenMap, {
-			root: testdata.root,
-			output: output,
+		const hasErrors = await filesP69(tokenMap, {
+			src: testdata.src,
+			out: out,
 		})
 
 		expect(hasErrors).toEqual(false)
@@ -59,6 +59,6 @@ describe('files.js', () => {
 			return `${acc}${f.content}\n`
 		}, '')
 
-		await testdata.expectFileContains(output, exp)
+		await testdata.expectFileContains(out, exp)
 	}, 2000)
 })

@@ -6,40 +6,40 @@ const newPath = (dir, f) => {
 	return path.resolve(f)
 }
 
-const root = './src/files/testdata'
+const src = './src/files/testdata'
 const files = [
 	{
-		path: newPath(root, './alpha/alpha.html'),
+		path: newPath(src, './alpha/alpha.html'),
 		format: 'html',
 		content: '',
 	},
 	{
-		path: newPath(root, './alpha/alpha.p69'),
+		path: newPath(src, './alpha/alpha.p69'),
 		format: 'p69',
 		content: '.alpha {\n\tcolor: $color;\n}\n',
 	},
 	{
-		path: newPath(root, './alpha/beta/beta.html'),
+		path: newPath(src, './alpha/beta/beta.html'),
 		format: 'html',
 		content: '',
 	},
 	{
-		path: newPath(root, './alpha/beta/beta.p69'),
+		path: newPath(src, './alpha/beta/beta.p69'),
 		format: 'p69',
 		content: '.beta {\n\tpadding: $pad;\n}\n',
 	},
 	{
-		path: newPath(root, './alpha/charlie/charlie.html'),
+		path: newPath(src, './alpha/charlie/charlie.html'),
 		format: 'html',
 		content: '',
 	},
 	{
-		path: newPath(root, './alpha/charlie/charlie.p69'),
+		path: newPath(src, './alpha/charlie/charlie.p69'),
 		format: 'p69',
 		content: '.charlie {\n\tcolor: $color;\n\tpadding: $pad;\n}\n',
 	},
 	{
-		path: newPath(root, './alpha/charlie/other.css'),
+		path: newPath(src, './alpha/charlie/other.css'),
 		format: 'css',
 		content: '.other {\n\tcolor: green;\n}\n',
 	},
@@ -52,7 +52,7 @@ const reset = async () => {
 }
 
 const purge = async () => {
-	await fs.promises.rm(root, {
+	await fs.promises.rm(src, {
 		recursive: true,
 		force: true,
 	})
@@ -82,7 +82,7 @@ const sleep = (timeout) => {
 }
 
 export default {
-	root,
+	src,
 	files,
 	reset,
 	purge,

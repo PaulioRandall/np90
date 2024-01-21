@@ -3,22 +3,33 @@ import path from 'path'
 import os from './os.js'
 import listP69Files from './list.js'
 
-import engine from '../engine/engine.js'
+import { stringP69 } from '../engine/engine.js'
 import { stdout, stderr } from '../shared/writers.js'
 
-export const processTree = async (file, tokenMaps, options) => {
-	const p69Files = await listP69Files(file)
-
-	if (options.output) {
-		await os.deleteFile(options.output)
-	}
+export const filesP69 = async (tokenMaps, options) => {
+	const {
+		src = './src', //
+		out = './src/app.css', //
+	} = options
 
 	let hasErrors = false
+	let p69Files = []
+
+	try {
+		p69Files = await listP69Files(src)
+	} catch (e) {
+		stderr(e)
+		return true
+	}
+
+	if (out) {
+		await os.deleteFile(out)
+	}
 
 	for (const f of p69Files) {
-		await processFile(f, tokenMaps, {
-			reference: f,
-			...options,
+		await fileP69(f, tokenMaps, out, {
+			ref: f,
+			...options, //
 		}).catch((e) => {
 			hasErrors = true
 			stderr(e, '\n')
@@ -28,7 +39,7 @@ export const processTree = async (file, tokenMaps, options) => {
 	return hasErrors
 }
 
-export const processFile = async (p69File, tokenMaps, options) => {
+export const fileP69 = async (p69File, tokenMaps, out, options) => {
 	let [css, ok] = await os.readWholeFile(p69File)
 
 	if (!ok) {
@@ -36,15 +47,15 @@ export const processFile = async (p69File, tokenMaps, options) => {
 		return
 	}
 
-	css = engine(tokenMaps, css, options)
+	css = stringP69(tokenMaps, css, options)
 	css = css.trim()
 
-	await writeCssToFile(p69File, css, options)
+	await writeCssToFile(p69File, css, out)
 }
 
-const writeCssToFile = async (p69File, css, options) => {
-	if (options.output) {
-		await os.appendToFile(options.output, css + '\n\n')
+const writeCssToFile = async (p69File, css, out) => {
+	if (out) {
+		await os.appendToFile(out, css + '\n\n')
 		return
 	}
 

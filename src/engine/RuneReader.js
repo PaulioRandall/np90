@@ -1,4 +1,4 @@
-// StringReader is a class for reading a string, rune by rune, using regular
+// RuneReader is a class for reading a string, rune by rune, using regular
 // expressions.
 //
 // A rune (AKA symbol), terminology borrowed from the Go programming language,
@@ -9,8 +9,8 @@
 // This implementation works on runes but keeps a track of code points
 // because that's what the users will need for manipulating JavaScript strings.
 //
-// StringReader acts as an iterator with various query and read operations.
-export default class StringReader {
+// RuneReader acts as an iterator with various query and read operations.
+export default class RuneReader {
 	constructor(s) {
 		this._runes = Array.from(s)
 		this._len = this._runes.length
@@ -20,7 +20,7 @@ export default class StringReader {
 
 		// Tracks index in the rune array (AKA symbol index).
 		//
-		// Use this index when with StringReader functions.
+		// Use this index when with RuneReader functions.
 		this._runeIdx = 0
 
 		// Tracks code point index in the CSS string.

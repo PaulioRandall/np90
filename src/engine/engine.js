@@ -3,8 +3,8 @@ import { lookup } from './lookup.js'
 import { resolve, identifyType } from './resolve.js'
 import { stdout, stderr } from '../shared/writers.js'
 
-const replaceAll = (tokenMaps, content, userOptions = {}) => {
-	const options = getOptions(userOptions)
+export const stringP69 = (tokenMaps, content, options = {}) => {
+	options = getOptions(options)
 
 	if (!Array.isArray(tokenMaps)) {
 		tokenMaps = [tokenMaps]
@@ -16,11 +16,11 @@ const replaceAll = (tokenMaps, content, userOptions = {}) => {
 
 const getOptions = (userOptions) => {
 	return {
-		reference: '¯\\_(ツ)_/¯',
+		ref: '¯\\_(ツ)_/¯',
 		throwIfMissing: true,
 		onError: (e, tk, options) => {
-			if (options.reference) {
-				stderr('[P69]', options.reference)
+			if (options.ref) {
+				stderr('[P69]', options.ref)
 			}
 			stderr('[P69]', e)
 			stdout('[P69]', JSON.stringify(tk, null, 2))
@@ -58,7 +58,7 @@ const replaceAllTokens = (tokenMaps, content, options) => {
 	return content
 }
 
-const replaceToken = (tokenMaps, content, tk, options) => {
+const replaceToken = (tokenMaps, content, tk) => {
 	let value = lookup(tokenMaps, tk.path)
 
 	if (value === undefined) {
@@ -82,5 +82,3 @@ const appendSuffix = (value, suffix) => {
 	const dontSuffix = value === undefined || value === null
 	return dontSuffix ? value : value + suffix
 }
-
-export default replaceAll

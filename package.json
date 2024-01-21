@@ -4,7 +4,7 @@
 	"description": "A minimalist CSS preprocessing tool using simple search and replace.",
 	"type": "module",
 	"license": "MIT",
-	"version": "2.0.0",
+	"version": "3.0.0-dev-1",
 	"keywords": [
 		"css",
 		"processor",
@@ -14,9 +14,8 @@
 		"plunder"
 	],
 	"exports": {
-		"./files": "./src/files/index.js",
-		"./util": "./src/util/index.js",
-		"./svelte": "./src/svelte/index.js"
+		".": "./src/index.js",
+		"./util": "./src/util/index.js"
 	},
 	"engines": {
 		"node": ">=18.18.2 <19.0.0",
@@ -33,7 +32,10 @@
 		"commit": "npm run fmt && npm run test && cat ./scripts/ready-to-ship.txt"
 	},
 	"devDependencies": {
-		"jest": "^29.7.0",
-		"prettier": "^3.1.1"
+		"jest": "29.7.0",
+		"prettier": "3.2.4"
+	},
+	"dependencies": {
+		"chokidar": "3.5.3"
 	}
 }

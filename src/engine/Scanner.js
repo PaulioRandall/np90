@@ -1,9 +1,9 @@
-import StringReader from './StringReader.js'
+import RuneReader from './RuneReader.js'
 
 // Scanner is an iterator class for scanning tokens within .p69 files.
 export default class Scanner {
 	constructor(content) {
-		this._sr = new StringReader(content)
+		this._rr = new RuneReader(content)
 
 		this._prefix = '$'
 		this._escapedPrefix = this._escapeForRegex(this._prefix)
@@ -16,26 +16,26 @@ export default class Scanner {
 
 	// NAME := { *alpha-numeric* | "_" | "-" | "." | "$" }
 	_scanName() {
-		return this._sr.readWhile(/[a-zA-Z0-9_\-\.\$]/)
+		return this._rr.readWhile(/[a-zA-Z0-9_\-\.\$]/)
 	}
 
 	// PARAMS := [ "(" ARGS ")" ]
 	_scanParams(name) {
-		const bookmark = this._sr.makeBookmark()
+		const bookmark = this._rr.makeBookmark()
 
-		this._sr.skipSpaces()
-		if (!this._sr.accept(/\(/)) {
-			this._sr.gotoBookmark(bookmark)
+		this._rr.skipSpaces()
+		if (!this._rr.accept(/\(/)) {
+			this._rr.gotoBookmark(bookmark)
 			return []
 		}
 
-		this._sr.skipSpaces()
-		if (this._sr.accept(/\)/)) {
+		this._rr.skipSpaces()
+		if (this._rr.accept(/\)/)) {
 			return []
 		}
 
 		const args = this._scanArgs(name)
-		this._sr.expect(/\)/)
+		this._rr.expect(/\)/)
 
 		return args
 	}
@@ -48,8 +48,8 @@ export default class Scanner {
 			const arg = this._scanArg(name)
 			args.push(arg)
 
-			this._sr.skipSpaces()
-			if (!this._sr.accept(/,/)) {
+			this._rr.skipSpaces()
+			if (!this._rr.accept(/,/)) {
 				break
 			}
 		}
@@ -61,15 +61,15 @@ export default class Scanner {
 	// ARG := "'" { *any rune except "'" OR "\"* | "\'" | "\\" } "'"
 	// ARG := { *any rune except "\"* | "\\" }
 	_scanArg(name) {
-		this._sr.skipSpaces()
+		this._rr.skipSpaces()
 
-		const delim = this._sr.accept(/["']/)
+		const delim = this._rr.accept(/["']/)
 		let arg = ''
 
 		if (delim) {
 			arg = this._scanQuotedArg(delim, name)
 		} else {
-			arg = this._sr.readWhile(/[^,)]/)
+			arg = this._rr.readWhile(/[^,)]/)
 			arg = arg === '' ? null : arg
 		}
 
@@ -87,10 +87,10 @@ export default class Scanner {
 		let result = ''
 		let escaped = false
 
-		while (!this._sr.isEmpty()) {
-			result += this._sr.readWhile(readingArg)
+		while (!this._rr.isEmpty()) {
+			result += this._rr.readWhile(readingArg)
 
-			const termintor = this._sr.accept(terminatingDelim)
+			const termintor = this._rr.accept(terminatingDelim)
 
 			if (termintor && !escaped) {
 				return result
@@ -102,7 +102,7 @@ export default class Scanner {
 				continue
 			}
 
-			const backSlash = this._sr.accept(/\\/)
+			const backSlash = this._rr.accept(/\\/)
 
 			if (backSlash && !escaped) {
 				escaped = true
@@ -121,28 +121,28 @@ export default class Scanner {
 
 	// SUFFIX := *white-space*
 	_scanSuffix() {
-		return this._sr.accept(/\s/) || ''
+		return this._rr.accept(/\s/) || ''
 	}
 
 	// nextToken scans and returns the next token or null if the end of file
 	// reached.
 	nextToken() {
-		if (!this._sr.seek(this._prefixRegex)) {
+		if (!this._rr.seek(this._prefixRegex)) {
 			return null
 		}
 
-		const start = this._sr.makeBookmark()
-		this._sr.read() // skip prefix
+		const start = this._rr.makeBookmark()
+		this._rr.read() // skip prefix
 
 		const name = this._scanName()
 		const args = this._scanParams(name)
 		const suffix = this._scanSuffix()
-		const end = this._sr.makeBookmark()
+		const end = this._rr.makeBookmark()
 
 		return {
 			start: start.cpIdx,
 			end: end.cpIdx,
-			raw: this._sr.slice(start.runeIdx, end.runeIdx),
+			raw: this._rr.slice(start.runeIdx, end.runeIdx),
 			suffix: suffix,
 			path: name.split('.'),
 			args: args,

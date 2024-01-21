@@ -4,7 +4,7 @@
 
 # P69
 
-**P69** adds compile time tokens for CSS within Node based projects.
+**P69** allows compile time tokens to be used for CSS within Node based projects.
 
 It scans CSS for placeholder tokens which are substituted for user defined values. It's just a glorified `string.replace`.
 
@@ -60,8 +60,10 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 - [Parsing P69 Files](#parsing-p69-files)
   - [Options](#options-1)
   - [Example P69 File](#example-p69-file)
-- [Svelte](#svelte)
+- [Watching P69 Files](#watching-p69-files)
   - [Options](#options-2)
+- [Svelte](#svelte)
+  - [Options](#options-3)
   - [Example Svelte Component](#example-svelte-component)
 - [Utility Functions](#utility-functions)
   - [rgbsToColors](#rgbstocolors): Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.
@@ -71,12 +73,23 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 
 ## Import
 
-`package.json`
+<div>
+	<a href="https://www.npmjs.com/package/p69">
+		<img src="/scripts/npm.svg" width="50" height="50" />
+	</a>
+	<a href="https://github.com/PaulioRandall/p69">
+		<picture>
+		  <source media="(prefers-color-scheme: dark)" srcset="/scripts/github-dark.png" />
+		  <source media="(prefers-color-scheme: light)" srcset="/scripts/github-light.png" />
+		  <img alt="Github Logo" src="/scripts/github-dark.png" />
+		</picture>
+	</a>
+</div>
 
 ```json
 {
 	"devDependencies": {
-		"p69": "2.x.x"
+		"p69": "3.x.x"
 	}
 }
 ```
@@ -87,7 +100,7 @@ See [sveltekit-minimalist-template](https://github.com/PaulioRandall/sveltekit-m
 
 First create a map of your tokens in JavaScript. I recommend creating a file and exporting. Call it whatever you like.
 
-There are no standards or conventions on how one should organise their tokens. Do what works, not what happens to be trending!
+There are no standards or conventions on how one should organise their tokens. Do what works, not what just happens to be trending!
 
 Here's a rough example:
 
@@ -187,7 +200,7 @@ export const escapeMethods = {
 ## Parsing CSS Strings
 
 ```js
-import p69 from 'p69'
+import { stringP69 } from 'p69'
 
 const tokens = {
 	font: {
@@ -198,7 +211,7 @@ const tokens = {
 }
 
 const before = 'main { font-family: $font.family.verdana; }'
-const after = p69(tokens, before)
+const after = stringP69(tokens, before)
 
 // after: "main { font-family: Verdana, Arial, Helvetica; }"
 ```
@@ -206,14 +219,12 @@ const after = p69(tokens, before)
 ### Options
 
 ```js
-p69(tokens, css, {
-	// P69_String_Options
-
-	// reference is a useful identifer for when onError
+stringP69(tokens, css, {
+	// ref is a useful identifer for when onError
 	// is called. The default onError will print it out.
 	// Typically a filename but any identifer you find
 	// meaningful will do.
-	reference: '¯\\_(ツ)_/¯',
+	ref: '¯\\_(ツ)_/¯',
 
 	// throwIfMissing will throw an error, after onError
 	// is called, if a style token can't be found in the
@@ -235,7 +246,7 @@ p69(tokens, css, {
 **P69** files are CSS files containing P69 tokens.
 
 ```js
-import p69Files from 'p69/files'
+import { filesP69, fileP69 } from 'p69'
 
 const tokens = {
 	theme: {
@@ -248,23 +259,22 @@ const tokens = {
 	},
 }
 
-p69Files(tokens)
+filesP69(tokens)
 ```
 
 ### Options
 
 ```js
-p69Files(tokens, {
-	...P69_String_Options,
+filesP69(tokens, {
+	// See stringP69 options.
+	...stringP69.options,
 
-	// P69_File_Options
-
-	// root directory containing .p69 files that need
+	// src directory containing .p69 files that need
 	// to be converted to CSS. If null then .p69 file
 	// processing is skipped.
-	root: './src',
+	src: './src',
 
-	// output is the file path to merge all processed .p69
+	// out is the file path to merge all processed .p69
 	// files into. This does not include style content from
 	// framework files. If null, a .css file will be
 	// created for each .p69 file in the same directory as it.
@@ -273,7 +283,7 @@ p69Files(tokens, {
 	// amalgamation works better for smaller projects while
 	// big projects usually benefit from more rigorous
 	// modularisation.
-	output: './src/app.css',
+	out: './src/app.css',
 })
 ```
 
@@ -295,19 +305,63 @@ p69Files(tokens, {
 
 [^Back to menu](#explore)
 
+## Watching P69 Files
+
+Unfortunatly, I've had little success in getting a JavaScript token file **and its dependencies** to reload on change. I can get a single file and I can reload a whole directory, albeit a little leaky. ECMAScript modules were designed to load once and once only. I may apply the directory approach in a future update.
+
+```js
+import { watchP69 } from 'p69'
+
+const tokens = {
+	theme: {
+		strong: 'burlywood',
+	},
+	font: {
+		family: {
+			verdana: ['Verdana', 'Arial', 'Helvetica'],
+		},
+	},
+}
+
+// Does not block.
+// Currently uses chokidar.
+const terminateWatcher = watchP69(tokens)
+
+await terminateWatcher()
+```
+
+### Options
+
+```js
+watchP69(tokens, {
+	// See filesP69 options.
+	...filesP69.options,
+
+	// chokidar is passed to chokidar as options.
+	// See https://github.com/paulmillr/chokidar.
+	chokidar: {},
+})
+```
+
+[^Back to menu](#explore)
+
 ## Svelte
 
 ```js
 // svelte.config.js
 
-import p69Svelte from 'p69/svelte'
+import { svelteP69, watchP69 } from 'p69'
 import tokens from './src/tokens.js'
+
+if (process.env.NODE_ENV === 'development') {
+	// Only needed if you're using .p69 files.
+	// Compiles them all into ./src/app.css by default.
+	watchP69(tokens)
+}
 
 export default {
 	...,
-	preprocess: [
-		p69Svelte(tokens)
-	],
+	preprocess: [svelteP69(tokens)],
 	...,
 }
 ```
@@ -315,13 +369,14 @@ export default {
 ### Options
 
 ```js
-p69Svelte(tokens, {
-	...P69_File_Options,
+svelteP69(tokens, {
+	// See svelteP69 options.
+	...filesP69.options,
 
-	// List of accepted lang attibute values. Undefined
-	// Undefined means a style tag with no lang set will
-	// be included in processing.
-	mimeTypes: [undefined, 'p69', 'text/p69'],
+	// langs is a list of accepted lang attibute values.
+	// Undefined means any style tag with no lang set
+	// will assumed to be P69 parsable.
+	langs: [undefined, 'p69', 'text/p69'],
 })
 ```
 
@@ -392,7 +447,7 @@ Converts a map of RGB and RGBA arrays to CSS RGB and RGBA values.
 - **cssColorMap**: map of token names to RGB and RGBA CSS strings.
 
 ```js
-import { rgbsToColors } from 'p90/util'
+import { rgbsToColors } from 'p69/util'
 
 const colors = rgbsToColors({
 	burly_wood: [222, 184, 135],
@@ -429,7 +484,7 @@ Generates CSS color scheme media queries from a set of themes; goes hand-in-hand
 - **mediaQueries**: media queries as a CSS string.
 
 ```js
-import { colorSchemes } from 'p90/util'
+import { colorSchemes } from 'p69/util'
 
 const themes = {
 	// P69 doesn't care what the theme names are but browsers do!
@@ -475,7 +530,7 @@ Generates a **set** of CSS variables from a set of themes; goes hand-in-hand wit
 - **varMap**: map of token names to CSS variable strings.
 
 ```js
-import { themeVariables } from 'p90/util'
+import { themeVariables } from 'p69/util'
 
 const themes = {
 	// P69 doesn't care what the theme names are but browsers do!

@@ -1,4 +1,4 @@
-import preprocessor from './preprocessor.js'
+import { svelteP69 } from './preprocessor.js'
 
 describe('svelte', () => {
 	test('Integration', async () => {
@@ -7,7 +7,7 @@ describe('svelte', () => {
 			shape: 'hexagon',
 		}
 
-		const processor = await preprocessor(tokenMap, {
+		const processor = await svelteP69(tokenMap, {
 			root: null,
 			output: null,
 		})
