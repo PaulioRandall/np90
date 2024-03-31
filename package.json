@@ -5,6 +5,14 @@
 	"type": "module",
 	"license": "MIT",
 	"version": "3.0.0-dev-4",
+	"engines": {
+		"node": ">=18",
+		"npm": ">=10"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/PaulioRandall/p69.git"
+	},
 	"keywords": [
 		"css",
 		"processor",
@@ -17,14 +25,6 @@
 		".": "./src/index.js",
 		"./util": "./src/util/index.js"
 	},
-	"engines": {
-		"node": ">=18.18.2 <19.0.0",
-		"npm": ">=9.8.1 < 10.0.0"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/PaulioRandall/p69.git"
-	},
 	"scripts": {
 		"fmt": "prettier --log-level warn --write .",
 		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --silent --runInBand",
@@ -33,9 +33,9 @@
 	},
 	"devDependencies": {
 		"jest": "29.7.0",
-		"prettier": "3.2.4"
+		"prettier": "3.2.5"
 	},
 	"dependencies": {
-		"chokidar": "3.5.3"
+		"chokidar": "^3.6.0"
 	}
 }
