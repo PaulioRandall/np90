@@ -1,4 +1,4 @@
-import { scanAll } from './Scanner.js'
+import { scanAll } from '../scanner/Scanner.js'
 import { lookup } from './lookup.js'
 import { resolve, identifyType } from './resolve.js'
 import { stdout, stderr } from '../shared/writers.js'
