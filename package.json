@@ -21,8 +21,7 @@
 		"plunder"
 	],
 	"exports": {
-		".": "./src/index.js",
-		"./util": "./src/util/index.js"
+		".": "./src/index.js"
 	},
 	"scripts": {
 		"fmt": "prettier --log-level warn --write .",
