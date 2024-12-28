@@ -3,17 +3,18 @@ import fs from 'fs'
 import testdata from './testdata.js'
 import { filesP69 } from './process.js'
 
+
 const expectedCSS = [
 	{
-		path: './src/files/testdata/alpha/alpha.css',
+		path: testdata.testDir + '/alpha/alpha.css',
 		content: '.alpha {\n\tcolor: blue;\n}\n',
 	},
 	{
-		path: './src/files/testdata/alpha/beta/beta.css',
+		path: testdata.testDir + '/alpha/beta/beta.css',
 		content: '.beta {\n\tpadding: 2rem;\n}\n',
 	},
 	{
-		path: './src/files/testdata/alpha/charlie/charlie.css',
+		path: testdata.testDir + '/alpha/charlie/charlie.css',
 		content: '.charlie {\n\tcolor: blue;\n\tpadding: 2rem;\n}\n',
 	},
 ]
@@ -28,7 +29,7 @@ describe('files.js', () => {
 		}
 
 		const hasErrors = await filesP69(tokenMap, {
-			src: testdata.src,
+			src: testdata.testDir,
 			out: null,
 		})
 
@@ -42,14 +43,14 @@ describe('files.js', () => {
 	test('processes AND amalgamtes testdata from .p69 to .css', async () => {
 		await testdata.reset()
 
-		const out = './src/files/testdata/global.css'
+		const out = testdata.testDir + '/global.css'
 		const tokenMap = {
 			color: 'blue',
 			pad: '2rem',
 		}
 
 		const hasErrors = await filesP69(tokenMap, {
-			src: testdata.src,
+			src: testdata.testDir,
 			out: out,
 		})
 

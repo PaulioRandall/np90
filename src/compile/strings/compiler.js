@@ -1,8 +1,8 @@
-import { scanAll } from '../scanner/Scanner.js'
+import Scanner from './scanner/Scanner.js'
 import Tokens from './Tokens.js'
-import { stdout, stderr } from '../shared/writers.js'
+import { stdout, stderr } from '../writers.js'
 
-export const stringP69 = (mappings, content, options = {}) => {
+export const p69StringToCss = (mappings, content, options = {}) => {
 	options = getOptions(options)
 
 	if (Array.isArray(mappings)) {
@@ -26,7 +26,7 @@ const getOptions = (userOptions) => {
 }
 
 const replaceAllTokens = (mapper, content, options) => {
-	const tokens = scanAll(content)
+	const tokens = Scanner.scanAll(content)
 
 	// Work from back to front of the content string otherwise replacements at
 	// the start will fuck up start & end indexes.

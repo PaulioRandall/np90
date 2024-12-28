@@ -3,8 +3,8 @@ import path from 'path'
 import os from './os.js'
 import listP69Files from './list.js'
 
-import { stringP69 } from '../engine/engine.js'
-import { stdout, stderr } from '../shared/writers.js'
+import { p69StringToCss } from '../strings/compiler.js'
+import { stdout, stderr } from '../writers.js'
 
 export const filesP69 = async (tokenMaps, options = {}) => {
 	const {
@@ -47,7 +47,7 @@ export const fileP69 = async (p69File, tokenMaps, out, options) => {
 		return
 	}
 
-	css = stringP69(tokenMaps, css, options)
+	css = p69StringToCss(tokenMaps, css, options)
 	css = css.trim()
 
 	await writeCssToFile(p69File, css, out)

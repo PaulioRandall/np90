@@ -2,8 +2,8 @@ import RuneReader from './RuneReader.js'
 
 // Scanner is an iterator class for scanning tokens within .p69 files.
 export default class Scanner {
-	constructor(content) {
-		this._rr = new RuneReader(content)
+	constructor(p69_css) {
+		this._rr = new RuneReader(p69_css)
 
 		this._prefix = '$'
 		this._escapedPrefix = this._escapeForRegex(this._prefix)
@@ -148,17 +148,18 @@ export default class Scanner {
 			args: args,
 		}
 	}
-}
 
-// scanAll is convenience function for scanning all tokens at once.
-export const scanAll = (content) => {
-	const sc = new Scanner(content)
-	const result = []
+	// scanAll is convenience function returning all tokens, in order of
+	// appearence, 
+	static scanAll(p69_css) {
+		const sc = new Scanner(p69_css)
+		const result = []
 
-	let tk = null
-	while ((tk = sc.nextToken())) {
-		result.push(tk)
+		let tk = null
+		while ((tk = sc.nextToken())) {
+			result.push(tk)
+		}
+
+		return result
 	}
-
-	return result
 }

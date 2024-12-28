@@ -1,4 +1,4 @@
-import Scanner, { scanAll } from './Scanner.js'
+import Scanner from './Scanner.js'
 
 const newToken = (start, end, raw, path = [], args = [], suffix = '') => {
 	return {
@@ -177,7 +177,7 @@ describe('scanner.js', () => {
 	})
 
 	test('given surrogate pair rune, parsed tokens include correct indexes', () => {
-		const act = scanAll('$color; 🫀; $color;')
+		const act = Scanner.scanAll('$color; 🫀; $color;')
 		// 🫀 counts as two characters
 
 		expect(act).toEqual([

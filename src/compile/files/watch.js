@@ -1,6 +1,6 @@
 import chokidar from 'chokidar'
 import { filesP69 } from './process.js'
-import { stderr } from '../shared/writers.js'
+import { stderr } from '../writers.js'
 
 export const watchP69 = (tokenMaps, options = {}) => {
 	const src = options.src || './src'

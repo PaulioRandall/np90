@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { stderr } from '../shared/writers.js'
+import { stderr } from '../writers.js'
 
 const replaceFileExt = (f, newExt) => {
 	const currExt = path.extname(f)
