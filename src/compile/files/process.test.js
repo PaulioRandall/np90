@@ -1,8 +1,7 @@
 import fs from 'fs'
 
 import testdata from './testdata.js'
-import { filesP69 } from './process.js'
-
+import { p69FilesToCss } from './process.js'
 
 const expectedCSS = [
 	{
@@ -28,7 +27,7 @@ describe('files.js', () => {
 			pad: '2rem',
 		}
 
-		const hasErrors = await filesP69(tokenMap, {
+		const hasErrors = await p69FilesToCss(tokenMap, {
 			src: testdata.testDir,
 			out: null,
 		})
@@ -49,7 +48,7 @@ describe('files.js', () => {
 			pad: '2rem',
 		}
 
-		const hasErrors = await filesP69(tokenMap, {
+		const hasErrors = await p69FilesToCss(tokenMap, {
 			src: testdata.testDir,
 			out: out,
 		})

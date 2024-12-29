@@ -1,4 +1,4 @@
-import { p69StringToCss } from '../compile/strings/compiler.js'
+import Compile from '../compile/Compile.js'
 
 export const svelteP69 = (tokenMaps, options = {}) => {
 	const {
@@ -13,7 +13,7 @@ export const svelteP69 = (tokenMaps, options = {}) => {
 				return
 			}
 
-			const code = await p69StringToCss(tokenMaps, content, {
+			const code = await Compile.P69StringToCSS(tokenMaps, content, {
 				ref: filename,
 				...options,
 			})

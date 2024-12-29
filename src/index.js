@@ -1,4 +1,11 @@
-export { stringP69 } from './engine/engine.js'
-export { filesP69, fileP69 } from './files/process.js'
-export { watchP69 } from './files/watch.js'
-export { svelteP69 } from './svelte/preprocessor.js'
+export stringToCSS from './strings/stringToCSS.js'
+export fileToCSS from './files/fileToCSS.js'
+export watchFile from './watchers/watchFile.js'
+export newSveltePreprocessor from './svelte/preprocessor.js'
+
+export default Object.freeze({
+	stringToCSS,
+	fileToCSS,
+	watchFile,
+	newSveltePreprocessor,
+})

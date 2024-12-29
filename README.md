@@ -173,15 +173,15 @@ const tokens = {
 	},
 }
 
-const before = 'main { font-family: $font.family.verdana; }'
-const after = P69.compileString(tokens, before)
-// after: "main { font-family: Verdana,Arial,Helvetica; }"
+const p69String = 'main { font-family: $font.family.verdana; }'
+const css = P69.stringToCSS(tokens, p69String)
+// css: "main { font-family: Verdana,Arial,Helvetica; }"
 ```
 
 ### Options
 
 ```js
-P69.compileString(tokens, cssString, {
+P69.stringToCSS(tokens, cssString, {
 	// onError is called when an error occurs.
 	//
 	// If the error isn't thrown then processing will
@@ -212,29 +212,27 @@ const tokens = {
 	},
 }
 
-await P69.compileFiles(tokens)
+await P69.fileToCSS(tokens)
 ```
 
 ### Options
 
 ```js
-await P69.compileFiles(tokens, {
-	// Extends P69.compileString options.
+await P69.fileToCSS(tokens, {
+	// Extends P69.stringToCSS options.
 
-	// src directory containing .p69 files that need
-	// to be converted to CSS. If null then .p69 file
-	// processing is skipped.
+	// src file or directory containing .p69 files
+	// to be converted to CSS. If null then .p69
+	// file processing is skipped.
 	src: './src',
 
-	// dst is the file path to merge all processed .p69
-	// files into. This does not include style content from
-	// framework files. If null, a .css file will be
-	// created for each .p69 file in its directory.
+	// dst is the file path to amalgamate all
+	// processed .p69 files into. This does not include
+	// styles from framework files. If null, each
+	// .p69 file will be converted to its own .css file.
 	//
-	// There are virtues and vices to each approach but
-	// amalgamation works better for smaller projects while
-	// big projects usually benefit from more rigorous
-	// modularisation.
+	// Note that files are amalgamated in the order
+	// they are read from the file system.
 	dst: './src/app.css',
 })
 ```
@@ -286,7 +284,7 @@ await terminateWatcher()
 
 ```js
 P69.watchFiles(tokens, {
-	// Extends P69.compileFiles options.
+	// Extends P69.fileToCSS options.
 
 	// chokidar is passed to chokidar as options.
 	// See https://github.com/paulmillr/chokidar.
@@ -304,17 +302,17 @@ P69.watchFiles(tokens, {
 import P69 from 'p69'
 import tokens from './src/tokens.js'
 
-// This first be is only needed if you're using .p69 files.
+// This first is only needed if you're using .p69 files.
 // Compiles all into ./src/app.css by default.
 if (process.env.NODE_ENV === 'development') {
 	P69.watchFiles(tokens)
 } else {
-	await P69.compileFiles(tokens)
+	await P69.fileToCSS(tokens)
 }
 
 export default {
 	...,
-	preprocess: [P69.createSvelteCompiler(tokens)],
+	preprocess: [P69.newSveltePreprocessor(tokens)],
 	...,
 }
 ```
@@ -322,12 +320,14 @@ export default {
 ### Options
 
 ```js
-P69.createSvelteCompiler(tokens, {
-	// Extends P69.watchFiles options.
+P69.newSveltePreprocessor(tokens, {
+	// Extends P69.stringToCSS options.
 
 	// langs is a list of accepted lang attibute values.
-	// Undefined means any style tag with no lang set
-	// will assumed to be P69 parsable.
+	//
+	// Regarding 'undefined', it is assumed that any
+	// style tag with no lang attribute contains P69
+	// content.
 	langs: [undefined, 'p69', 'text/p69'],
 })
 ```

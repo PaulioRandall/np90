@@ -1,12 +1,12 @@
 import chokidar from 'chokidar'
-import { filesP69 } from './process.js'
+import { p69FilesToCss } from './process.js'
 import { stderr } from '../writers.js'
 
 export const watchP69 = (tokenMaps, options = {}) => {
 	const src = options.src || './src'
 	const chokidarOptions = options.chokidar || {}
 
-	const handler = (path) => filesP69(tokenMaps, options)
+	const handler = (path) => p69FilesToCss(tokenMaps, options)
 
 	const watcher = chokidar
 		.watch(`${src}/**/*.p69`, chokidarOptions) //

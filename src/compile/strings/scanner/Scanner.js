@@ -150,7 +150,7 @@ export default class Scanner {
 	}
 
 	// scanAll is convenience function returning all tokens, in order of
-	// appearence, 
+	// appearence,
 	static scanAll(p69_css) {
 		const sc = new Scanner(p69_css)
 		const result = []
