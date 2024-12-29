@@ -1,10 +1,10 @@
 {
 	"author": "Paul Williams",
-	"name": "p69",
+	"name": "@paulio/p69",
 	"description": "Injects compile time tokens into CSS strings",
 	"type": "module",
 	"license": "MIT",
-	"version": "4.0.0-beta",
+	"version": "4.0.0-rc-1",
 	"engines": {
 		"node": ">=18"
 	},
