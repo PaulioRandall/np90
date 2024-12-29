@@ -35,13 +35,13 @@ const mappings = {
 		},
 	},
 	width: (size = 'md') => {
-		const sizes = [
+		const sizes = {
 			'xs': '5rem',
 			'sm': '10rem',
 			'md': '15rem',
 			'lg': '20rem',
 			'xl': '25rem',
-		]
+		}
 
 		return sizes[md]
 	},
