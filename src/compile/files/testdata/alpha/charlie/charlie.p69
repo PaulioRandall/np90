@@ -1,4 +1,0 @@
-.charlie {
-	color: $color;
-	padding: $pad;
-}

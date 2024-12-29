@@ -1,9 +1,9 @@
-import { p69StringToCss } from './compiler.js'
+import compile from './index.js'
 
 const joinLines = (...lines) => lines.join('\n')
 
 const doProcessString = (valueMaps, content, config = {}) => {
-	return p69StringToCss(valueMaps, content, {
+	return compile(valueMaps, content, {
 		filename: 'Test.svelte',
 		onError: (e) => {
 			throw e
@@ -12,8 +12,8 @@ const doProcessString = (valueMaps, content, config = {}) => {
 	})
 }
 
-describe('conpiler.js', () => {
-	describe('p69StringToCss', () => {
+describe('index.js', () => {
+	describe('compile', () => {
 		test('performs simple replacement', () => {
 			const valueMap = {
 				green: 'forestgreen',

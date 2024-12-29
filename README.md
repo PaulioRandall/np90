@@ -6,11 +6,11 @@
 
 **P69** enables use of compile time tokens within CSS for Node based projects.
 
-It's just a glorified `string.replace`, i.e. it scans CSS for placeholder tokens which are substituted for user defined values.
+It's just a glorified fiind and replace, i.e. it scans CSS for placeholder tokens which are substituted for user defined values.
 
-Just create an object containing your tokens. You can nest as you please. There are no standards or conventions on how one should organise their tokens. Just keep it simple and do what works, not what everyone else is doing!
+Just create an object containing your tokens. There are no standards or conventions on how one should name and organise their tokens. Just keep it simple and do what works, not what everyone else is doing!
 
-## For example
+## Example
 
 ```js
 export default {
@@ -70,19 +70,12 @@ export default {
 ## Explore
 
 - [Import](#import)
+- [Options](#options)
 - [Token Maps](#token-maps)
   - [Rules for Token Mappings](#rules-for-token-mappings)
   - [Escaping the prefix](#escaping-the-prefix)
-- [Parsing CSS Strings](#parsing-css-strings)
-  - [Options](#options)
-- [Parsing P69 Files](#parsing-p69-files)
-  - [Options](#options-1)
-  - [Example P69 File](#example-p69-file)
-- [Watching P69 Files](#watching-p69-files)
-  - [Options](#options-2)
-- [Svelte](#svelte)
-  - [Options](#options-3)
-  - [Example Svelte Component](#example-svelte-component)
+- [Compiling](#compiling)
+  - [Multiple Mappings](#multiple-mappings)
 
 ## Import
 
@@ -105,6 +98,26 @@ export default {
 		"p69": "4.x.x"
 	}
 }
+```
+
+[^Back to menu](#explore)
+
+## Options
+
+```js
+P69(
+	mappings,
+	cssWithTokens,
+	options: {
+		// onError is called when an error occurs.
+		//
+		// If the error isn't thrown then processing will
+		// continue for the remaining tokens.
+		//
+		// By default, logs the error and carries on.
+		onError: (err, token) => {},
+	}
+)
 ```
 
 [^Back to menu](#explore)
@@ -160,221 +173,71 @@ export const escapeMethods = {
 
 [^Back to menu](#explore)
 
-## Parsing CSS Strings
+## Compiling
 
 ```js
 import P69 from 'p69'
 
-const tokens = {
+const mappings = {
 	font: {
 		family: {
 			verdana: ['Verdana', 'Arial', 'Helvetica'],
 		},
 	},
+	colors: {
+		primary: '#3333FF',
+		secondary: '#FF3333',
+	},
 }
 
-const p69String = 'main { font-family: $font.family.verdana; }'
-const css = P69.stringToCSS(tokens, p69String)
-// css: "main { font-family: Verdana,Arial,Helvetica; }"
+const cssWithTokens = `main {
+	font-family: $font.family.verdana;
+	color: $colors.primary;
+}`
+
+const css = P69(mappings, cssWithTokens)
+
+console.log(css)
+// main {
+//   font-family: Verdana,Arial,Helvetica;
+//   color: #3333FF;
+// }
 ```
 
-### Options
-
-```js
-P69.stringToCSS(tokens, cssString, {
-	// onError is called when an error occurs.
-	//
-	// If the error isn't thrown then processing will
-	// continue for the remaining tokens.
-	//
-	// By default, logs the error and carries on.
-	onError: (err, token, options) => {},
-})
-```
-
-[^Back to menu](#explore)
-
-## Parsing P69 Files
-
-**P69** files are CSS files containing P69 tokens.
+### Multiple Mappings
 
 ```js
 import P69 from 'p69'
 
-const tokens = {
-	theme: {
-		strong: 'burlywood',
-	},
+const fonts = {
 	font: {
 		family: {
 			verdana: ['Verdana', 'Arial', 'Helvetica'],
+			Arial: ['Arial', 'Verdana', 'Helvetica'],
 		},
 	},
 }
 
-await P69.fileToCSS(tokens)
-```
-
-### Options
-
-```js
-await P69.fileToCSS(tokens, {
-	// Extends P69.stringToCSS options.
-
-	// src file or directory containing .p69 files
-	// to be converted to CSS. If null then .p69
-	// file processing is skipped.
-	src: './src',
-
-	// dst is the file path to amalgamate all
-	// processed .p69 files into. This does not include
-	// styles from framework files. If null, each
-	// .p69 file will be converted to its own .css file.
-	//
-	// Note that files are amalgamated in the order
-	// they are read from the file system.
-	dst: './src/app.css',
-})
-```
-
-### Example P69 File
-
-```css
-/* styles.p69 */
-
-.text-strong {
-	color: $theme.strong;
-	font-weight: bold;
-}
-
-.text-fancy {
-	font-family: $font.family.spectral;
-	font-style: italic;
-}
-```
-
-[^Back to menu](#explore)
-
-## Watching P69 Files
-
-Unfortunatly, I've had little success in getting a JavaScript token file **and its dependencies** to reload on change. I can get a single file and I can reload a whole directory, albeit a little leaky. ECMAScript modules were designed to load once and once only.
-
-```js
-import P69 from 'p69'
-
-const tokens = {
-	theme: {
-		strong: 'burlywood',
-	},
-	font: {
-		family: {
-			verdana: ['Verdana', 'Arial', 'Helvetica'],
-		},
+const colors = {
+	colors: {
+		primary: '#3333FF',
+		secondary: '#FF3333',
 	},
 }
 
-// Does not block.
-// Currently uses chokidar.
-const terminateWatcher = P69.watchFiles(tokens)
+const cssWithTokens = `main {
+	font-family: $font.family.verdana;
+	color: $colors.primary;
+}`
 
-await terminateWatcher()
-```
+// Each map is checked for the value in array order.
+const css = P69([fonts, colors], cssWithTokens)
 
-### Options
-
-```js
-P69.watchFiles(tokens, {
-	// Extends P69.fileToCSS options.
-
-	// chokidar is passed to chokidar as options.
-	// See https://github.com/paulmillr/chokidar.
-	chokidar: {},
-})
-```
-
-[^Back to menu](#explore)
-
-## Svelte
-
-```js
-// svelte.config.js
-
-import P69 from 'p69'
-import tokens from './src/tokens.js'
-
-// This first is only needed if you're using .p69 files.
-// Compiles all into ./src/app.css by default.
-if (process.env.NODE_ENV === 'development') {
-	P69.watchFiles(tokens)
-} else {
-	await P69.fileToCSS(tokens)
-}
-
-export default {
-	...,
-	preprocess: [P69.newSveltePreprocessor(tokens)],
-	...,
-}
-```
-
-### Options
-
-```js
-P69.newSveltePreprocessor(tokens, {
-	// Extends P69.stringToCSS options.
-
-	// langs is a list of accepted lang attibute values.
-	//
-	// Regarding 'undefined', it is assumed that any
-	// style tag with no lang attribute contains P69
-	// content.
-	langs: [undefined, 'p69', 'text/p69'],
-})
-```
-
-### Example Svelte Component
-
-```html
-<!-- StyledSection.svelte -->
-
-<script>
-	export let title
-</script>
-
-<section>
-	<h2>{title}</h2>
-	<slot />
-</section>
-
-<style>
-	section {
-		background: $color.base;
-		border-radius: 4px;
-		overflow: hidden;
-	}
-
-	section h2 {
-		font-size: $font.size.lg.rem;
-		color: $color.strong;
-	}
-
-	@media $screen.larger_devices {
-		section h2 {
-			font-size: $font.size.xl.rem;
-		}
-	}
-
-	section :global(p) {
-		font-family: $font.family.helvetica;
-		font-size: $font.size.md.rem;
-		color: $color.text;
-		margin-top: $space.md.em;
-	}
-
-	section :global(strong) {
-		color: $color.strong;
-	}
-</style>
+console.log(css)
+// main {
+//   font-family: Verdana,Arial,Helvetica;
+//   color: #3333FF;
+// }
 ```
 
 [^Back to menu](#explore)

@@ -1,12 +1,12 @@
 {
 	"author": "Paul Williams",
 	"name": "p69",
-	"description": "A minimalist CSS preprocessing tool using simple search and replace.",
+	"description": "Injects compile time tokens into CSS strings",
 	"type": "module",
 	"license": "MIT",
 	"version": "4.0.0-beta",
 	"engines": {
-		"node": ">=20"
+		"node": ">=18"
 	},
 	"repository": {
 		"type": "git",
@@ -14,11 +14,7 @@
 	},
 	"keywords": [
 		"css",
-		"processor",
-		"minimalist",
-		"node",
-		"svelte",
-		"plunder"
+		"node"
 	],
 	"exports": {
 		".": "./src/index.js"
@@ -32,8 +28,5 @@
 	"devDependencies": {
 		"jest": "29.7.0",
 		"prettier": "3.4.2"
-	},
-	"dependencies": {
-		"chokidar": "^4.0.3"
 	}
 }
