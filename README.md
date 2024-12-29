@@ -13,9 +13,7 @@ Just create an object containing your tokens. There are no standards or conventi
 ## Contents
 
 - [Example](#example)
-- [Multiple Mappings](#multiple-mappings)
 - [Options](#options)
-- [Token Maps](#token-maps)
 - [Rules for Token Mappings](#rules-for-token-mappings)
 - [Escaping the prefix](#escaping-the-prefix)
 
@@ -83,7 +81,7 @@ const css = P69(mappings, cssWithTokens)
 `
 ```
 
-[^Back to menu](#explore)
+[^Back to contents](#contents)
 
 ## Options
 
@@ -103,7 +101,7 @@ P69(
 )
 ```
 
-[^Back to menu](#explore)
+[^Back to contents](#contents)
 
 ## Rules for Token Mappings
 
@@ -119,6 +117,8 @@ P69(
 10. Nulls are resolved to empty strings, discarding any suffix.
 
 **Harmless bug:** you can pass arguments to a non-function but they're ignored. I may fix this in future.
+
+[^Back to contents](#contents)
 
 ## Escaping the prefix
 
@@ -154,4 +154,4 @@ export const escapeMethods = {
 }
 ```
 
-[^Back to menu](#explore)
+[^Back to contents](#contents)
