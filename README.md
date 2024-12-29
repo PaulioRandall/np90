@@ -199,10 +199,12 @@ const css = P69(mappings, cssWithTokens)
 
 console.log(css)
 // main {
-//   font-family: Verdana,Arial,Helvetica;
-//   color: #3333FF;
+// 	font-family: Verdana,Arial,Helvetica;
+// 	color: #3333FF;
 // }
 ```
+
+[^Back to menu](#explore)
 
 ### Multiple Mappings
 
@@ -235,8 +237,8 @@ const css = P69([fonts, colors], cssWithTokens)
 
 console.log(css)
 // main {
-//   font-family: Verdana,Arial,Helvetica;
-//   color: #3333FF;
+// 	font-family: Verdana,Arial,Helvetica;
+// 	color: #3333FF;
 // }
 ```
 
