@@ -72,10 +72,10 @@ export default {
 - [Import](#import)
 - [Options](#options)
 - [Token Maps](#token-maps)
-  - [Rules for Token Mappings](#rules-for-token-mappings)
-  - [Escaping the prefix](#escaping-the-prefix)
+- [Rules for Token Mappings](#rules-for-token-mappings)
+- [Escaping the prefix](#escaping-the-prefix)
 - [Compiling](#compiling)
-  - [Multiple Mappings](#multiple-mappings)
+- [Multiple Mappings](#multiple-mappings)
 
 ## Import
 
@@ -122,7 +122,7 @@ P69(
 
 [^Back to menu](#explore)
 
-### Rules for Token Mappings
+## Rules for Token Mappings
 
 1. All tokens must be prefixed with `$`.
 2. Functions can have arguments, e.g. `$func(1, 2, 3)`.
@@ -137,7 +137,7 @@ P69(
 
 **Harmless bug:** you can pass arguments to a non-function but they're ignored. I may fix this in future.
 
-### Escaping the prefix
+## Escaping the prefix
 
 There's no escape character for the `$` symbol, but it's easy to write your own. A few possibilities:
 
@@ -206,7 +206,7 @@ console.log(css)
 
 [^Back to menu](#explore)
 
-### Multiple Mappings
+## Multiple Mappings
 
 ```js
 import P69 from 'p69'
