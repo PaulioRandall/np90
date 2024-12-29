@@ -10,10 +10,21 @@ It's just a glorified fiind and replace, i.e. it scans CSS for placeholder token
 
 Just create an object containing your tokens. There are no standards or conventions on how one should name and organise their tokens. Just keep it simple and do what works, not what everyone else is doing!
 
+## Contents
+
+- [Example](#example)
+- [Multiple Mappings](#multiple-mappings)
+- [Options](#options)
+- [Token Maps](#token-maps)
+- [Rules for Token Mappings](#rules-for-token-mappings)
+- [Escaping the prefix](#escaping-the-prefix)
+
 ## Example
 
 ```js
-export default {
+import P69 from 'p69'
+
+const mappings = {
 	color: {
 		normal: 'burlywood',
 		highlight: 'crimson ',
@@ -37,9 +48,8 @@ export default {
 		return sizes[md]
 	},
 }
-```
 
-```css
+const cssWithTokens = `
 .my-class {
 	color: $color.normal;
 	font-weight: bold;
@@ -51,11 +61,16 @@ export default {
 .my-class:hover {
 	color: &color.highlight;
 }
-```
+`
 
-**Compiles into:**
+const css = P69(mappings, cssWithTokens)
 
-```css
+// You can pass multiple mappings. It will search them in order of appearance
+// using the first value found.
+//const css = P69([fonts, colors], cssWithTokens)
+
+// Expect CSS to equal:
+`
 .my-class {
 	color: burlywood;
 	font-size: 1rem;
@@ -65,39 +80,7 @@ export default {
 .my-class:hover {
 	color: crimson;
 }
-```
-
-## Explore
-
-- [Import](#import)
-- [Options](#options)
-- [Token Maps](#token-maps)
-- [Rules for Token Mappings](#rules-for-token-mappings)
-- [Escaping the prefix](#escaping-the-prefix)
-- [Compiling](#compiling)
-- [Multiple Mappings](#multiple-mappings)
-
-## Import
-
-<div>
-	<a href="https://www.npmjs.com/package/p69">
-		<img src="/scripts/npm.svg" width="50" height="50" />
-	</a>
-	<a href="https://github.com/PaulioRandall/p69">
-		<picture>
-		  <source media="(prefers-color-scheme: dark)" srcset="/scripts/github-dark.png" />
-		  <source media="(prefers-color-scheme: light)" srcset="/scripts/github-light.png" />
-		  <img alt="Github Logo" src="/scripts/github-dark.png" width="50" height="50" />
-		</picture>
-	</a>
-</div>
-
-```json
-{
-	"devDependencies": {
-		"p69": "4.x.x"
-	}
-}
+`
 ```
 
 [^Back to menu](#explore)
@@ -169,77 +152,6 @@ export const escapeMethods = {
 	// $quote('Lots of $$$', '`') => `Lots of $$$`
 	quote: (v, glyph = '"') => glyph + v.toString() + glyph,
 }
-```
-
-[^Back to menu](#explore)
-
-## Compiling
-
-```js
-import P69 from 'p69'
-
-const mappings = {
-	font: {
-		family: {
-			verdana: ['Verdana', 'Arial', 'Helvetica'],
-		},
-	},
-	colors: {
-		primary: '#3333FF',
-		secondary: '#FF3333',
-	},
-}
-
-const cssWithTokens = `main {
-	font-family: $font.family.verdana;
-	color: $colors.primary;
-}`
-
-const css = P69(mappings, cssWithTokens)
-
-console.log(css)
-// main {
-// 	font-family: Verdana,Arial,Helvetica;
-// 	color: #3333FF;
-// }
-```
-
-[^Back to menu](#explore)
-
-## Multiple Mappings
-
-```js
-import P69 from 'p69'
-
-const fonts = {
-	font: {
-		family: {
-			verdana: ['Verdana', 'Arial', 'Helvetica'],
-			Arial: ['Arial', 'Verdana', 'Helvetica'],
-		},
-	},
-}
-
-const colors = {
-	colors: {
-		primary: '#3333FF',
-		secondary: '#FF3333',
-	},
-}
-
-const cssWithTokens = `main {
-	font-family: $font.family.verdana;
-	color: $colors.primary;
-}`
-
-// Each map is checked for the value in array order.
-const css = P69([fonts, colors], cssWithTokens)
-
-console.log(css)
-// main {
-// 	font-family: Verdana,Arial,Helvetica;
-// 	color: #3333FF;
-// }
 ```
 
 [^Back to menu](#explore)

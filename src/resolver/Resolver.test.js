@@ -113,5 +113,22 @@ describe('Resolver', () => {
 			const f = () => resolver.resolve(['k'])
 			expect(f).toThrow(Error)
 		})
+
+		test('passes when given multiple mappings', () => {
+			const resolver = new Resolver(
+				{
+					a: 'A',
+				},
+				{
+					b: 'B',
+				}
+			)
+
+			const act1 = resolver.resolve(['a'])
+			expect(act1).toEqual('A')
+
+			const act2 = resolver.resolve(['b'])
+			expect(act2).toEqual('B')
+		})
 	})
 })
