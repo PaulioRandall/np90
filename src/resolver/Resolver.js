@@ -21,7 +21,7 @@ export default class Resolver {
 			}
 		}
 
-		throw new Error(`Unable to find token: '${tokenPath}'.`)
+		throw new Error(`Unable to find token: $'${tokenPath.join('.')}'.`)
 	}
 
 	_findToken(mapping, tokenPath) {

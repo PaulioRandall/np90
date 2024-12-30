@@ -36,11 +36,11 @@ const mappings = {
 	},
 	width: (size = 'md') => {
 		const sizes = {
-			'xs': '5rem',
-			'sm': '10rem',
-			'md': '15rem',
-			'lg': '20rem',
-			'xl': '25rem',
+			xs: '5rem',
+			sm: '10rem',
+			md: '15rem',
+			lg: '20rem',
+			xl: '25rem',
 		}
 
 		return sizes[md]
@@ -61,9 +61,10 @@ const cssWithTokens = `
 }
 `
 
-const css = P69(mappings, cssWithTokens)
-
-// You can pass multiple mappings. It will search them in order of appearance
+const css = P69(
+	mappings,
+	cssWithTokens
+)// You can pass multiple mappings. It will search them in order of appearance
 // using the first value found.
 //const css = P69([fonts, colors], cssWithTokens)
 
