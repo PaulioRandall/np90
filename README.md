@@ -4,7 +4,7 @@
 
 # P69
 
-**P69** enables use of compile time tokens within CSS for Node based projects.
+**P69** enables use of compile time tokens within CSS strings for Node based projects.
 
 It's just a glorified fiind and replace, i.e. it scans CSS for placeholder tokens which are substituted for user defined values.
 
@@ -61,12 +61,7 @@ const cssWithTokens = `
 }
 `
 
-const css = P69(
-	mappings,
-	cssWithTokens
-)// You can pass multiple mappings. It will search them in order of appearance
-// using the first value found.
-//const css = P69([fonts, colors], cssWithTokens)
+const css = P69.string(mappings, cssWithTokens)
 
 // Expect CSS to equal:
 `
@@ -81,6 +76,8 @@ const css = P69(
 }
 `
 ```
+
+> You can pass multiple mappings. It will search each mapping in order until it finds a value, e.g. `P69.string([fonts, colors], cssWithTokens)`
 
 [^Back to contents](#contents)
 

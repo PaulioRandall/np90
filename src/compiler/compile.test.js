@@ -1,4 +1,4 @@
-import compile from './index.js'
+import compile from './compile.js'
 
 const joinLines = (...lines) => lines.join('\n')
 
