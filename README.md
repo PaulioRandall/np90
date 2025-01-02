@@ -84,7 +84,7 @@ const css = P69.string(mappings, cssWithTokens)
 ## Options
 
 ```js
-P69(
+P69.string(
 	mappings,
 	cssWithTokens,
 	options: {
