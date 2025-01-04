@@ -17,7 +17,7 @@
 		"node"
 	],
 	"exports": {
-		".": "./src/index.js"
+		".": "./lib/index.js"
 	},
 	"scripts": {
 		"fmt": "prettier --log-level warn --write .",
