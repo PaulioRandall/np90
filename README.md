@@ -97,9 +97,9 @@ P69.string(
 		//
 		// If the error isn't thrown then processing will
 		// continue for the remaining tokens.
-		//
-		// By default, logs the error and carries on.
-		onError: (err, token) => {},
+		onError: (err, token) => {
+			// By default, logs the error and carries on.
+		},
 	}
 )
 ```
