@@ -6,9 +6,14 @@
 
 **P69** enables use of compile time tokens within CSS strings for Node based projects.
 
-It's just a glorified fiind and replace, i.e. it scans CSS for placeholder tokens which are substituted for user defined values.
+It's just a glorified fiind and replace, i.e. it scans CSS strings for placeholder tokens which are substituted for user defined values.
 
-Just create an object containing your tokens. There are no standards or conventions on how one should name and organise their tokens. Just keep it simple and do what works, not what everyone else is doing!
+> Create an arbitary nested object containing your tokens. There are no standards or conventions on how one should name and organise them. Just keep it simple and do what works, not what everyone else is doing!
+
+- **P69**: https://github.com/PaulioRandall/p69
+- **P69 Files**: https://github.com/PaulioRandall/p69-files
+- **P69 Svelte**: https://github.com/PaulioRandall/p69-svelte
+- **P69 Util**: https://github.com/PaulioRandall/p69-util
 
 ## Contents
 
