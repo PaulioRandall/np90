@@ -23,7 +23,7 @@
 		"fmt": "prettier --log-level warn --write .",
 		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --silent --runInBand",
 		"debug": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand",
-		"commit": "npm run fmt && npm run test && cat ./scripts/ready-to-ship.txt"
+		"commit": "npm run fmt && npm run test && cat ./ready-to-ship.txt"
 	},
 	"devDependencies": {
 		"jest": "29.7.0",
